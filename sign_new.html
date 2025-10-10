@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register & Login - HospiLink</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/sign.css">
+    <link rel="icon" href="hosp_favicon.png" type="image/png">
+</head>
+<body>
+    <!-- Registration Form -->
+    <div class="container" id="signup" style="display:none;">
+      <h1 class="form-title">Register</h1>
+      <form method="post" action="php/auth.php">
+        <div class="input-group">
+           <i class="fas fa-user"></i>
+           <input type="text" name="fName" id="fName" placeholder="First Name" required>
+           <label for="fName">First Name</label>
+        </div>
+        <div class="input-group">
+            <i class="fas fa-user"></i>
+            <input type="text" name="lName" id="lName" placeholder="Last Name" required>
+            <label for="lName">Last Name</label>
+        </div>
+        <div class="input-group">
+            <i class="fas fa-envelope"></i>
+            <input type="email" name="email" id="regEmail" placeholder="Email" required>
+            <label for="regEmail">Email</label>
+        </div>
+        <div class="input-group">
+            <i class="fas fa-phone"></i>
+            <input type="tel" name="phone" id="phone" placeholder="Phone Number" pattern="[0-9]{10}" required>
+            <label for="phone">Phone Number</label>
+        </div>
+        <div class="input-group">
+            <i class="fas fa-user-tag"></i>
+            <select name="role" id="role" required>
+                <option value="">Select Role</option>
+                <option value="patient">Patient</option>
+                <option value="doctor">Doctor</option>
+                <option value="admin">Admin</option>
+            </select>
+            <label for="role">Role</label>
+        </div>
+        <!-- Conditional fields for doctors -->
+        <div id="doctorFields" style="display:none;">
+            <div class="input-group">
+                <i class="fas fa-stethoscope"></i>
+                <input type="text" name="specialization" id="specialization" placeholder="Specialization">
+                <label for="specialization">Specialization</label>
+            </div>
+            <div class="input-group">
+                <i class="fas fa-hospital"></i>
+                <input type="text" name="department" id="department" placeholder="Department">
+                <label for="department">Department</label>
+            </div>
+            <div class="input-group">
+                <i class="fas fa-id-card"></i>
+                <input type="text" name="license_number" id="license_number" placeholder="License Number">
+                <label for="license_number">License Number</label>
+            </div>
+        </div>
+        <div class="input-group">
+            <i class="fas fa-lock"></i>
+            <input type="password" name="password" id="password" placeholder="Password" minlength="6" required>
+            <label for="password">Password</label>
+        </div>
+        <div class="input-group">
+            <i class="fas fa-lock"></i>
+            <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm Password" minlength="6" required>
+            <label for="confirm_password">Confirm Password</label>
+        </div>
+       <input type="submit" class="btn" value="Sign Up" name="signUp">
+      </form>
+      
+      <div class="links">
+        <p>Already Have Account ?</p>
+        <button id="signInButton">Sign In</button>
+      </div>
+    </div>
+
+    <!-- Login Form -->
+    <div class="container" id="signIn">
+        <h1 class="form-title">Sign In</h1>
+        <form method="post" action="php/auth.php">
+          <div class="input-group">
+              <i class="fas fa-envelope"></i>
+              <input type="email" name="email" id="loginEmail" placeholder="Email" required>
+              <label for="loginEmail">Email</label>
+          </div>
+          <div class="input-group">
+              <i class="fas fa-lock"></i>
+              <input type="password" name="password" id="loginPassword" placeholder="Password" required>
+              <label for="loginPassword">Password</label>
+          </div>
+          <div class="input-group">
+              <i class="fas fa-user-tag"></i>
+              <select name="role" id="loginRole" required>
+                  <option value="">Login As</option>
+                  <option value="patient">Patient</option>
+                  <option value="doctor">Doctor</option>
+                  <option value="admin">Admin</option>
+              </select>
+              <label for="loginRole">Role</label>
+          </div>
+          <p class="recover">
+            <a href="#">Forgot Password?</a>
+          </p>
+         <input type="submit" class="btn" value="Sign In" name="signIn">
+        </form>
+        <p class="or"></p>
+
+        <div class="links">
+          <p>Don't have account yet?</p>
+          <button id="signUpButton">Sign Up</button>
+        </div>
+    </div>
+
+    <script src="sign.js"></script>
+    <script>
+        // Show/hide doctor-specific fields based on role selection
+        document.getElementById('role').addEventListener('change', function() {
+            const doctorFields = document.getElementById('doctorFields');
+            const specialization = document.getElementById('specialization');
+            const department = document.getElementById('department');
+            const license_number = document.getElementById('license_number');
+            
+            if (this.value === 'doctor') {
+                doctorFields.style.display = 'block';
+                specialization.required = true;
+                department.required = true;
+                license_number.required = true;
+            } else {
+                doctorFields.style.display = 'none';
+                specialization.required = false;
+                department.required = false;
+                license_number.required = false;
+            }
+        });
+
+        // Password confirmation validation
+        document.querySelector('form[name="signUp"]')?.addEventListener('submit', function(e) {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+            
+            if (password !== confirmPassword) {
+                e.preventDefault();
+                alert('Passwords do not match!');
+            }
+        });
+    </script>
+</body>
+</html>

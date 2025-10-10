@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About</title>
+    <link rel="stylesheet" href="css/admit.css">
+    <link
+    href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css"
+    rel="stylesheet"/>
+    <link rel="icon" href="hosp_favicon.png" type="image/png">
+</head>
+<body>
+   <div class="main">
+      <div class="nav">
+         <a href="index.html"> <img src="images/logo.png" alt=""> </a>
+         <div class="nav-part2">
+            <h4><a href="index.html"><abbr title="Home">Home</abbr></a></h4>
+            <h4><a href="appointment.html"><abbr title="Book Appointment">Book Appointment</abbr></a></h4>
+            <h4><a href="beds.html"><abbr title="Beds Availability">Beds</abbr></a></h4>
+            <h4><a href="admit.html"><abbr title="Admit Patient"> Admit Patient</abbr></a></h4>
+            <h4><a href="contact.html"><abbr title="Contact Us">Contact Us</abbr></a></h4>
+            <button><a href="sign.html"><abbr title="Sign In">Sign In</abbr></a></button>
+            <i class="ri-menu-3-line"></i>
+         </div>
+      </div>
+</div>
+    <div class="content">
+           
+          
+    <div class="upload-section">
+      <h2>Patient Details</h2>
+      <form action="php/admit_patient.php" method="post" enctype="multipart/form-data">
+          <div class="form-group">
+              <label for="patient-name">Patient Name</label>
+              <input type="text" id="patient-name" name="patient_name" placeholder="Enter your full name" required>
+          </div>
+
+          <div class="form-group">
+            <label for="report-type">Gender</label>
+            <select id="report-type" name="report_type" required>
+                <option value="" disabled selected>Select Your Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Others">Others</option>
+          </select>
+          </div>
+
+          <div class="form-group">
+            <label for="report-date">Date Of Birth</label>
+            <input type="date" id="report-date" name="report_date" required>
+          </div>
+
+          <div class="form-group">
+              <label for="report-date">Admit Date</label>
+              <input type="date" id="report-date" name="report_date" required>
+          </div>
+          <div class="form-group">
+              <label for="report-type">Blood Group</label>
+              <select id="report-type" name="report_type" required>
+                  <option value="" disabled selected>Select Blood Group</option>
+                  <option value="A+">A+</option>
+                  <option value="A-">A-</option>
+                  <option value="B+">B+</option>
+                  <option value="B-">B-</option>
+                  <option value="AB+">AB+</option>
+                  <option value="AB-">AB-</option>
+                  <option value="O+">O+</option>
+                  <option value="O-">O-</option>
+              </select>
+          </div>
+          <div class="form-group">
+            <label for="disease">Description of Disease</label>
+            <input type="text" id="disease" name="disease" required>
+          </div>
+
+          <div class="form-group">
+            <label for="disease">Phone No.</label>
+            <input type="text" id="phno" name="phno" required>
+          </div>
+
+          <div class="form-group">
+            <label for="disease">Address</label>
+            <input type="text" id="address" name="address" required>
+          </div>
+
+          <div class="form-group">
+          <h4><input type="checkbox" id="checkbox" name="checkbox" required> <span>I Accept all the<a href="tc.html"> terms & conditions</a></span></h4>  
+          </div>
+          <button type="submit">Submit</button>
+      </form>
+  </div>
+
+
+    </div>
+</body>
+</html>

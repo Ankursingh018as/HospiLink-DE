@@ -1,0 +1,164 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html , body{
+    height: 100%;
+    width: 100%;
+}
+
+.nav-part2 h4 a abbr{
+    text-decoration: none;
+}
+
+.nav-part2 button a abbr{
+    text-decoration: none;
+}
+
+.left button a abbr{
+    text-decoration: none;
+}
+
+.nav h4{
+    font-size: 17px;
+    text-transform: capitalize;
+}
+
+.nav img{
+   height: 90px;
+   padding-right: 0px;
+}
+
+h2{
+      display: flex;
+      flex-wrap: wrap;  
+}
+
+h4 a{
+    text-decoration: none;
+    color: black;
+}
+
+h4 a:hover{
+    color: #00adb5;
+}
+
+a{
+    text-decoration: none;
+    color: white;
+}
+
+.main{
+    height: 100px;
+    width: 100%;
+    position: relative;
+   
+}
+
+.nav{
+    height: 100px;
+    width: 100%;
+    border-bottom: 2px solid #dadada;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5vw;
+}
+
+.nav button{
+    padding: 1.1vw 2.1vw;
+    font-size: 1.2vw;
+    background-color: #00adb5;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-weight: 700;
+}
+
+.nav button:hover{
+    background-color: #0e545f;
+}
+
+.nav i{
+    font-weight: 600;
+    display: none;
+}
+
+.nav-part2{
+    display: flex;
+    align-items: center;
+    gap: 4vw;
+}
+
+.nav h2{
+    font-size: 2vw;
+    font-weight: 700;
+}
+
+.nav h4{
+    font-size: 17px;
+    text-transform: capitalize;
+}
+
+
+
+
+/* contact css */
+
+.contact-section {
+    background-color: #fff;
+    padding: 40px;
+    max-width: 600px;
+    margin: 50px auto;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.contact-section h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #000000;
+}
+
+.contact-section .form-group {
+    margin-bottom: 15px;
+}
+
+.contact-section label {
+    display: block;
+    margin-bottom: 5px;
+    color: #000000;
+}
+
+.contact-section input,
+.contact-section textarea,
+.contact-section select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.contact-section textarea {
+    padding-top: 10px;
+    height: 130px;
+    resize: none;
+}
+
+.contact-section button {
+    width: 100%;
+    padding: 10px;
+    background-color: #00adb5;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.contact-section button:hover {
+    background-color: #0e545f;
+}

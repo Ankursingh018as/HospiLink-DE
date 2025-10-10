@@ -1,0 +1,23 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin-top: 50px;
+}
+
+#clickText {
+    cursor: pointer;
+    color: blue;
+    text-decoration: underline;
+}
+
+.card {
+    display: none; /* Initially hide the card */
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+    max-width: 300px;
+    margin: 20px auto;
+}

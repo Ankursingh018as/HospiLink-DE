@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Card on Click</title>
+    <link rel="stylesheet" href="tc.css">
+</head>
+<body>
+    <p id="clickText">Click here to view terms & Conditions</p>
+
+    <div id="card" class="card">
+        <h3>Terms & Conditions</h3>
+        <p>
+           1. Admission to the hospital is subject to the availability of beds and facilities, as well as the patient's medical condition.<br>
+           2. The hospital reserves the right to transfer a patient to another facility if necessary for better medical care or due to lack of resources.<br>
+           3. The patient or their representative has the right to refuse treatment at any time, but must sign a refusal form acknowledging the risks involved. <br>
+           4. The hospital collects personal information to provide proper care and treatment. This information will be kept confidential and used only for medical and administrative purposes.<br>
+           5. Patients have the right to receive information about their diagnosis, treatment options, and the risks involved in their care.
+        </p>
+    </div>
+
+
+
+
+    <script>
+        document.getElementById("clickText").addEventListener("click", function() {
+    var card = document.getElementById("card");
+    if (card.style.display === "none" || card.style.display === "") {
+        card.style.display = "block";
+    } else {
+        card.style.display = "none";
+    }
+});
+    </script>
+</body>
+</html>

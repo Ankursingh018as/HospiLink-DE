@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us</title>
+    <link rel="stylesheet" href="css/contact.css">
+    <link rel="icon" href="hosp_favicon.png" type="image/png">
+</head>
+<body>
+
+    <div class="main">
+        <div class="nav">
+            <a href="index.html"> <img src="images/logo.png" alt=""> </a>
+           <div class="nav-part2">
+            <h4><a href="index.html"><abbr title="Home">Home</abbr></a></h4>
+            <h4><a href="appointment.html"><abbr title="Book Appointment">Book Appointment</abbr></a></h4>
+            <h4><a href="beds.html"><abbr title="Beds Availability">Beds</abbr></a></h4>
+            <h4><a href="admit.html"><abbr title="Admit Patient"> Admit Patient</abbr></a></h4>
+            <h4><a href="contact.html"><abbr title="Contact Us">Contact Us</abbr></a></h4>
+            <button><a href="sign.html"><abbr title="Sign In">Sign In</abbr></a></button>
+              <i class="ri-menu-3-line"></i>
+           </div>
+        </div>
+
+    <div class="contact-section">
+        <h2>Contact Us</h2>
+        <br>
+        <form action="https://formsubmit.co/el/yeliyo" method="post">
+            <div class="form-group">
+                <label for="name">Your Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Your Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="Speciality">Select Speciality:</label>
+                <select id="Speciality" name="Speciality" required>
+                    <option value="Select Speciality" disabled selected>Select Speciality</option>
+                    <option value="Spine Surgery">Spine Surgery</option>
+                    <option value="Nephrology">Nephrology</option>
+                    <option value="Radiology">Radiology</option>
+                    <option value="Pathology">Pathology</option>
+                    <option value="Dietician">Dietician</option>
+                    <option value="Physiotherapy">Physiotherapy</option>
+                    <option value="Orthopaedics">Orthopaedics</option>
+                </select>
+            </div>  
+
+            <div class="">
+                <label for="Select Doctor">Select Doctor</label>
+                <select id="Select Doctor" name="Select Doctor" required>
+                    <option value="" disabled selected>Select Doctor</option>
+                    <option value="Dr. Patel">Dr. Patel</option>
+                    <option value="Dr. HM Shah">Dr. HM Shah</option>
+                    <option value="Dr. poonawala">Dr. poonawala</option>
+                </select>
+            </div>  
+            
+
+            <div class="form-group" style="margin-top: 15px;">
+                <label for="message">Your Message</label>
+                <textarea id="message" name="message" required></textarea>
+            </div>
+            <button type="submit">Send Message</button>
+        </form>
+    </div>
+
+</body>
+</html>

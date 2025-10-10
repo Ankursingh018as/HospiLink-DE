@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment</title>
+    <link rel="stylesheet" href="css/appointment.css">
+    <!-- <link
+    href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css"
+    rel="stylesheet"/> -->
+    <link rel="icon" href="hosp_favicon.png" type="image/png">
+</head>
+<body>
+   <div class="main">
+      <div class="nav">
+        <a href=index.html> <img src="images/logo.png" alt=""> </a>
+         <div class="nav-part2">
+            <h4><a href="index.html"><abbr title="Home">Home</abbr></a></h4>
+            <h4><a href="appointment.html"><abbr title="Book Appointment">Book Appointment</abbr></a></h4>
+            <h4><a href="beds.html"><abbr title="Beds Availability">Beds</abbr></a></h4>
+            <h4><a href="admit.html"><abbr title="Admit Patient"> Admit Patient</abbr></a></h4>
+            <h4><a href="contact.html"><abbr title="Contact Us">Contact Us</abbr></a></h4>
+            <button><a href="sign.html"><abbr title="Sign In">Sign In</abbr></a></button>
+            <i class="ri-menu-3-line"></i>
+         </div>
+      </div>
+</div>
+    <div class="content">
+         <div class="left">
+    <div class="container">
+        <h1>Book Your <span>Appointment</span> </h1>
+        <br>
+        <form action="php/appointment.php" method="POST">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+
+            <div class="form-group">
+                <label for="report-type">Gender</label>
+                <select id="gender" name="gender" required>
+                    <option value="" disabled selected>Select Your Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Others">Others</option>
+            </select>
+            </div>
+
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
+
+            <label for="symptoms">Describe Your Symptoms *</label>
+            <textarea id="symptoms" name="symptoms" placeholder="Please describe your symptoms in detail (e.g., chest pain, high fever, cough, etc.). This helps our AI system prioritize your appointment based on urgency." rows="4" required></textarea>
+            <small style="color: #666; font-size: 12px;">💡 Our AI will analyze your symptoms to prioritize your appointment</small>
+
+            <label for="date">Preferred Appointment Date</label>
+            <input type="date" id="date" name="date" required min="<?php echo date('Y-m-d'); ?>">
+
+            <label for="time">Preferred Appointment Time</label>
+            <input type="time" id="time" name="time" required>
+
+            
+            <div class="form-group">
+                <label for="report-type">Doctor Preference (Optional)</label>
+                <select id="s_doctor" name="s_doctor">
+                    <option value="">Any Available Doctor</option>
+                    <option value="Dr. Ramesh Patel">Dr. Ramesh Patel - Cardiology</option>
+                    <option value="Dr. Harsh Shah">Dr. Harsh Shah - General Medicine</option>
+                    <option value="Dr. Mehul Poonawala">Dr. Mehul Poonawala - Pediatrics</option>
+            </select>
+            </div>
+
+            <button type="submit">Book Appointment with AI Priority</button>
+        </form>
+    </div>
+</body>
+</html>
+
+        </div>
+         <div class="right">
+            <img src="images/appointment.png" alt="Image">
+         </div>
+    </div>
+</body>
+</html>
