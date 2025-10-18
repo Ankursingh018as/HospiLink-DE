@@ -42,7 +42,7 @@ $history = $histStmt->get_result();
     <title>Patient Dashboard - HospiLink</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="../css/dashboard.css">
-    <link rel="icon" href="../hosp_favicon.png" type="image/png">
+    <link rel="icon" href="../images/hosp_favicon.png" type="image/png">
 </head>
 <body>
     <div class="dashboard-container">

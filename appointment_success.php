@@ -33,7 +33,7 @@ if ($appointment_id > 0) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Appointment Confirmed - HospiLink</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="icon" href="hosp_favicon.png" type="image/png">
+    <link rel="icon" href="images/hosp_favicon.png" type="image/png">
     <style>
         * {
             margin: 0;

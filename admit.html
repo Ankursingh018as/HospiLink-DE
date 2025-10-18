@@ -8,7 +8,7 @@
     <link
     href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css"
     rel="stylesheet"/>
-    <link rel="icon" href="hosp_favicon.png" type="image/png">
+    <link rel="icon" href="images/hosp_favicon.png" type="image/png">
 </head>
 <body>
    <div class="main">
@@ -20,7 +20,7 @@
             <h4><a href="beds.html"><abbr title="Beds Availability">Beds</abbr></a></h4>
             <h4><a href="admit.html"><abbr title="Admit Patient"> Admit Patient</abbr></a></h4>
             <h4><a href="contact.html"><abbr title="Contact Us">Contact Us</abbr></a></h4>
-            <button><a href="sign.html"><abbr title="Sign In">Sign In</abbr></a></button>
+            <button><a href="sign_new.html"><abbr title="Sign In">Sign In</abbr></a></button>
             <i class="ri-menu-3-line"></i>
          </div>
       </div>
@@ -37,8 +37,8 @@
           </div>
 
           <div class="form-group">
-            <label for="report-type">Gender</label>
-            <select id="report-type" name="report_type" required>
+            <label for="gender">Gender</label>
+            <select id="gender" name="gender" required>
                 <option value="" disabled selected>Select Your Gender</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
@@ -47,17 +47,17 @@
           </div>
 
           <div class="form-group">
-            <label for="report-date">Date Of Birth</label>
-            <input type="date" id="report-date" name="report_date" required>
+            <label for="dob">Date Of Birth</label>
+            <input type="date" id="dob" name="dob" required>
           </div>
 
           <div class="form-group">
-              <label for="report-date">Admit Date</label>
-              <input type="date" id="report-date" name="report_date" required>
+              <label for="admit-date">Admit Date</label>
+              <input type="date" id="admit-date" name="admit_date" required>
           </div>
           <div class="form-group">
-              <label for="report-type">Blood Group</label>
-              <select id="report-type" name="report_type" required>
+              <label for="blood-group">Blood Group</label>
+              <select id="blood-group" name="blood_group" required>
                   <option value="" disabled selected>Select Blood Group</option>
                   <option value="A+">A+</option>
                   <option value="A-">A-</option>
@@ -93,5 +93,12 @@
 
 
     </div>
+    
+    <script>
+        // Set minimum admit date to today
+        document.getElementById('admit-date').min = new Date().toISOString().split('T')[0];
+        // Set maximum DOB to today
+        document.getElementById('dob').max = new Date().toISOString().split('T')[0];
+    </script>
 </body>
 </html>

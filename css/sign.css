@@ -5,8 +5,8 @@
     font-family:"poppins",sans-serif;
 }
 body{
-    background-color: #e7a259;
-    background:linear-gradient(to right,#e3e1df,#e89f5f);
+    background-color: #00adb5;
+    background:linear-gradient(to right,#e3e1df,#00adb5);
 }
 .container{
     background:#fff;
@@ -47,7 +47,7 @@ input{
 input:focus{
     background-color: transparent;
     outline:transparent;
-    border-bottom:2px solid hsl(327,90%,28%);
+    border-bottom:2px solid #00adb5;
 }
 input::placeholder{
     color:transparent;
@@ -62,7 +62,7 @@ label{
 }
 input:focus~label,input:not(:placeholder-shown)~label{
     top:-3em;
-    color:hsl(327,90%,28%);
+    color:#00adb5;
     font-size:15px;
 }
 .recover{
@@ -73,10 +73,10 @@ input:focus~label,input:not(:placeholder-shown)~label{
 }
 .recover a{
     text-decoration:none;
-    color:#F58A08;
+    color:#00adb5;
 }
 .recover a:hover{
-    color: orange;
+    color: #00adb5;
     text-decoration:underline;
 }
 .btn{
@@ -86,13 +86,13 @@ input:focus~label,input:not(:placeholder-shown)~label{
     outline:none;
     border:none;
     width:100%;
-    background: #F58A08;
+    background: #00adb5;
     color:white;
     cursor:pointer;
     transition:0.9s;
 }
 .btn:hover{
-    background:#dc6905;
+    background:#00adb5;
 }
 .or{
     font-size:1.1rem;
@@ -103,7 +103,7 @@ input:focus~label,input:not(:placeholder-shown)~label{
     text-align:center;
 }
 .icons i{
-    color: #F58A08;
+    color: #00adb5;
     padding:0.8rem 1.5rem;
     border-radius:10px;
     font-size:1.5rem;
@@ -113,9 +113,9 @@ input:focus~label,input:not(:placeholder-shown)~label{
     transition:1s;
 }
 .icons i:hover{
-    background:#dc6905;
+    background:#00adb5;
     font-size:1.6rem;
-    border:2px solid #F58A08;
+    border:2px solid #00adb5;
 }
 .links{
     display:flex;
@@ -125,7 +125,7 @@ input:focus~label,input:not(:placeholder-shown)~label{
     font-weight:bold;
 }
 button{
-    color:#F58A08;
+    color:#00adb5;
     border:none;
     background-color:transparent;
     font-size:1rem;
@@ -133,5 +133,5 @@ button{
 }
 button:hover{
     text-decoration:underline;
-    color:#dc6905;
+    color:#00adb5;
 }

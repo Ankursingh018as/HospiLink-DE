@@ -62,8 +62,8 @@ echo.
 echo [4/4] Importing database...
 echo.
 
-:: Import the database with password
-"%MYSQL_EXE%" -u root -p8511 < "%DB_FILE%"
+:: Import the database (no password required for XAMPP default)
+"%MYSQL_EXE%" -u root < "%DB_FILE%"
 
 if %ERRORLEVEL% EQU 0 (
     echo.

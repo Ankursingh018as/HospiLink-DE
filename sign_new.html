@@ -6,7 +6,7 @@
     <title>Register & Login - HospiLink</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="css/sign.css">
-    <link rel="icon" href="hosp_favicon.png" type="image/png">
+    <link rel="icon" href="images/hosp_favicon.png" type="image/png">
 </head>
 <body>
     <!-- Registration Form -->
@@ -81,7 +81,7 @@
     </div>
 
     <!-- Login Form -->
-    <div class="container" id="signIn">
+    <div class="container" id="signIn" style="display:block;">
         <h1 class="form-title">Sign In</h1>
         <form method="post" action="php/auth.php">
           <div class="input-group">
@@ -140,13 +140,17 @@
         });
 
         // Password confirmation validation
-        document.querySelector('form[name="signUp"]')?.addEventListener('submit', function(e) {
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirm_password').value;
-            
-            if (password !== confirmPassword) {
-                e.preventDefault();
-                alert('Passwords do not match!');
+        document.querySelector('form').addEventListener('submit', function(e) {
+            // Only check for registration form (has confirm_password field)
+            const confirmPassword = document.getElementById('confirm_password');
+            if (confirmPassword && confirmPassword.offsetParent !== null) {
+                const password = document.getElementById('password').value;
+                const confirmPasswordValue = confirmPassword.value;
+                
+                if (password !== confirmPasswordValue) {
+                    e.preventDefault();
+                    alert('Passwords do not match!');
+                }
             }
         });
     </script>

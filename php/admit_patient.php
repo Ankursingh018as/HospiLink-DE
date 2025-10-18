@@ -5,29 +5,48 @@ include 'db.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get form data
-    $patient_name = $_POST['patient_name'];
-    $gender = $_POST['report_type'];
-    $dob = $_POST['report_date'];
-    $admit_date = $_POST['report_date'];
-    $blood_group = $_POST['report_type'];
-    $disease_description = $_POST['disease'];
-    $phone_number = $_POST['phno'];
-    $address = $_POST['address'];
-    // Generate a random unique user ID
-    $user_id = mt_rand(100000, 999999);;
-
-    // Prepare SQL statement
-    $sql = "INSERT INTO patients ( user_id,patient_name, gender, dob, admit_date, blood_group, disease_description, phone_number, address) 
-            VALUES ('$user_id','$patient_name', '$gender', '$dob', '$admit_date', '$blood_group', '$disease_description', '$phone_number', '$address')";
-
-    // Execute the query
-    if ($conn->query($sql) === TRUE) {
-        echo "Patient admitted successfully! your patient id is:$user_id";
+    $patient_name = mysqli_real_escape_string($conn, $_POST['patient_name']);
+    $gender = mysqli_real_escape_string($conn, $_POST['gender']);
+    $dob = mysqli_real_escape_string($conn, $_POST['dob']);
+    $admit_date = mysqli_real_escape_string($conn, $_POST['admit_date']);
+    $blood_group = mysqli_real_escape_string($conn, $_POST['blood_group']);
+    $disease_description = mysqli_real_escape_string($conn, $_POST['disease']);
+    $phone_number = mysqli_real_escape_string($conn, $_POST['phno']);
+    $address = mysqli_real_escape_string($conn, $_POST['address']);
+    
+    // Split patient name into first and last name
+    $name_parts = explode(' ', $patient_name, 2);
+    $first_name = $name_parts[0];
+    $last_name = isset($name_parts[1]) ? $name_parts[1] : '';
+    
+    // Generate a temporary email for the patient
+    $temp_email = 'patient_' . time() . '@hospilink.temp';
+    $temp_password = password_hash('temp123', PASSWORD_BCRYPT);
+    
+    // Insert into users table as a patient
+    $stmt = $conn->prepare("INSERT INTO users (first_name, last_name, email, password, role, phone, status) VALUES (?, ?, ?, ?, 'patient', ?, 'active')");
+    $stmt->bind_param("sssss", $first_name, $last_name, $temp_email, $temp_password, $phone_number);
+    
+    if ($stmt->execute()) {
+        $user_id = $stmt->insert_id;
+        
+        // Create medical history entry for admission
+        $history_stmt = $conn->prepare("INSERT INTO medical_history (patient_id, diagnosis, treatment, visit_date, notes) VALUES (?, ?, ?, ?, ?)");
+        $diagnosis = "Patient admitted with: " . $disease_description;
+        $treatment = "Under observation";
+        $visit_date = date('Y-m-d');
+        $notes = "DOB: $dob, Blood Group: $blood_group, Address: $address";
+        
+        $history_stmt->bind_param("issss", $user_id, $diagnosis, $treatment, $visit_date, $notes);
+        $history_stmt->execute();
+        $history_stmt->close();
+        
+        echo "<script>alert('Patient admitted successfully! Patient ID: $user_id'); window.location.href='../admit.html';</script>";
     } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+        echo "<script>alert('Error admitting patient: " . $conn->error . "'); window.location.href='../admit.html';</script>";
     }
-
-    // Close the database connection
+    
+    $stmt->close();
     $conn->close();
 }
 ?>

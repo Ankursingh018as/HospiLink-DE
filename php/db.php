@@ -1,13 +1,13 @@
 <!-- db.php -->
 <?php
-// Start session if not already started
-if (session_status() === PHP_SESSION_NONE) {
+// Start session if not already started and not running from command line
+if (session_status() === PHP_SESSION_NONE && php_sapi_name() !== 'cli') {
     session_start();
 }
 
 $servername = "localhost";
 $username = "root";  // Default username for XAMPP/WAMP
-$password = "8511";      // Default password for XAMPP/WAMP
+$password = "";      // No password for XAMPP default installation
 $dbname = "hospilink"; // Updated database name
 
 // Create connection

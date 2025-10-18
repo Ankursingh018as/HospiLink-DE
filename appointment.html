@@ -8,7 +8,7 @@
     <!-- <link
     href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css"
     rel="stylesheet"/> -->
-    <link rel="icon" href="hosp_favicon.png" type="image/png">
+    <link rel="icon" href="images/hosp_favicon.png" type="image/png">
 </head>
 <body>
    <div class="main">
@@ -18,9 +18,8 @@
             <h4><a href="index.html"><abbr title="Home">Home</abbr></a></h4>
             <h4><a href="appointment.html"><abbr title="Book Appointment">Book Appointment</abbr></a></h4>
             <h4><a href="beds.html"><abbr title="Beds Availability">Beds</abbr></a></h4>
-            <h4><a href="admit.html"><abbr title="Admit Patient"> Admit Patient</abbr></a></h4>
-            <h4><a href="contact.html"><abbr title="Contact Us">Contact Us</abbr></a></h4>
-            <button><a href="sign.html"><abbr title="Sign In">Sign In</abbr></a></button>
+            <h4><a href="admit.html"><abbr title="Admit Patient">Admit Patient</abbr></a></h4>
+            <button><a href="sign_new.html"><abbr title="Sign In">Sign In</abbr></a></button>
             <i class="ri-menu-3-line"></i>
          </div>
       </div>
@@ -55,7 +54,7 @@
             <small style="color: #666; font-size: 12px;">💡 Our AI will analyze your symptoms to prioritize your appointment</small>
 
             <label for="date">Preferred Appointment Date</label>
-            <input type="date" id="date" name="date" required min="<?php echo date('Y-m-d'); ?>">
+            <input type="date" id="date" name="date" required>
 
             <label for="time">Preferred Appointment Time</label>
             <input type="time" id="time" name="time" required>
@@ -74,13 +73,15 @@
             <button type="submit">Book Appointment with AI Priority</button>
         </form>
     </div>
-</body>
-</html>
-
         </div>
          <div class="right">
             <img src="images/appointment.png" alt="Image">
          </div>
     </div>
+
+    <script>
+        // Set minimum date to today
+        document.getElementById('date').min = new Date().toISOString().split('T')[0];
+    </script>
 </body>
 </html>
