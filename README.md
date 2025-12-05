@@ -1,4 +1,4 @@
-# 🏥 HospiLink - AI-Powered Hospital Management System
+# HospiLink - AI-Powered Hospital Management System
 
 > **Revolutionizing Healthcare Connectivity Through Intelligent Technology**
 
