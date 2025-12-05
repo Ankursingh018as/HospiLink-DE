@@ -39,11 +39,16 @@ h4 a{
 
 h4 a:hover{
     color: #00adb5;
+    text-decoration: none;
 }
 
 a{
     text-decoration: none;
     color: white;
+}
+
+a:hover{
+    text-decoration: none;
 }
 
 .main{
@@ -75,6 +80,16 @@ a{
 
 .nav button:hover{
     background-color: #0e545f;
+}
+
+.nav button a{
+    color: #fff !important;
+    text-decoration: none;
+}
+
+.nav button:hover a{
+    color: #fff !important;
+    text-decoration: none;
 }
 
 .nav i{
@@ -112,15 +127,23 @@ a{
     padding: 5vw 5vw;
 }
 .left h1{
-    font-size: 3.5vw;
-    line-height: 4.4vw;
+    font-size: 2.8vw;
+    line-height: 3.5vw;
 }
 .left h1 span{
     color: #00adb5;
 }
+.left h2{
+    font-size: 18px;
+    font-weight: 500;
+    color: #0e545f;
+    line-height: 1.7;
+    width: 80%;
+    margin: 0;
+}
 .left p{
-    font-size: 1.3vw;
-    font-weight: 600;
+    font-size: 16px;
+    font-weight: 500;
     color: black;
     width: 80%;
     margin-top: 1.5vw;
@@ -147,6 +170,16 @@ a{
 
 .content button:hover{
     background-color: #0e545f;
+}
+
+.content button a{
+    color: #fff !important;
+    text-decoration: none;
+}
+
+.content button:hover a{
+    color: #fff !important;
+    text-decoration: none;
 }
 
 
@@ -217,12 +250,17 @@ a{
 
 
 /* our services */
+.osection{
+    padding: 80px 20px 60px;
+    margin-top: 60px;
+}
 .osection span{
       color: #00adb5;
 }
 .osection h1{
     text-align: center;
-    font-size: xx-large;
+    font-size: 36px;
+    margin-bottom: 50px;
 }
 .services-section {
     padding: 50px;
@@ -247,7 +285,7 @@ a{
 .service-box {
 
     background-color: #fff;
-    padding: 20px;
+    padding: 30px 20px;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     flex: 1 1 calc(25% - 20px);
@@ -256,14 +294,16 @@ a{
 }
 
 .service-box h3 {
-    font-size: 20px;
+    font-size: 18px;
     color: #00adb5;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
+    font-weight: 600;
 }
 
 .service-box p {
     font-size: 14px;
-    color: #000000;
+    color: #495057;
+    line-height: 1.6;
 }
 
 .service-box:hover {
@@ -271,8 +311,10 @@ a{
 }
 
 .service-box img{
-    height: 60%;
-    width:  50%;
+    height: 120px;
+    width: 120px;
+    object-fit: contain;
+    margin-bottom: 15px;
 }
 
 .services-container h3 a{
