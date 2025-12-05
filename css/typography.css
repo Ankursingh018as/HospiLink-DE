@@ -1,0 +1,390 @@
+/* ========================================
+   HOSPILINK TYPOGRAPHY SYSTEM
+   Modern Healthcare UI - Inter + Poppins
+   ======================================== */
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap');
+
+/* ========================================
+   CSS CUSTOM PROPERTIES (Variables)
+   ======================================== */
+
+:root {
+  /* Font Families */
+  --font-heading: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Font Sizes - 1.25× Scale */
+  --text-xs: 0.75rem;      /* 12px - Captions, tiny labels */
+  --text-sm: 0.875rem;     /* 14px - Small text, secondary info */
+  --text-base: 1rem;       /* 16px - Body text, paragraphs */
+  --text-lg: 1.125rem;     /* 18px - Large body text */
+  --text-xl: 1.25rem;      /* 20px - H4, subheadings */
+  --text-2xl: 1.563rem;    /* 25px - H3 */
+  --text-3xl: 1.953rem;    /* 31px - H2 */
+  --text-4xl: 2.441rem;    /* 39px - H1 */
+  --text-5xl: 3.052rem;    /* 49px - Hero titles */
+
+  /* Font Weights */
+  --weight-normal: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* Line Heights */
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose: 1.75;
+
+  /* Letter Spacing */
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.025em;
+
+  /* Text Colors */
+  --color-text-primary: #1a202c;
+  --color-text-secondary: #4a5568;
+  --color-text-muted: #718096;
+  --color-text-inverse: #ffffff;
+  --color-text-brand: #0e545f;
+  --color-text-accent: #00adb5;
+}
+
+/* ========================================
+   GLOBAL RESET & BASE STYLES
+   ======================================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px; /* Base 16px for accessibility */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: var(--weight-normal);
+  line-height: var(--leading-relaxed);
+  color: var(--color-text-primary);
+  background-color: #ffffff;
+}
+
+/* ========================================
+   HEADINGS - Poppins Font
+   ======================================== */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-tight);
+  color: var(--color-text-brand);
+  margin-bottom: 0.75em;
+  letter-spacing: var(--tracking-tight);
+}
+
+h1 {
+  font-size: var(--text-4xl);
+  font-weight: var(--weight-bold);
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-bold);
+}
+
+h3 {
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-semibold);
+}
+
+h4 {
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semibold);
+}
+
+h5 {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-medium);
+}
+
+h6 {
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+}
+
+/* ========================================
+   BODY TEXT - Inter Font
+   ======================================== */
+
+p {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: var(--weight-normal);
+  line-height: var(--leading-relaxed);
+  color: var(--color-text-secondary);
+  margin-bottom: 1em;
+}
+
+/* Large body text for introductions */
+.text-large {
+  font-size: var(--text-lg);
+  line-height: var(--leading-relaxed);
+}
+
+/* Small text for secondary content */
+.text-small {
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  color: var(--color-text-muted);
+}
+
+/* Extra small text for captions */
+.text-caption {
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
+  color: var(--color-text-muted);
+  font-weight: var(--weight-medium);
+}
+
+/* ========================================
+   LINKS
+   ======================================== */
+
+a {
+  color: var(--color-text-accent);
+  text-decoration: none;
+  font-weight: var(--weight-medium);
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--color-text-brand);
+  text-decoration: underline;
+}
+
+a:focus {
+  outline: 2px solid var(--color-text-accent);
+  outline-offset: 2px;
+}
+
+/* ========================================
+   FORM ELEMENTS
+   ======================================== */
+
+label {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-brand);
+  display: block;
+  margin-bottom: 0.5em;
+  letter-spacing: var(--tracking-normal);
+}
+
+input,
+textarea,
+select {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: var(--weight-normal);
+  line-height: var(--leading-normal);
+  color: var(--color-text-primary);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-text-muted);
+  font-weight: var(--weight-normal);
+}
+
+/* ========================================
+   BUTTONS
+   ======================================== */
+
+button,
+.btn {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-normal);
+  letter-spacing: var(--tracking-normal);
+  text-transform: none;
+}
+
+button:disabled,
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ========================================
+   LISTS
+   ======================================== */
+
+ul, ol {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--color-text-secondary);
+  margin-bottom: 1em;
+  padding-left: 1.5em;
+}
+
+li {
+  margin-bottom: 0.5em;
+}
+
+/* ========================================
+   TABLES (for dashboards & data)
+   ======================================== */
+
+table {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-brand);
+  background-color: #f7fafc;
+}
+
+th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+td {
+  padding: 0.75rem 1rem;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-normal);
+  color: var(--color-text-secondary);
+  border-top: 1px solid #e2e8f0;
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+.font-heading {
+  font-family: var(--font-heading);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+.text-brand {
+  color: var(--color-text-brand);
+}
+
+.text-accent {
+  color: var(--color-text-accent);
+}
+
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.font-normal {
+  font-weight: var(--weight-normal);
+}
+
+.font-medium {
+  font-weight: var(--weight-medium);
+}
+
+.font-semibold {
+  font-weight: var(--weight-semibold);
+}
+
+.font-bold {
+  font-weight: var(--weight-bold);
+}
+
+/* ========================================
+   RESPONSIVE TYPOGRAPHY
+   ======================================== */
+
+@media (max-width: 768px) {
+  :root {
+    --text-4xl: 2rem;      /* 32px */
+    --text-3xl: 1.75rem;   /* 28px */
+    --text-2xl: 1.5rem;    /* 24px */
+  }
+  
+  html {
+    font-size: 15px; /* Slightly smaller on mobile */
+  }
+  
+  h1 {
+    margin-bottom: 0.5em;
+  }
+  
+  p {
+    line-height: var(--leading-loose);
+  }
+}
+
+@media (max-width: 480px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+/* ========================================
+   ACCESSIBILITY
+   ======================================== */
+
+/* Focus visible for keyboard navigation */
+*:focus-visible {
+  outline: 2px solid var(--color-text-accent);
+  outline-offset: 3px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --color-text-primary: #000000;
+    --color-text-secondary: #1a1a1a;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
