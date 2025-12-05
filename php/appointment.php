@@ -1,7 +1,13 @@
-<!-- book_appointment.php -->
 <?php
 include 'db.php';
 include 'symptom_analyzer.php';
+include 'email_service.php'; // Include email service
+
+// Redirect if not a POST request
+if ($_SERVER["REQUEST_METHOD"] != "POST") {
+    header("Location: ../appointment.html");
+    exit();
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get patient ID from session if logged in
@@ -73,6 +79,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($sql->execute()) {
         $appointment_id = $sql->insert_id;
         
+        // Get doctor name if assigned
+        $doctor_name = 'To be assigned';
+        if ($doctor_id) {
+            $doctorQuery = $conn->prepare("SELECT CONCAT(first_name, ' ', last_name) as name, specialization FROM users WHERE user_id = ?");
+            $doctorQuery->bind_param("i", $doctor_id);
+            $doctorQuery->execute();
+            $doctorResult = $doctorQuery->get_result();
+            if ($doctorResult->num_rows > 0) {
+                $doctorRow = $doctorResult->fetch_assoc();
+                $doctor_name = $doctorRow['name'] . ' - ' . $doctorRow['specialization'];
+            }
+            $doctorQuery->close();
+        }
+        
+        // Prepare email data
+        $emailData = [
+            'appointment_id' => $appointment_id,
+            'full_name' => $name,
+            'email' => $email,
+            'appointment_date' => $date,
+            'appointment_time' => $time,
+            'symptoms' => $symptoms,
+            'priority_level' => $priorityLevel,
+            'priority_score' => $priorityScore,
+            'doctor_name' => $doctor_name
+        ];
+        
+        // Send email confirmation
+        $emailSent = EmailService::sendAppointmentConfirmation($emailData);
+        
         // Get suggestions
         $suggestions = $analyzer->getAppointmentSuggestions($priorityLevel);
         
@@ -85,16 +121,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $message .= "🔍 AI Analysis:\n" . $analysisMessage . "\n\n";
         $message .= "⏱️ Expected Wait Time: " . $suggestions['wait_time'] . "\n\n";
         
+        if ($emailSent) {
+            $message .= "📧 Confirmation email sent to: " . $email . "\n\n";
+        } else {
+            $message .= "⚠️ Note: Email confirmation could not be sent.\n\n";
+        }
+        
         if ($priorityLevel === 'critical') {
             $message .= "🚨 URGENT: Please proceed to the emergency department immediately or call emergency services if symptoms worsen!";
         } elseif ($priorityLevel === 'high') {
             $message .= "⚡ Your appointment has been marked as high priority. A doctor will contact you soon.";
         }
         
-        echo "<script>
-            alert('" . addslashes($message) . "');
-            window.location.href='../appointment_success.php?id=" . $appointment_id . "';
-        </script>";
+        // Redirect to success page
+        header("Location: ../appointment_success.php?id=" . $appointment_id);
+        exit();
         
     } else {
         echo "<script>

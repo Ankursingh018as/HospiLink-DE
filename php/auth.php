@@ -2,6 +2,12 @@
 // Authentication handler for HospiLink
 include 'db.php';
 
+// Redirect if accessed directly (not via POST)
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header("Location: ../sign_new.html");
+    exit();
+}
+
 // Function to log activity
 function logActivity($conn, $user_id, $action, $details = null) {
     $ip_address = $_SERVER['REMOTE_ADDR'];

@@ -3,19 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload Patient Report</title>
-    <link rel="stylesheet" href="css/beds.css">
+    <title>Beds Availability</title>
+    <link rel="stylesheet" href="css/style.css?v=2">
+    <link rel="stylesheet" href="css/beds.css?v=2">
+    <link
+    href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css"
+    rel="stylesheet"/>
+    <link rel="icon" href="images/hosp_favicon.png" type="image/png">
 </head>
 <body>
 
     <div class="main">
         <div class="nav">
-            <a href=index.html> <img src="images/logo.png" alt=""> </a>
+            <a href="index.html"> <img src="images/logo.png" alt=""> </a>
            <div class="nav-part2">
             <h4><a href="index.html"><abbr title="Home">Home</abbr></a></h4>
             <h4><a href="appointment.html"><abbr title="Book Appointment">Book Appointment</abbr></a></h4>
             <h4><a href="beds.html"><abbr title="Beds Availability">Beds</abbr></a></h4>
-            <h4><a href="admit.html"><abbr title="Admit Patient"> Admit Patient</abbr></a></h4>
+            <h4><a href="admit.html"><abbr title="Admit Patient">Admit Patient</abbr></a></h4>
             <h4><a href="contact.html"><abbr title="Contact Us">Contact Us</abbr></a></h4>
             <button><a href="sign_new.html"><abbr title="Sign In">Sign In</abbr></a></button>
               <i class="ri-menu-3-line"></i>
@@ -24,35 +29,102 @@
 
        <!-- Beds -->
        <section id="beds" class="beds">
-       <br><h1>Real-time<span> Beds Availability !</span></h1><br><br>
+       <h1>Real-time<span> Beds Availability</span></h1>
         <div class="beds-container">
-           <div class="beds-box">
-             <div class="bg">
-                <h1>Total Wards</h1>
-                <h3>20</h3>
-             </div>  
+           <div class="beds-box stat-card">
+                <i class="ri-hospital-line stat-icon"></i>
+                <h2>Total Wards</h2>
+                <h3 class="stat-number">20</h3>
            </div>
 
-           <div class="beds-box">
-               <div class="bg1"> 
-                <h1>Total Beds</h1>
-                <h3>127</h3>
-               </div>
-               
+           <div class="beds-box stat-card">
+                <i class="ri-hotel-bed-line stat-icon"></i>
+                <h2>Total Beds</h2>
+                <h3 class="stat-number">127</h3>
            </div>
-           <div class="beds-box">
-                <h1>Ward Wise Beds-Availibilty</h1>
-                <h3>General Ward</h3>
-                <h3>Emergency Ward</h3>
-                <h3>Intensive Care Unit (ICU)</h3>
-                <h3>Neonatal Intensive Care Unit (NICU)</h3> <br>
-               <button><a href="show.html">Show More</a></button>
+
+           <div class="beds-box stat-card">
+                <i class="ri-check-line stat-icon"></i>
+                <h2>Available Beds</h2>
+                <h3 class="stat-number">45</h3>
            </div>
-           <div class="beds-box">
-               <button><a href="appointment.html">Book Appointment</a></button><br><br>
-               <button><a href="admit.html">Admit Patient</a></button><br><br>
-               <button><a href="contact.html">Contact Us</a></button>
+
+           <div class="beds-box stat-card">
+                <i class="ri-time-line stat-icon"></i>
+                <h2>Occupied Beds</h2>
+                <h3 class="stat-number">82</h3>
            </div>
+       </div>
+
+       <div class="ward-section">
+            <h2>Ward-wise Availability</h2>
+            <div class="ward-grid">
+                <div class="ward-card">
+                    <h3>General Ward</h3>
+                    <div class="bed-stats">
+                        <span class="available">12 Available</span>
+                        <span class="total">/ 30 Total</span>
+                    </div>
+                </div>
+
+                <div class="ward-card">
+                    <h3>Emergency Ward</h3>
+                    <div class="bed-stats">
+                        <span class="available">8 Available</span>
+                        <span class="total">/ 20 Total</span>
+                    </div>
+                </div>
+
+                <div class="ward-card">
+                    <h3>Intensive Care Unit (ICU)</h3>
+                    <div class="bed-stats">
+                        <span class="available">3 Available</span>
+                        <span class="total">/ 15 Total</span>
+                    </div>
+                </div>
+
+                <div class="ward-card">
+                    <h3>Neonatal ICU (NICU)</h3>
+                    <div class="bed-stats">
+                        <span class="available">5 Available</span>
+                        <span class="total">/ 12 Total</span>
+                    </div>
+                </div>
+
+                <div class="ward-card">
+                    <h3>Pediatric Ward</h3>
+                    <div class="bed-stats">
+                        <span class="available">7 Available</span>
+                        <span class="total">/ 18 Total</span>
+                    </div>
+                </div>
+
+                <div class="ward-card">
+                    <h3>Maternity Ward</h3>
+                    <div class="bed-stats">
+                        <span class="available">10 Available</span>
+                        <span class="total">/ 22 Total</span>
+                    </div>
+                </div>
+            </div>
+       </div>
+
+       <div class="action-section">
+            <h2>Quick Actions</h2>
+            <div class="action-buttons">
+                <a href="appointment.html" class="action-btn">
+                    <i class="ri-calendar-line"></i>
+                    <span>Book Appointment</span>
+                </a>
+                <a href="admit.html" class="action-btn">
+                    <i class="ri-hospital-line"></i>
+                    <span>Admit Patient</span>
+                </a>
+                <a href="contact.html" class="action-btn">
+                    <i class="ri-phone-line"></i>
+                    <span>Contact Us</span>
+                </a>
+            </div>
        </div>
     </section>
 
