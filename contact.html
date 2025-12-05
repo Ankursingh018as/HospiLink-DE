@@ -4,7 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us</title>
-    <link rel="stylesheet" href="css/contact.css">
+    <link rel="stylesheet" href="css/style.css?v=2">
+    <link rel="stylesheet" href="css/contact.css?v=2">
+    <link
+    href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css"
+    rel="stylesheet"/>
     <link rel="icon" href="images/hosp_favicon.png" type="image/png">
 </head>
 <body>
@@ -27,43 +31,46 @@
         <h2>Contact Us</h2>
         <br>
         <form action="https://formsubmit.co/el/yeliyo" method="post">
-            <div class="form-group">
-                <label for="name">Your Name</label>
-                <input type="text" id="name" name="name" required>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="name">Your Name</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Your Email</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="email">Your Email</label>
-                <input type="email" id="email" name="email" required>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="Speciality">Select Speciality</label>
+                    <select id="Speciality" name="Speciality" required>
+                        <option value="Select Speciality" disabled selected>Select Speciality</option>
+                        <option value="Spine Surgery">Spine Surgery</option>
+                        <option value="Nephrology">Nephrology</option>
+                        <option value="Radiology">Radiology</option>
+                        <option value="Pathology">Pathology</option>
+                        <option value="Dietician">Dietician</option>
+                        <option value="Physiotherapy">Physiotherapy</option>
+                        <option value="Orthopaedics">Orthopaedics</option>
+                    </select>
+                </div>  
+
+                <div class="form-group">
+                    <label for="Select Doctor">Select Doctor</label>
+                    <select id="Select Doctor" name="Select Doctor" required>
+                        <option value="" disabled selected>Select Doctor</option>
+                        <option value="Dr. Patel">Dr. Patel</option>
+                        <option value="Dr. HM Shah">Dr. HM Shah</option>
+                        <option value="Dr. poonawala">Dr. poonawala</option>
+                    </select>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="Speciality">Select Speciality:</label>
-                <select id="Speciality" name="Speciality" required>
-                    <option value="Select Speciality" disabled selected>Select Speciality</option>
-                    <option value="Spine Surgery">Spine Surgery</option>
-                    <option value="Nephrology">Nephrology</option>
-                    <option value="Radiology">Radiology</option>
-                    <option value="Pathology">Pathology</option>
-                    <option value="Dietician">Dietician</option>
-                    <option value="Physiotherapy">Physiotherapy</option>
-                    <option value="Orthopaedics">Orthopaedics</option>
-                </select>
-            </div>  
-
-            <div class="">
-                <label for="Select Doctor">Select Doctor</label>
-                <select id="Select Doctor" name="Select Doctor" required>
-                    <option value="" disabled selected>Select Doctor</option>
-                    <option value="Dr. Patel">Dr. Patel</option>
-                    <option value="Dr. HM Shah">Dr. HM Shah</option>
-                    <option value="Dr. poonawala">Dr. poonawala</option>
-                </select>
-            </div>  
-            
-
-            <div class="form-group" style="margin-top: 15px;">
+            <div class="form-group full-width">
                 <label for="message">Your Message</label>
-                <textarea id="message" name="message" required></textarea>
+                <textarea id="message" name="message" placeholder="Write your message here..." required></textarea>
             </div>
             <button type="submit">Send Message</button>
         </form>

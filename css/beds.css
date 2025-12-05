@@ -1,190 +1,235 @@
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* Beds CSS */
+
+body {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    min-height: 100vh;
 }
 
-html , body{
-    height: 100%;
-    width: 100%;
+.beds {
+    padding: 40px 20px 60px;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
-.nav-part2 h4 a abbr{
-    text-decoration: none;
+.beds h1 {
+    text-align: center;
+    font-size: 42px;
+    margin-bottom: 50px;
+    color: #0e545f;
+    font-weight: 700;
 }
 
-.nav-part2 button a abbr{
-    text-decoration: none;
-}
-
-.left button a abbr{
-    text-decoration: none;
-}
-
-.nav h4{
-    font-size: 17px;
-    text-transform: capitalize;
-}
-
-.nav img{
-   height: 90px;
-   padding-right: 0px;
-}
-
-h2{
-      display: flex;
-      flex-wrap: wrap;  
-}
-
-h4 a{
-    text-decoration: none;
-    color: black;
-}
-
-h4 a:hover{
+.beds span {
     color: #00adb5;
 }
 
-a{
+/* Statistics Cards */
+.beds-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+    margin-bottom: 60px;
+}
+
+.stat-card {
+    background: white;
+    padding: 35px 25px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    border-top: 5px solid #00adb5;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 50px rgba(0, 173, 181, 0.2);
+}
+
+.stat-icon {
+    font-size: 50px;
+    margin-bottom: 15px;
+    color: #00adb5;
+}
+
+.stat-card h2 {
+    font-size: 18px;
+    color: #495057;
+    margin-bottom: 15px;
+    font-weight: 600;
+    text-align: center;
+    display: block;
+    width: 100%;
+}
+
+.stat-number {
+    font-size: 48px;
+    color: #00adb5;
+    font-weight: 700;
+    margin: 0;
+    text-align: center;
+}
+
+/* Ward Section */
+.ward-section {
+    margin-bottom: 60px;
+}
+
+.ward-section h2 {
+    text-align: center;
+    font-size: 32px;
+    color: #0e545f;
+    margin-bottom: 35px;
+    font-weight: 700;
+}
+
+.ward-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.ward-card {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    border-left: 5px solid #00adb5;
+    transition: all 0.3s ease;
+}
+
+.ward-card:hover {
+    transform: translateX(5px);
+    box-shadow: 0 12px 40px rgba(0, 173, 181, 0.15);
+}
+
+.ward-card h3 {
+    font-size: 20px;
+    color: #0e545f;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.bed-stats {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-size: 16px;
+}
+
+.bed-stats .available {
+    color: #00adb5;
+    font-weight: 700;
+    font-size: 24px;
+}
+
+.bed-stats .total {
+    color: #6c757d;
+    font-size: 18px;
+}
+
+/* Action Section */
+.action-section {
+    background: white;
+    padding: 50px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    border-top: 5px solid #00adb5;
+}
+
+.action-section h2 {
+    text-align: center;
+    font-size: 32px;
+    color: #0e545f;
+    margin-bottom: 35px;
+    font-weight: 700;
+}
+
+.action-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.action-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    padding: 35px 20px;
+    background: linear-gradient(135deg, #0e545f 0%, #00adb5 100%);
+    color: white;
     text-decoration: none;
+    border-radius: 15px;
+    font-size: 18px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.action-btn span {
     color: white;
 }
 
-.main{
-    height: 100px;
-    width: 100%;
-    position: relative;
-   
+.action-btn i {
+    font-size: 40px;
+    color: white;
+    font-weight: 400;
 }
 
-.nav{
-    height: 100px;
-    width: 100%;
-    border-bottom: 2px solid #dadada;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 5vw;
+.action-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 173, 181, 0.4);
 }
 
-.nav button{
-    padding: 1.1vw 2.1vw;
-    font-size: 1.2vw;
-    background-color: #00adb5;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    font-weight: 700;
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .beds-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .ward-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
-.nav button:hover{
-    background-color: #0e545f;
-}
-
-.nav i{
-    font-weight: 600;
-    display: none;
-}
-
-.nav-part2{
-    display: flex;
-    align-items: center;
-    gap: 4vw;
-}
-
-.nav h2{
-    font-size: 2vw;
-    font-weight: 700;
-}
-
-.nav h4{
-    font-size: 17px;
-    text-transform: capitalize;
-}
-
-
-/* Beds Css */
-
-.beds span{
-    color: #00adb5;
-}
-.beds h1{
-  text-align: center;
-  font-size: xx-large;
-}
-.beds-section {
-  padding: 50px;
-  background-color: #f7f7f7;
-  text-align: center;
-}
-
-.beds-section h2 {
-  font-size: 32px;
-  margin-bottom: 30px;
-  color: #000000;
-}
-
-.beds-container {
- 
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-
-.beds-box {
-
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  flex: 1 1 calc(25% - 20px);
-  box-sizing: border-box;
-  transition: transform 0.3s ease;
-}
-
-.beds-box h1 {
-  font-size: 20px;
-  color: #00adb5;
-  margin-bottom: 15px;
-}
-
-.beds-box p {
-  font-size: 14px;
-  color: #000000;
-}
-
-.beds-box:hover {
-  transform: translateY(-5px);
-}
-
-.beds-box img{
-  height: 60%;
-  width:  50%;
-}
-
-.beds-container h1 a{
-  text-decoration: none;
-  color: #00adb5;
-}
-
-.beds-container h3{
-    text-align: center;
-}
-.beds-container button{
-    font-size:1.1rem;
-    padding:8px 0;
-    border-radius:5px;
-    outline:none;
-    border:none;
-    width:100%;
-    background: #00adb5;
-    color:white;
-    cursor:pointer;
-    transition:0.9s;
-}
-
-button:hover{
-    background-color: #0e545f;
+@media (max-width: 768px) {
+    body {
+        padding-top: 40px;
+    }
+    
+    .beds {
+        padding: 20px 15px 40px;
+    }
+    
+    .beds h1 {
+        font-size: 32px;
+        margin-bottom: 30px;
+    }
+    
+    .beds-container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+    
+    .ward-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .action-buttons {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .action-section {
+        padding: 30px 20px;
+    }
+    
+    .ward-section h2,
+    .action-section h2 {
+        font-size: 26px;
+    }
 }
 

@@ -34,6 +34,7 @@ if ($appointment_id > 0) {
     <title>Appointment Confirmed - HospiLink</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="icon" href="images/hosp_favicon.png" type="image/png">
+    <link rel="stylesheet" href="css/style.css">
     <style>
         * {
             margin: 0;
@@ -43,22 +44,21 @@ if ($appointment_id > 0) {
         }
 
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #00adb5;
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            padding: 60px 20px;
+            overflow-y: auto;
         }
 
         .success-container {
             background: white;
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            max-width: 600px;
+            max-width: 700px;
             width: 100%;
             overflow: hidden;
-            animation: slideUp 0.5s ease-out;
+            animation: slideUp 0.6s ease-out;
+            margin: 0 auto 40px;
         }
 
         @keyframes slideUp {
@@ -73,48 +73,104 @@ if ($appointment_id > 0) {
         }
 
         .success-header {
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            background: linear-gradient(135deg, #0e545f 0%, #00adb5 100%);
             color: white;
-            padding: 40px;
+            padding: 35px 40px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .success-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
         }
 
         .success-icon {
-            font-size: 80px;
-            margin-bottom: 20px;
+            font-size: 60px;
+            margin-bottom: 15px;
             animation: scaleIn 0.5s ease-out 0.3s both;
+            position: relative;
+            z-index: 1;
         }
 
         @keyframes scaleIn {
             from {
-                transform: scale(0);
+                transform: scale(0) rotate(-180deg);
             }
             to {
-                transform: scale(1);
+                transform: scale(1) rotate(0deg);
             }
         }
 
         .success-header h1 {
-            font-size: 32px;
-            margin-bottom: 10px;
+            font-size: 30px;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .success-header p {
+            font-size: 16px;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
         }
 
         .success-body {
             padding: 40px;
+            background: white;
+        }
+
+        .appointment-id {
+            text-align: center;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 2px dashed #00adb5;
+        }
+
+        .appointment-id h2 {
+            color: #0e545f;
+            font-size: 16px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .appointment-id .id-number {
+            font-size: 42px;
+            font-weight: 800;
+            color: #00adb5;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
 
         .appointment-details {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 25px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-radius: 15px;
+            padding: 30px;
             margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
         .detail-row {
             display: flex;
             justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid #e0e0e0;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #e9ecef;
         }
 
         .detail-row:last-child {
@@ -123,95 +179,121 @@ if ($appointment_id > 0) {
 
         .detail-label {
             font-weight: 600;
-            color: #666;
+            color: #495057;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            font-size: 15px;
+        }
+
+        .detail-label i {
+            color: #00adb5;
+            font-size: 18px;
+            width: 20px;
         }
 
         .detail-value {
             font-weight: 700;
-            color: #333;
+            color: #212529;
             text-align: right;
+            font-size: 16px;
         }
 
         .priority-badge {
             display: inline-block;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 12px;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 13px;
             font-weight: 700;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
 
         .priority-badge.critical {
-            background: #f44336;
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
             color: white;
         }
 
         .priority-badge.high {
-            background: #FF9800;
+            background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
             color: white;
         }
 
         .priority-badge.medium {
-            background: #FFC107;
+            background: linear-gradient(135deg, #FFC107 0%, #FFA000 100%);
             color: #333;
         }
 
         .priority-badge.low {
-            background: #4CAF50;
+            background: linear-gradient(135deg, #4CAF50 0%, #388E3C 100%);
             color: white;
         }
 
         .alert-box {
-            padding: 20px;
-            border-radius: 10px;
+            padding: 12px 15px;
+            border-radius: 8px;
             margin-bottom: 25px;
+            border-left: 4px solid;
             display: flex;
-            align-items: flex-start;
-            gap: 15px;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
         .alert-box.critical {
-            background: #ffebee;
-            border-left: 4px solid #f44336;
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            border-left-color: #f44336;
             color: #c62828;
         }
 
         .alert-box.high {
-            background: #fff3e0;
-            border-left: 4px solid #FF9800;
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-left-color: #FF9800;
             color: #e65100;
         }
 
         .alert-box.medium {
-            background: #e3f2fd;
-            border-left: 4px solid #2196F3;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-left-color: #2196F3;
             color: #1565c0;
         }
 
         .alert-box.low {
-            background: #e8f5e9;
-            border-left: 4px solid #4CAF50;
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-left-color: #4CAF50;
             color: #2e7d32;
         }
 
         .alert-box i {
-            font-size: 24px;
-            margin-top: 3px;
+            font-size: 20px;
+            flex-shrink: 0;
         }
 
         .next-steps {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 25px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border-radius: 15px;
+            padding: 30px;
             margin-bottom: 25px;
+            border: 2px solid #e9ecef;
         }
 
         .next-steps h3 {
-            margin-bottom: 15px;
-            color: #333;
+            margin-bottom: 20px;
+            color: #0e545f;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .next-steps h3 i {
+            color: #00adb5;
         }
 
         .next-steps ul {
@@ -220,15 +302,19 @@ if ($appointment_id > 0) {
         }
 
         .next-steps li {
-            padding: 10px 0;
+            padding: 12px 0;
             display: flex;
             align-items: flex-start;
-            gap: 10px;
+            gap: 12px;
+            font-size: 15px;
+            line-height: 1.6;
         }
 
         .next-steps li i {
-            color: #4CAF50;
+            color: #00adb5;
             margin-top: 3px;
+            font-size: 18px;
+            flex-shrink: 0;
         }
 
         .action-buttons {
@@ -236,13 +322,14 @@ if ($appointment_id > 0) {
             gap: 15px;
             justify-content: center;
             flex-wrap: wrap;
+            margin-top: 30px;
         }
 
         .btn {
-            padding: 15px 30px;
-            border-radius: 10px;
+            padding: 15px 35px;
+            border-radius: 30px;
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 700;
             display: inline-flex;
             align-items: center;
             gap: 10px;
@@ -250,22 +337,35 @@ if ($appointment_id > 0) {
             border: none;
             cursor: pointer;
             font-size: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0e545f 0%, #00adb5 100%);
             color: white;
         }
 
         .btn-secondary {
             background: white;
-            color: #667eea;
-            border: 2px solid #667eea;
+            color: #0e545f;
+            border: 2px solid #00adb5;
         }
 
         .btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 8px 25px rgba(0,173,181,0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #00adb5 0%, #0e545f 100%);
+        }
+
+        .btn-secondary:hover {
+            background: #00adb5;
+            color: white;
+            border-color: #00adb5;
         }
 
         @media (max-width: 600px) {
@@ -321,23 +421,19 @@ if ($appointment_id > 0) {
             $priorityMessages = [
                 'critical' => [
                     'icon' => 'fa-exclamation-triangle',
-                    'title' => '🚨 CRITICAL PRIORITY',
-                    'message' => 'Your symptoms indicate a medical emergency. Please proceed to the emergency department immediately or call emergency services if symptoms worsen. A doctor will contact you very soon.'
+                    'message' => 'Critical Priority - Your symptoms require immediate medical attention. Please proceed to emergency if symptoms worsen.'
                 ],
                 'high' => [
                     'icon' => 'fa-bolt',
-                    'title' => '⚡ HIGH PRIORITY',
-                    'message' => 'Your symptoms require urgent medical attention. You have been prioritized in our queue. A doctor will review your case and contact you within 24 hours.'
+                    'message' => 'High Priority - A doctor will review your case and contact you within 24 hours.'
                 ],
                 'medium' => [
                     'icon' => 'fa-info-circle',
-                    'title' => '📋 MEDIUM PRIORITY',
-                    'message' => 'Your appointment has been scheduled. Expected wait time is 3-5 days. A doctor will review your case and confirm the appointment.'
+                    'message' => 'Medium Priority - Expected wait time is 3-5 days. You will receive confirmation shortly.'
                 ],
                 'low' => [
                     'icon' => 'fa-check-circle',
-                    'title' => '✓ SCHEDULED',
-                    'message' => 'Your appointment has been scheduled for routine care. You will receive a confirmation call within 1-2 weeks.'
+                    'message' => 'Scheduled - You will receive a confirmation call within 1-2 weeks.'
                 ]
             ];
 
@@ -346,10 +442,7 @@ if ($appointment_id > 0) {
 
             <div class="alert-box <?php echo $appointment['priority_level']; ?>">
                 <i class="fas <?php echo $priorityInfo['icon']; ?>"></i>
-                <div>
-                    <strong><?php echo $priorityInfo['title']; ?></strong>
-                    <p style="margin-top: 8px;"><?php echo $priorityInfo['message']; ?></p>
-                </div>
+                <span><?php echo $priorityInfo['message']; ?></span>
             </div>
 
             <!-- Appointment Details -->
