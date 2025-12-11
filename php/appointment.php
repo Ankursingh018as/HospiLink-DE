@@ -1,7 +1,7 @@
 <?php
 include 'db.php';
 include 'symptom_analyzer.php';
-include 'email_service.php'; // Include email service
+include 'email_service_smtp.php'; // Include Gmail SMTP email service
 
 // Redirect if not a POST request
 if ($_SERVER["REQUEST_METHOD"] != "POST") {

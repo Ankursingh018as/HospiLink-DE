@@ -7,7 +7,7 @@ if (session_status() === PHP_SESSION_NONE && php_sapi_name() !== 'cli') {
 
 $servername = "localhost";
 $username = "root";  // Default username for XAMPP/WAMP
-$password = "";      // No password for XAMPP default installation
+$password = "8511";      // No password for XAMPP default installation
 $dbname = "hospilink"; // Updated database name
 
 // Create connection
