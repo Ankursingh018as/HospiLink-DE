@@ -2,7 +2,12 @@
 session_start();
 include 'php/db.php';
 
-$appointment_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+// Get appointment ID from session instead of URL
+$appointment_id = isset($_SESSION['appointment_id']) ? intval($_SESSION['appointment_id']) : 0;
+// Clear the session variable after retrieving
+if ($appointment_id > 0) {
+    unset($_SESSION['appointment_id']);
+}
 
 if ($appointment_id > 0) {
     $query = "SELECT a.*, CONCAT(u.first_name, ' ', u.last_name) as doctor_name

@@ -48,5 +48,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     $stmt->close();
     $conn->close();
+} else {
+    // Handle GET requests - redirect to admit form
+    header("Location: ../admit.html");
+    exit();
 }
 ?>

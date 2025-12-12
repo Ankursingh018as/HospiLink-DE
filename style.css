@@ -45,7 +45,6 @@ h4 a{
 
 h4 a:hover{
     color: #00adb5;
-    text-decoration: none;
 }
 
 a{
@@ -53,19 +52,10 @@ a{
     color: white;
 }
 
-a:hover{
-    text-decoration: none;
-}
-
 a:focus,
 a:active {
     outline: none !important;
     box-shadow: none !important;
-}
-
-h4:focus,
-h4:active {
-    outline: none !important;
 }
 
 .main{
@@ -106,16 +96,6 @@ h4:active {
     box-shadow: none !important;
 }
 
-.nav button a{
-    color: #fff !important;
-    text-decoration: none;
-}
-
-.nav button:hover a{
-    color: #fff !important;
-    text-decoration: none;
-}
-
 .nav i{
     font-weight: 600;
     display: none;
@@ -151,23 +131,15 @@ h4:active {
     padding: 5vw 5vw;
 }
 .left h1{
-    font-size: 2.8vw;
-    line-height: 3.5vw;
+    font-size: 3.5vw;
+    line-height: 4.4vw;
 }
 .left h1 span{
     color: #00adb5;
 }
-.left h2{
-    font-size: 18px;
-    font-weight: 500;
-    color: #0e545f;
-    line-height: 1.7;
-    width: 80%;
-    margin: 0;
-}
 .left p{
-    font-size: 16px;
-    font-weight: 500;
+    font-size: 1.3vw;
+    font-weight: 600;
     color: black;
     width: 80%;
     margin-top: 1.5vw;
@@ -194,16 +166,6 @@ h4:active {
 
 .content button:hover{
     background-color: #0e545f;
-}
-
-.content button a{
-    color: #fff !important;
-    text-decoration: none;
-}
-
-.content button:hover a{
-    color: #fff !important;
-    text-decoration: none;
 }
 
 
@@ -274,17 +236,12 @@ h4:active {
 
 
 /* our services */
-.osection{
-    padding: 80px 20px 60px;
-    margin-top: 60px;
-}
 .osection span{
       color: #00adb5;
 }
 .osection h1{
     text-align: center;
-    font-size: 36px;
-    margin-bottom: 50px;
+    font-size: xx-large;
 }
 .services-section {
     padding: 50px;
@@ -309,7 +266,7 @@ h4:active {
 .service-box {
 
     background-color: #fff;
-    padding: 30px 20px;
+    padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     flex: 1 1 calc(25% - 20px);
@@ -318,16 +275,14 @@ h4:active {
 }
 
 .service-box h3 {
-    font-size: 18px;
+    font-size: 20px;
     color: #00adb5;
-    margin-bottom: 12px;
-    font-weight: 600;
+    margin-bottom: 15px;
 }
 
 .service-box p {
     font-size: 14px;
-    color: #495057;
-    line-height: 1.6;
+    color: #000000;
 }
 
 .service-box:hover {
@@ -335,10 +290,8 @@ h4:active {
 }
 
 .service-box img{
-    height: 120px;
-    width: 120px;
-    object-fit: contain;
-    margin-bottom: 15px;
+    height: 60%;
+    width:  50%;
 }
 
 .services-container h3 a{
@@ -431,7 +384,6 @@ h4:active {
     margin: 8px 0;
     font-size: 0.95rem;
     font-weight: 400;
-    color: #ffffff;
 }
 
 .footer-box h3 a {
@@ -440,12 +392,24 @@ h4:active {
     transition: all 0.3s ease;
     display: inline-block;
     position: relative;
-    padding-left: 0;
+    padding-left: 20px;
+}
+
+.footer-box h3 a::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: #00adb5;
+    transition: transform 0.3s ease;
 }
 
 .footer-box h3 a:hover {
     color: #00d4ff;
-    padding-left: 0;
+    padding-left: 25px;
+}
+
+.footer-box h3 a:hover::before {
+    transform: translateX(5px);
 }
 
 .footer-box h1 a{
@@ -459,10 +423,9 @@ h4:active {
 }
 
 .footer-box p {
-    color: #ffffff;
+    color: rgba(255, 255, 255, 0.9);
     line-height: 1.8;
     font-size: 0.95rem;
-    margin: 8px 0;
 }
 
 /* Footer Copyright */

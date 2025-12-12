@@ -2,7 +2,19 @@
 // Authentication handler for HospiLink
 include 'db.php';
 
-// Redirect if accessed directly (not via POST)
+// Handle Logout via GET
+if (isset($_GET['logout'])) {
+    if (isset($_SESSION['user_id'])) {
+        logActivity($conn, $_SESSION['user_id'], "User Logout", "Logged out");
+    }
+    
+    session_unset();
+    session_destroy();
+    header("Location: ../sign_new.html");
+    exit();
+}
+
+// Redirect if not a POST request (except for logout)
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header("Location: ../sign_new.html");
     exit();
@@ -134,18 +146,6 @@ if (isset($_POST['signIn'])) {
     }
     
     $stmt->close();
-}
-
-// Handle Logout
-if (isset($_GET['logout'])) {
-    if (isset($_SESSION['user_id'])) {
-        logActivity($conn, $_SESSION['user_id'], "User Logout", "Logged out");
-    }
-    
-    session_unset();
-    session_destroy();
-    header("Location: ../sign_new.html");
-    exit();
 }
 
 $conn->close();
