@@ -517,17 +517,48 @@ if ($appointment_id > 0) {
                     </li>
                     <li>
                         <i class="fas fa-check-circle"></i>
-                        <span>A doctor will review your case based on urgency</span>
+                        <span>A confirmation email with calendar invite has been sent to <?php echo htmlspecialchars($appointment['email']); ?></span>
                     </li>
                     <li>
                         <i class="fas fa-check-circle"></i>
-                        <span>You will receive a confirmation email/call shortly</span>
+                        <span>A doctor will review your case based on urgency</span>
                     </li>
                     <li>
                         <i class="fas fa-check-circle"></i>
                         <span>Track your appointment status in your patient dashboard</span>
                     </li>
                 </ul>
+            </div>
+
+            <!-- Calendar Notice -->
+            <div style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border-left: 4px solid #2196F3; padding: 20px; border-radius: 8px; margin: 25px 0;">
+                <div style="display: flex; align-items: flex-start; gap: 15px;">
+                    <i class="fas fa-calendar-plus" style="font-size: 28px; color: #2196F3; margin-top: 2px;"></i>
+                    <div>
+                        <h4 style="color: #1976D2; margin: 0 0 10px 0; font-size: 16px;">📅 Add to Your Calendar</h4>
+                        <p style="color: #555; margin: 0; line-height: 1.6;">
+                            Check your email for a calendar invite (.ics file) that you can add to:
+                        </p>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px;">
+                            <span style="background: white; padding: 6px 12px; border-radius: 15px; font-size: 13px; color: #666;">
+                                📅 Google Calendar
+                            </span>
+                            <span style="background: white; padding: 6px 12px; border-radius: 15px; font-size: 13px; color: #666;">
+                                📧 Outlook
+                            </span>
+                            <span style="background: white; padding: 6px 12px; border-radius: 15px; font-size: 13px; color: #666;">
+                                🍎 Apple Calendar
+                            </span>
+                            <span style="background: white; padding: 6px 12px; border-radius: 15px; font-size: 13px; color: #666;">
+                                ⚡ & More
+                            </span>
+                        </div>
+                        <p style="color: #555; margin: 12px 0 0 0; font-size: 13px;">
+                            <i class="fas fa-bell" style="color: #FF9800;"></i> 
+                            <strong>Automatic reminders</strong> will be set for 24 hours and 2 hours before your appointment.
+                        </p>
+                    </div>
+                </div>
             </div>
 
             <!-- Action Buttons -->
