@@ -8,6 +8,7 @@
  */
 
 require_once 'email_config.php';
+require_once 'calendar_helper.php';
 
 class EmailService {
     
@@ -29,14 +30,18 @@ class EmailService {
         // Create email body
         $message = self::createEmailTemplate($appointmentData);
         
-        // Send via SMTP
-        return $emailService->sendEmailViaSMTP($to, $subject, $message);
+        // Generate calendar ICS file
+        $icsContent = CalendarHelper::generateICS($appointmentData);
+        $icsFilename = CalendarHelper::getICSFilename($appointmentData['appointment_id']);
+        
+        // Send via SMTP with calendar attachment
+        return $emailService->sendEmailViaSMTP($to, $subject, $message, $icsContent, $icsFilename);
     }
     
     /**
      * Send email via Gmail SMTP
      */
-    private function sendEmailViaSMTP($to, $subject, $body) {
+    private function sendEmailViaSMTP($to, $subject, $body, $icsContent = null, $icsFilename = null) {
         try {
             // Connect to Gmail SMTP server (without TLS prefix for port 587)
             $this->connection = fsockopen(
@@ -88,9 +93,17 @@ class EmailService {
             $this->sendCommand("DATA");
             
             // Send headers and body
-            $emailHeaders = $this->buildEmailHeaders($to, $subject);
-            fwrite($this->connection, $emailHeaders . "\r\n\r\n");
-            fwrite($this->connection, $body . "\r\n");
+            if ($icsContent && $icsFilename) {
+                // Send multipart email with calendar attachment
+                $emailContent = $this->buildMultipartEmail($to, $subject, $body, $icsContent, $icsFilename);
+                fwrite($this->connection, $emailContent);
+            } else {
+                // Send simple HTML email
+                $emailHeaders = $this->buildEmailHeaders($to, $subject);
+                fwrite($this->connection, $emailHeaders . "\r\n\r\n");
+                fwrite($this->connection, $body . "\r\n");
+            }
+            
             fwrite($this->connection, ".\r\n");
             
             $this->readResponse();
@@ -142,6 +155,44 @@ class EmailService {
         $headers .= "Reply-To: " . SMTP_FROM_EMAIL . "\r\n";
         
         return $headers;
+    }
+    
+    /**
+     * Build multipart email with calendar attachment
+     */
+    private function buildMultipartEmail($to, $subject, $htmlBody, $icsContent, $icsFilename) {
+        $boundary = md5(time());
+        
+        // Headers
+        $headers = "From: " . SMTP_FROM_NAME . " <" . SMTP_FROM_EMAIL . ">\r\n";
+        $headers .= "To: " . $to . "\r\n";
+        $headers .= "Subject: " . $subject . "\r\n";
+        $headers .= "MIME-Version: 1.0\r\n";
+        $headers .= "Content-Type: multipart/mixed; boundary=\"" . $boundary . "\"\r\n";
+        $headers .= "X-Mailer: HospiLink SMTP Service\r\n";
+        $headers .= "Reply-To: " . SMTP_FROM_EMAIL . "\r\n";
+        
+        // Start email body
+        $email = $headers . "\r\n";
+        $email .= "This is a multi-part message in MIME format.\r\n\r\n";
+        
+        // HTML part
+        $email .= "--" . $boundary . "\r\n";
+        $email .= "Content-Type: text/html; charset=UTF-8\r\n";
+        $email .= "Content-Transfer-Encoding: 8bit\r\n\r\n";
+        $email .= $htmlBody . "\r\n\r\n";
+        
+        // Calendar attachment (.ics file)
+        $email .= "--" . $boundary . "\r\n";
+        $email .= "Content-Type: text/calendar; charset=UTF-8; method=REQUEST; name=\"" . $icsFilename . "\"\r\n";
+        $email .= "Content-Transfer-Encoding: base64\r\n";
+        $email .= "Content-Disposition: attachment; filename=\"" . $icsFilename . "\"\r\n\r\n";
+        $email .= chunk_split(base64_encode($icsContent)) . "\r\n";
+        
+        // End boundary
+        $email .= "--" . $boundary . "--\r\n";
+        
+        return $email;
     }
     
     /**
