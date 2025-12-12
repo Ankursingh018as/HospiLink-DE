@@ -5,6 +5,7 @@
  */
 
 require_once 'email_config.php';
+require_once 'calendar_helper.php';
 
 class EmailService {
     
@@ -23,15 +24,38 @@ class EmailService {
         // Create email body
         $message = self::createEmailTemplate($appointmentData);
         
+        // Generate calendar ICS file
+        $icsContent = CalendarHelper::generateICS($appointmentData);
+        $icsFilename = CalendarHelper::getICSFilename($appointmentData['appointment_id']);
+        
+        // Create multipart email with calendar attachment
+        $boundary = md5(time());
+        
         // Email headers
         $headers = "MIME-Version: 1.0" . "\r\n";
-        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+        $headers .= "Content-Type: multipart/mixed; boundary=\"" . $boundary . "\"" . "\r\n";
         $headers .= "From: " . SMTP_FROM_NAME . " <" . SMTP_FROM_EMAIL . ">" . "\r\n";
         $headers .= "Reply-To: " . SMTP_FROM_EMAIL . "\r\n";
         $headers .= "X-Mailer: PHP/" . phpversion();
         
+        // Build multipart message
+        $emailBody = "--" . $boundary . "\r\n";
+        $emailBody .= "Content-Type: text/html; charset=UTF-8\r\n";
+        $emailBody .= "Content-Transfer-Encoding: 8bit\r\n\r\n";
+        $emailBody .= $message . "\r\n\r\n";
+        
+        // Add calendar attachment
+        $emailBody .= "--" . $boundary . "\r\n";
+        $emailBody .= "Content-Type: text/calendar; charset=UTF-8; method=REQUEST; name=\"" . $icsFilename . "\"\r\n";
+        $emailBody .= "Content-Transfer-Encoding: base64\r\n";
+        $emailBody .= "Content-Disposition: attachment; filename=\"" . $icsFilename . "\"\r\n\r\n";
+        $emailBody .= chunk_split(base64_encode($icsContent)) . "\r\n";
+        
+        // End boundary
+        $emailBody .= "--" . $boundary . "--\r\n";
+        
         // Send email
-        $sent = mail($to, $subject, $message, $headers);
+        $sent = mail($to, $subject, $emailBody, $headers);
         
         return $sent;
     }
