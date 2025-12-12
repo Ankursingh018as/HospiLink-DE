@@ -3,12 +3,7 @@ include 'db.php';
 include 'symptom_analyzer.php';
 include 'email_service_smtp.php'; // Include Gmail SMTP email service
 
-// Redirect if not a POST request
-if ($_SERVER["REQUEST_METHOD"] != "POST") {
-    header("Location: ../appointment.html");
-    exit();
-}
-
+// Only process POST requests
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get patient ID from session if logged in
     $patient_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
@@ -133,8 +128,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $message .= "⚡ Your appointment has been marked as high priority. A doctor will contact you soon.";
         }
         
-        // Redirect to success page
-        header("Location: ../appointment_success.php?id=" . $appointment_id);
+        // Store appointment ID in session and redirect to success page
+        $_SESSION['appointment_id'] = $appointment_id;
+        header("Location: ../appointment_success.php");
         exit();
         
     } else {
@@ -146,5 +142,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $sql->close();
     $conn->close();
+} else {
+    // Handle GET requests - redirect to appointment form
+    header("Location: ../appointment.html");
+    exit();
 }
 ?>

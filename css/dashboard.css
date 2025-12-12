@@ -19,7 +19,7 @@ body {
 /* Sidebar Styles */
 .sidebar {
     width: 260px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #0e545f 0%, #00adb5 100%);
     color: white;
     position: fixed;
     height: 100vh;
@@ -115,7 +115,7 @@ body {
 }
 
 .user-role {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #0e545f 0%, #00adb5 100%);
     color: white;
     padding: 8px 16px;
     border-radius: 20px;
@@ -222,7 +222,7 @@ body {
 }
 
 .content-section h2 .badge {
-    background: #667eea;
+    background: #00adb5;
     color: white;
     font-size: 12px;
     padding: 4px 12px;
@@ -342,7 +342,7 @@ body {
 
 /* Score Badge */
 .score-badge {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #0e545f 0%, #00adb5 100%);
     color: white;
     padding: 6px 12px;
     border-radius: 20px;
@@ -359,7 +359,7 @@ body {
     cursor: pointer;
     font-size: 14px;
     transition: all 0.3s ease;
-    background: #667eea;
+    background: #00adb5;
     color: white;
     margin: 0 2px;
 }
@@ -378,7 +378,7 @@ body {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #0e545f 0%, #00adb5 100%);
     color: white;
     padding: 12px 24px;
     border: none;
@@ -391,7 +391,7 @@ body {
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 6px 20px rgba(0, 173, 181, 0.4);
 }
 
 .action-buttons-inline {
@@ -427,14 +427,14 @@ body {
 }
 
 .action-btn.primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #0e545f 0%, #00adb5 100%);
     color: white;
 }
 
 .action-btn.secondary {
     background: white;
-    color: #667eea;
-    border: 2px solid #667eea;
+    color: #00adb5;
+    border: 2px solid #00adb5;
 }
 
 .action-btn:hover {
@@ -461,7 +461,7 @@ body {
     padding: 10px 15px;
     border-radius: 8px;
     font-weight: 600;
-    color: #667eea;
+    color: #00adb5;
     text-align: center;
     height: fit-content;
 }
@@ -494,12 +494,12 @@ body {
     padding: 15px;
     background: #f8f9fa;
     border-radius: 8px;
-    border-left: 3px solid #667eea;
+    border-left: 3px solid #00adb5;
 }
 
 .activity-icon {
     flex-shrink: 0;
-    color: #667eea;
+    color: #00adb5;
     font-size: 8px;
     padding-top: 4px;
 }
@@ -519,7 +519,7 @@ body {
 }
 
 .activity-content .role-badge {
-    background: #667eea;
+    background: #00adb5;
     color: white;
     padding: 2px 8px;
     border-radius: 10px;
