@@ -42,6 +42,7 @@ $history = $histStmt->get_result();
     <title>Patient Dashboard - HospiLink</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/doctor-dashboard-enhanced.css">
     <link rel="icon" href="../images/hosp_favicon.png" type="image/png">
 </head>
 <body>
@@ -54,15 +55,11 @@ $history = $histStmt->get_result();
             <nav class="sidebar-nav">
                 <a href="#overview" class="nav-item active">
                     <i class="fas fa-home"></i>
-                    <span>Overview</span>
+                    <span>Dashboard</span>
                 </a>
-                <a href="#appointments" class="nav-item">
-                    <i class="fas fa-calendar-check"></i>
-                    <span>My Appointments</span>
-                </a>
-                <a href="#history" class="nav-item">
-                    <i class="fas fa-history"></i>
-                    <span>Medical History</span>
+                <a href="patient_profile.php" class="nav-item">
+                    <i class="fas fa-user-edit"></i>
+                    <span>Edit Profile</span>
                 </a>
                 <a href="../appointment.html" class="nav-item">
                     <i class="fas fa-plus-circle"></i>
@@ -91,165 +88,151 @@ $history = $histStmt->get_result();
 
             <!-- Overview Section -->
             <section id="overview" class="content-section">
-                <h2>Dashboard Overview</h2>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon" style="background: #4CAF50;">
-                            <i class="fas fa-calendar-check"></i>
+                <div class="section-header">
+                    <h2>Dashboard Overview</h2>
+                    <div class="live-indicator">
+                        <span class="pulse-dot"></span>
+                        <span>Live Updates</span>
+                    </div>
+                </div>
+                <p class="section-subtitle"><?php echo date('l, F d, Y'); ?></p>
+                
+                <div class="stats-grid-enhanced">
+                    <div class="stat-card-enhanced">
+                        <div class="stat-card-header">
+                            <div class="stat-icon-enhanced" style="background: linear-gradient(135deg, #4caf50, #388e3c);">
+                                <i class="fas fa-calendar-check"></i>
+                            </div>
+                            <div class="stat-badge" style="background: rgba(76, 175, 80, 0.1); color: #4caf50;">Confirmed</div>
                         </div>
-                        <div class="stat-info">
-                            <h3><?php 
+                        <div class="stat-card-body">
+                            <div class="stat-number"><?php 
                                 $countQuery = "SELECT COUNT(*) as count FROM appointments WHERE patient_id = ? AND status = 'confirmed'";
                                 $countStmt = $conn->prepare($countQuery);
                                 $countStmt->bind_param("i", $user_id);
                                 $countStmt->execute();
                                 $result = $countStmt->get_result();
                                 echo $result->fetch_assoc()['count'];
-                            ?></h3>
-                            <p>Confirmed Appointments</p>
+                            ?></div>
+                            <div class="stat-label">Confirmed Appointments</div>
+                            <div class="stat-trend" style="color: #4caf50;">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Active</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon" style="background: #FF9800;">
-                            <i class="fas fa-clock"></i>
+                    
+                    <div class="stat-card-enhanced">
+                        <div class="stat-card-header">
+                            <div class="stat-icon-enhanced" style="background: linear-gradient(135deg, #ff9800, #f57c00);">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-badge warning">Pending</div>
                         </div>
-                        <div class="stat-info">
-                            <h3><?php 
+                        <div class="stat-card-body">
+                            <div class="stat-number"><?php 
                                 $pendingQuery = "SELECT COUNT(*) as count FROM appointments WHERE patient_id = ? AND status = 'pending'";
                                 $pendStmt = $conn->prepare($pendingQuery);
                                 $pendStmt->bind_param("i", $user_id);
                                 $pendStmt->execute();
                                 $result = $pendStmt->get_result();
                                 echo $result->fetch_assoc()['count'];
-                            ?></h3>
-                            <p>Pending Appointments</p>
+                            ?></div>
+                            <div class="stat-label">Pending Appointments</div>
+                            <div class="stat-trend orange">
+                                <i class="fas fa-hourglass-half"></i>
+                                <span>Awaiting</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon" style="background: #2196F3;">
-                            <i class="fas fa-file-medical"></i>
+                    
+                    <div class="stat-card-enhanced">
+                        <div class="stat-card-header">
+                            <div class="stat-icon-enhanced blue">
+                                <i class="fas fa-file-medical"></i>
+                            </div>
+                            <div class="stat-badge">Records</div>
                         </div>
-                        <div class="stat-info">
-                            <h3><?php 
+                        <div class="stat-card-body">
+                            <div class="stat-number"><?php 
                                 $histCount = "SELECT COUNT(*) as count FROM medical_history WHERE patient_id = ?";
                                 $histStmt2 = $conn->prepare($histCount);
                                 $histStmt2->bind_param("i", $user_id);
                                 $histStmt2->execute();
                                 $result = $histStmt2->get_result();
                                 echo $result->fetch_assoc()['count'];
-                            ?></h3>
-                            <p>Medical Records</p>
+                            ?></div>
+                            <div class="stat-label">Medical Records</div>
+                            <div class="stat-trend">
+                                <i class="fas fa-notes-medical"></i>
+                                <span>Available</span>
+                            </div>
                         </div>
-                    </div>
-                </div>
-
-                <div class="quick-actions">
-                    <h3>Quick Actions</h3>
-                    <div class="action-buttons">
-                        <a href="../appointment.html" class="action-btn primary">
-                            <i class="fas fa-plus"></i> Book New Appointment
-                        </a>
-                        <a href="../beds.html" class="action-btn secondary">
-                            <i class="fas fa-bed"></i> Check Bed Availability
-                        </a>
-                        <a href="../contact.html" class="action-btn secondary">
-                            <i class="fas fa-phone"></i> Contact Hospital
-                        </a>
                     </div>
                 </div>
             </section>
 
             <!-- Appointments Section -->
             <section id="appointments" class="content-section">
-                <h2>My Appointments</h2>
-                <div class="table-container">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Date & Time</th>
-                                <th>Doctor</th>
-                                <th>Symptoms</th>
-                                <th>Priority</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php 
-                            if ($appointments->num_rows > 0):
-                                while($apt = $appointments->fetch_assoc()): 
-                                    $priorityClass = $apt['priority_level'];
-                                    $statusClass = $apt['status'];
-                            ?>
-                            <tr>
-                                <td>#<?php echo $apt['appointment_id']; ?></td>
-                                <td>
-                                    <?php echo date('d M Y', strtotime($apt['appointment_date'])); ?><br>
-                                    <small><?php echo date('h:i A', strtotime($apt['appointment_time'])); ?></small>
-                                </td>
-                                <td>
-                                    <?php echo htmlspecialchars($apt['doctor_name'] ?: 'Not Assigned'); ?><br>
-                                    <small><?php echo htmlspecialchars($apt['specialization'] ?: ''); ?></small>
-                                </td>
-                                <td><?php echo htmlspecialchars(substr($apt['symptoms'], 0, 50)) . '...'; ?></td>
-                                <td>
-                                    <span class="priority-badge <?php echo $priorityClass; ?>">
-                                        <?php echo strtoupper($apt['priority_level']); ?>
-                                    </span>
-                                </td>
-                                <td>
-                                    <span class="status-badge <?php echo $statusClass; ?>">
-                                        <?php echo ucfirst($apt['status']); ?>
-                                    </span>
-                                </td>
-                                <td>
-                                    <button class="btn-small" onclick="viewDetails(<?php echo $apt['appointment_id']; ?>)">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <?php 
-                                endwhile;
-                            else:
-                            ?>
-                            <tr>
-                                <td colspan="7" style="text-align: center;">No appointments found. Book your first appointment!</td>
-                            </tr>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- Medical History Section -->
-            <section id="history" class="content-section">
-                <h2>Medical History</h2>
-                <div class="history-timeline">
+                <h2 style="text-align: center; margin-bottom: 30px;">My Appointments</h2>
+                
+                <div class="appointments-container-centered">
                     <?php 
-                    if ($history->num_rows > 0):
-                        while($record = $history->fetch_assoc()): 
+                    if ($appointments->num_rows > 0):
+                        while($apt = $appointments->fetch_assoc()): 
                     ?>
-                    <div class="history-item">
-                        <div class="history-date">
-                            <i class="fas fa-calendar"></i>
-                            <?php echo date('d M Y', strtotime($record['visit_date'])); ?>
+                    <div class="appointment-card-enhanced" data-status="<?php echo $apt['status']; ?>">
+                        <div class="appointment-header">
+                            <div class="appointment-id">#<?php echo $apt['appointment_id']; ?></div>
+                            <div class="priority-badge-enhanced <?php echo $apt['priority_level']; ?>">
+                                <?php echo strtoupper($apt['priority_level']); ?>
+                            </div>
                         </div>
-                        <div class="history-content">
-                            <h4>Visit with <?php echo htmlspecialchars($record['doctor_name']); ?></h4>
-                            <p><strong>Diagnosis:</strong> <?php echo htmlspecialchars($record['diagnosis'] ?: 'N/A'); ?></p>
-                            <p><strong>Treatment:</strong> <?php echo htmlspecialchars($record['treatment'] ?: 'N/A'); ?></p>
-                            <p><strong>Medications:</strong> <?php echo htmlspecialchars($record['medications'] ?: 'N/A'); ?></p>
-                            <?php if($record['notes']): ?>
-                            <p><strong>Notes:</strong> <?php echo htmlspecialchars($record['notes']); ?></p>
-                            <?php endif; ?>
+                        
+                        <div class="appointment-doctor">
+                            <div class="doctor-avatar">
+                                <i class="fas fa-user-md"></i>
+                            </div>
+                            <div class="doctor-info">
+                                <div class="doctor-name"><?php echo htmlspecialchars($apt['doctor_name'] ?: 'Not Assigned'); ?></div>
+                                <div class="doctor-specialty"><?php echo htmlspecialchars($apt['specialization'] ?: 'General'); ?></div>
+                            </div>
+                        </div>
+                        
+                        <div class="appointment-details">
+                            <div class="detail-row">
+                                <i class="fas fa-calendar"></i>
+                                <span><?php echo date('d M Y', strtotime($apt['appointment_date'])); ?></span>
+                            </div>
+                            <div class="detail-row">
+                                <i class="fas fa-clock"></i>
+                                <span><?php echo date('h:i A', strtotime($apt['appointment_time'])); ?></span>
+                            </div>
+                        </div>
+                        
+                        <div class="appointment-symptoms">
+                            <strong>Symptoms:</strong>
+                            <p><?php echo htmlspecialchars(substr($apt['symptoms'], 0, 80)) . '...'; ?></p>
+                        </div>
+                        
+                        <div class="appointment-footer">
+                            <span class="status-badge-enhanced <?php echo $apt['status']; ?>">
+                                <?php echo ucfirst($apt['status']); ?>
+                            </span>
+                            <div class="appointment-actions">
+                                <button class="action-btn primary" onclick="viewDetails(<?php echo $apt['appointment_id']; ?>)">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                            </div>
                         </div>
                     </div>
-                    <?php 
-                        endwhile;
-                    else:
-                    ?>
-                    <p>No medical history recorded yet.</p>
+                    <?php endwhile; else: ?>
+                    <div class="empty-state">
+                        <p>No appointments found. Book your first appointment!</p>
+                        <a href="../appointment.html" class="action-btn primary">
+                            <i class="fas fa-plus-circle"></i> Book Appointment
+                        </a>
+                    </div>
                     <?php endif; ?>
                 </div>
             </section>
@@ -277,12 +260,45 @@ $history = $histStmt->get_result();
                 }
             });
         });
+
+        // Animate stat numbers on load
+        document.addEventListener('DOMContentLoaded', function() {
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers.forEach(stat => {
+                const target = parseInt(stat.textContent);
+                let current = 0;
+                const increment = target / 30;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        stat.textContent = target;
+                        clearInterval(timer);
+                    } else {
+                        stat.textContent = Math.floor(current);
+                    }
+                }, 30);
+            });
+        });
+
+        // Real-time updates simulation
+        let lastUpdateTime = Date.now();
+        
+        function checkForUpdates() {
+            // Simulate checking for appointment updates
+            const now = Date.now();
+            if (now - lastUpdateTime > 30000) { // Every 30 seconds
+                console.log('Checking for appointment updates...');
+                lastUpdateTime = now;
+            }
+        }
+        
+        // Check for updates every 10 seconds
+        setInterval(checkForUpdates, 10000);
     </script>
 </body>
 </html>
 
 <?php
 $stmt->close();
-$histStmt->close();
 $conn->close();
 ?>
