@@ -30,12 +30,8 @@ class EmailService {
         // Create email body
         $message = self::createEmailTemplate($appointmentData);
         
-        // Generate calendar ICS file
-        $icsContent = CalendarHelper::generateICS($appointmentData);
-        $icsFilename = CalendarHelper::getICSFilename($appointmentData['appointment_id']);
-        
-        // Send via SMTP with calendar attachment
-        return $emailService->sendEmailViaSMTP($to, $subject, $message, $icsContent, $icsFilename);
+        // Send via SMTP without calendar attachment (calendar helper removed)
+        return $emailService->sendEmailViaSMTP($to, $subject, $message);
     }
     
     /**

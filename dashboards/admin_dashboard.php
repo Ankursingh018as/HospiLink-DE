@@ -57,6 +57,7 @@ $activityLogs = $conn->query($activityQuery);
     <title>Admin Dashboard - HospiLink</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/doctor-dashboard-enhanced.css">
     <link rel="icon" href="../images/hosp_favicon.png" type="image/png">
 </head>
 <body>
@@ -75,6 +76,14 @@ $activityLogs = $conn->query($activityQuery);
                     <i class="fas fa-calendar-alt"></i>
                     <span>All Appointments</span>
                 </a>
+                <a href="#activity" class="nav-item">
+                    <i class="fas fa-history"></i>
+                    <span>Activity Logs</span>
+                </a>
+                <a href="admin_profile.php" class="nav-item">
+                    <i class="fas fa-user-edit"></i>
+                    <span>Edit Profile</span>
+                </a>
                 <a href="#users" class="nav-item">
                     <i class="fas fa-users"></i>
                     <span>User Management</span>
@@ -86,10 +95,6 @@ $activityLogs = $conn->query($activityQuery);
                 <a href="#patients" class="nav-item">
                     <i class="fas fa-user-injured"></i>
                     <span>Patients</span>
-                </a>
-                <a href="#activity" class="nav-item">
-                    <i class="fas fa-history"></i>
-                    <span>Activity Logs</span>
                 </a>
                 <a href="#settings" class="nav-item">
                     <i class="fas fa-cog"></i>
@@ -119,52 +124,72 @@ $activityLogs = $conn->query($activityQuery);
             <section id="overview" class="content-section">
                 <h2>System Overview</h2>
                 
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon" style="background: #2196F3;">
-                            <i class="fas fa-users"></i>
+                <div class="stats-grid-enhanced">
+                    <div class="stat-card-enhanced" data-stat="users">
+                        <div class="stat-card-header">
+                            <div class="stat-icon-enhanced blue">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-badge">Total</div>
                         </div>
-                        <div class="stat-info">
-                            <h3><?php echo array_sum($userStats); ?></h3>
-                            <p>Total Users</p>
-                            <small>
-                                <?php echo ($userStats['patient'] ?? 0); ?> Patients | 
-                                <?php echo ($userStats['doctor'] ?? 0); ?> Doctors | 
-                                <?php echo ($userStats['admin'] ?? 0); ?> Admins
-                            </small>
-                        </div>
-                    </div>
-                    
-                    <div class="stat-card">
-                        <div class="stat-icon" style="background: #4CAF50;">
-                            <i class="fas fa-calendar-check"></i>
-                        </div>
-                        <div class="stat-info">
-                            <h3><?php echo $aptStats['total_appointments']; ?></h3>
-                            <p>Total Appointments</p>
-                            <small><?php echo $aptStats['confirmed']; ?> Confirmed | <?php echo $aptStats['pending']; ?> Pending</small>
+                        <div class="stat-card-body">
+                            <div class="stat-number"><?php echo array_sum($userStats); ?></div>
+                            <div class="stat-label">Total Users</div>
+                            <div class="stat-trend">
+                                <i class="fas fa-info-circle"></i>
+                                <span><?php echo ($userStats['patient'] ?? 0); ?> Patients | <?php echo ($userStats['doctor'] ?? 0); ?> Doctors</span>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="stat-card">
-                        <div class="stat-icon" style="background: #f44336;">
-                            <i class="fas fa-exclamation-triangle"></i>
+                    <div class="stat-card-enhanced" data-stat="appointments">
+                        <div class="stat-card-header">
+                            <div class="stat-icon-enhanced green">
+                                <i class="fas fa-calendar-check"></i>
+                            </div>
+                            <div class="stat-badge success">Active</div>
                         </div>
-                        <div class="stat-info">
-                            <h3><?php echo $aptStats['critical']; ?></h3>
-                            <p>Critical Cases</p>
-                            <small><?php echo $aptStats['high']; ?> High Priority</small>
+                        <div class="stat-card-body">
+                            <div class="stat-number"><?php echo $aptStats['total_appointments']; ?></div>
+                            <div class="stat-label">Total Appointments</div>
+                            <div class="stat-trend green">
+                                <i class="fas fa-check-circle"></i>
+                                <span><?php echo $aptStats['confirmed']; ?> Confirmed | <?php echo $aptStats['pending']; ?> Pending</span>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="stat-card">
-                        <div class="stat-icon" style="background: #FF9800;">
-                            <i class="fas fa-user-md"></i>
+                    <div class="stat-card-enhanced" data-stat="critical">
+                        <div class="stat-card-header">
+                            <div class="stat-icon-enhanced red">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="stat-badge urgent">Urgent</div>
                         </div>
-                        <div class="stat-info">
-                            <h3><?php echo $userStats['doctor'] ?? 0; ?></h3>
-                            <p>Active Doctors</p>
-                            <small>Managing Patients</small>
+                        <div class="stat-card-body">
+                            <div class="stat-number critical"><?php echo $aptStats['critical']; ?></div>
+                            <div class="stat-label">Critical Cases</div>
+                            <div class="stat-trend red">
+                                <i class="fas fa-bolt"></i>
+                                <span><?php echo $aptStats['high']; ?> High Priority</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card-enhanced" data-stat="doctors">
+                        <div class="stat-card-header">
+                            <div class="stat-icon-enhanced orange">
+                                <i class="fas fa-user-md"></i>
+                            </div>
+                            <div class="stat-badge warning">Staff</div>
+                        </div>
+                        <div class="stat-card-body">
+                            <div class="stat-number"><?php echo $userStats['doctor'] ?? 0; ?></div>
+                            <div class="stat-label">Active Doctors</div>
+                            <div class="stat-trend">
+                                <i class="fas fa-stethoscope"></i>
+                                <span>Managing Patients</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -264,29 +289,64 @@ $activityLogs = $conn->query($activityQuery);
 
             <!-- Activity Logs Section -->
             <section id="activity" class="content-section">
-                <h2>Recent Activity</h2>
-                <div class="activity-timeline">
+                <div class="section-header">
+                    <h2><i class="fas fa-history"></i> Recent Activity</h2>
+                </div>
+                <p class="section-subtitle">Latest system activities and updates</p>
+                
+                <div class="activity-logs-container">
                     <?php 
+                    // Reset pointer and limit to 4 logs
+                    $activityLogs->data_seek(0);
+                    $logCount = 0;
                     if ($activityLogs->num_rows > 0):
                         while($log = $activityLogs->fetch_assoc()): 
+                            if ($logCount >= 4) break;
+                            $logCount++;
+                            
+                            $actionIcon = [
+                                'User Login' => 'fa-sign-in-alt',
+                                'Appointment Confirmed' => 'fa-check-circle',
+                                'Appointment Created' => 'fa-plus-circle',
+                                'Notes Added' => 'fa-notes-medical',
+                                'Profile Updated' => 'fa-user-edit',
+                                'User Registered' => 'fa-user-plus',
+                                'Appointment Booked' => 'fa-calendar-plus'
+                            ];
+                            $icon = $actionIcon[$log['action']] ?? 'fa-info-circle';
                     ?>
-                    <div class="activity-item">
-                        <div class="activity-icon">
-                            <i class="fas fa-circle"></i>
+                    <div class="activity-log-item">
+                        <div class="log-icon">
+                            <i class="fas <?php echo $icon; ?>"></i>
                         </div>
-                        <div class="activity-content">
-                            <p>
+                        <div class="log-content">
+                            <div class="log-action">
                                 <strong><?php echo htmlspecialchars($log['user_name'] ?: 'System'); ?></strong>
                                 <span class="role-badge"><?php echo ucfirst($log['role'] ?: 'system'); ?></span>
-                            </p>
-                            <p><?php echo htmlspecialchars($log['action']); ?></p>
+                                - <?php echo htmlspecialchars($log['action']); ?>
+                            </div>
                             <?php if($log['details']): ?>
-                            <small><?php echo htmlspecialchars($log['details']); ?></small>
+                            <div class="log-details"><?php echo htmlspecialchars($log['details']); ?></div>
                             <?php endif; ?>
-                            <small class="timestamp"><?php echo date('d M Y, h:i A', strtotime($log['created_at'])); ?></small>
+                            <div class="log-time">
+                                <i class="fas fa-clock"></i> <?php echo date('M d, Y - h:i A', strtotime($log['created_at'])); ?>
+                            </div>
                         </div>
                     </div>
-                    <?php endwhile; endif; ?>
+                    <?php 
+                        endwhile;
+                    else:
+                    ?>
+                    <div class="empty-state">
+                        <p>No recent activity logs found.</p>
+                    </div>
+                    <?php endif; ?>
+                </div>
+                
+                <div class="see-more-container">
+                    <button class="see-more-btn" onclick="window.location.href='all_activity_logs.php'">
+                        <i class="fas fa-eye"></i> See All Activity Logs
+                    </button>
                 </div>
             </section>
 
