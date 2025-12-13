@@ -82,6 +82,14 @@ $todayStats = $statsStmt->get_result()->fetch_assoc();
                     <i class="fas fa-users"></i>
                     <span>My Patients</span>
                 </a>
+                <a href="../scan.php" class="nav-item">
+                    <i class="fas fa-qrcode"></i>
+                    <span>Scan Patient QR</span>
+                </a>
+                <a href="../admit.html" class="nav-item">
+                    <i class="fas fa-user-plus"></i>
+                    <span>Admit Patient</span>
+                </a>
                 <a href="#schedule" class="nav-item">
                     <i class="fas fa-clock"></i>
                     <span>My Schedule</span>
@@ -161,7 +169,41 @@ $todayStats = $statsStmt->get_result()->fetch_assoc();
                         </div>
                     </div>
                 </div>
+
+                <!-- Quick Actions for QR Patient Management -->
+                <div class="quick-actions" style="margin-top: 30px;">
+                    <h3 style="margin-bottom: 15px; color: #333;">
+                        <i class="fas fa-qrcode"></i> QR Patient Management
+                    </h3>
+                    <div class="stats-grid">
+                        <a href="../scan.php" class="stat-card action-card" style="text-decoration: none; cursor: pointer; transition: transform 0.2s;">
+                            <div class="stat-icon" style="background: #00adb5;">
+                                <i class="fas fa-camera"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 style="color: #00adb5;">Scan QR Code</h3>
+                                <p>View patient status by scanning bedside QR code</p>
+                            </div>
+                        </a>
+                        <a href="../admit.html" class="stat-card action-card" style="text-decoration: none; cursor: pointer; transition: transform 0.2s;">
+                            <div class="stat-icon" style="background: #4CAF50;">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 style="color: #4CAF50;">Admit Patient</h3>
+                                <p>Admit new patient and generate QR code</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
             </section>
+
+            <style>
+                .action-card:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+                }
+            </style>
 
             <!-- AI-Prioritized Appointments Queue -->
             <section id="appointments" class="content-section">

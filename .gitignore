@@ -38,4 +38,8 @@ temp/
 *.tmp
 
 
+# Database files
+db.php
+
+
 
