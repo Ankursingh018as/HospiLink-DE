@@ -126,14 +126,23 @@
 </div>
 
 <script>
+    // Form validation and submission handling
+    const form = document.querySelector('form');
+    const submitBtn = form.querySelector('button[type="submit"]');
+    let isSubmitting = false;
+
     // Load available beds and doctors
-    fetch('php/get_admission_options.php')
-        .then(response => response.json())
-        .then(data => {
+    async function loadAdmissionOptions() {
+        const bedSelect = document.getElementById('bed_id');
+        const doctorSelect = document.getElementById('doctor_id');
+        
+        try {
+            const response = await fetch('php/get_admission_options.php');
+            if (!response.ok) throw new Error('Failed to load options');
+            
+            const data = await response.json();
+            
             if (data.success) {
-                const bedSelect = document.getElementById('bed_id');
-                const doctorSelect = document.getElementById('doctor_id');
-                
                 // Populate beds
                 data.beds.forEach(bed => {
                     const option = document.createElement('option');
@@ -150,8 +159,102 @@
                     doctorSelect.appendChild(option);
                 });
             }
-        })
-        .catch(error => console.error('Error loading options:', error));
+        } catch (error) {
+            console.error('Error loading options:', error);
+            // Show user-friendly error
+            const errorMsg = document.createElement('div');
+            errorMsg.style.cssText = 'background:#ffebee;color:#c62828;padding:10px;margin:10px 0;border-radius:4px;';
+            errorMsg.textContent = 'Unable to load bed and doctor options. Please refresh the page.';
+            form.insertBefore(errorMsg, form.firstChild);
+        }
+    }
+
+    // Client-side validation
+    function validateForm() {
+        const phone = document.getElementById('phno').value;
+        const email = document.getElementById('email').value;
+        const dob = new Date(document.getElementById('dob').value);
+        const admitDate = new Date(document.getElementById('admit-date').value);
+        const today = new Date();
+        
+        // Phone validation (10 digits)
+        const phoneRegex = /^[6-9]\d{9}$/;
+        if (!phoneRegex.test(phone)) {
+            alert('Please enter a valid 10-digit Indian phone number (starting with 6-9)');
+            return false;
+        }
+        
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            alert('Please enter a valid email address');
+            return false;
+        }
+        
+        // Age validation (must be born before today)
+        if (dob >= today) {
+            alert('Date of birth must be in the past');
+            return false;
+        }
+        
+        // Check if patient is too old (>120 years)
+        const age = (today - dob) / (365.25 * 24 * 60 * 60 * 1000);
+        if (age > 120) {
+            alert('Please check the date of birth - age seems incorrect');
+            return false;
+        }
+        
+        // Admit date validation (not in past)
+        admitDate.setHours(0, 0, 0, 0);
+        today.setHours(0, 0, 0, 0);
+        if (admitDate < today) {
+            alert('Admission date cannot be in the past');
+            return false;
+        }
+        
+        // Check terms & conditions
+        if (!document.getElementById('checkbox').checked) {
+            alert('Please accept the terms and conditions');
+            return false;
+        }
+        
+        return true;
+    }
+
+    // Handle form submission
+    form.addEventListener('submit', function(e) {
+        if (isSubmitting) {
+            e.preventDefault();
+            return false;
+        }
+        
+        if (!validateForm()) {
+            e.preventDefault();
+            return false;
+        }
+        
+        // Show loading state
+        isSubmitting = true;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Processing...';
+        submitBtn.style.opacity = '0.6';
+        
+        // Form will submit normally
+        return true;
+    });
+
+    // Set today as minimum admit date
+    const admitDateInput = document.getElementById('admit-date');
+    const today = new Date().toISOString().split('T')[0];
+    admitDateInput.setAttribute('min', today);
+    admitDateInput.value = today; // Default to today
+    
+    // Set maximum DOB to today
+    const dobInput = document.getElementById('dob');
+    dobInput.setAttribute('max', today);
+
+    // Load options on page load
+    loadAdmissionOptions();
 </script>
       </form>
   </div>
