@@ -25,10 +25,9 @@ $appointmentsQuery = "SELECT a.*, u.first_name, u.last_name, u.phone as patient_
                       WHERE a.doctor_id = ? OR a.doctor_id IS NULL
                       ORDER BY 
                         CASE a.priority_level
-                            WHEN 'critical' THEN 1
-                            WHEN 'high' THEN 2
-                            WHEN 'medium' THEN 3
-                            WHEN 'low' THEN 4
+                            WHEN 'high' THEN 1
+                            WHEN 'medium' THEN 2
+                            WHEN 'low' THEN 3
                         END,
                         a.priority_score DESC,
                         a.appointment_date ASC";
@@ -40,8 +39,9 @@ $appointments = $stmt->get_result();
 // Get today's stats
 $todayStatsQuery = "SELECT 
                         COUNT(*) as total_today,
-                        COALESCE(SUM(CASE WHEN priority_level = 'critical' THEN 1 ELSE 0 END), 0) as critical_count,
                         COALESCE(SUM(CASE WHEN priority_level = 'high' THEN 1 ELSE 0 END), 0) as high_count,
+                        COALESCE(SUM(CASE WHEN priority_level = 'medium' THEN 1 ELSE 0 END), 0) as medium_count,
+                        COALESCE(SUM(CASE WHEN priority_level = 'low' THEN 1 ELSE 0 END), 0) as low_count,
                         COALESCE(SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END), 0) as pending_count
                     FROM appointments 
                     WHERE (doctor_id = ? OR doctor_id IS NULL) 
@@ -54,8 +54,9 @@ $todayStats = $statsStmt->get_result()->fetch_assoc();
 // Get all-time stats
 $allTimeStatsQuery = "SELECT 
                         COUNT(*) as total_appointments,
-                        COALESCE(SUM(CASE WHEN priority_level = 'critical' THEN 1 ELSE 0 END), 0) as critical_total,
                         COALESCE(SUM(CASE WHEN priority_level = 'high' THEN 1 ELSE 0 END), 0) as high_total,
+                        COALESCE(SUM(CASE WHEN priority_level = 'medium' THEN 1 ELSE 0 END), 0) as medium_total,
+                        COALESCE(SUM(CASE WHEN priority_level = 'low' THEN 1 ELSE 0 END), 0) as low_total,
                         COALESCE(SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END), 0) as pending_total
                     FROM appointments 
                     WHERE doctor_id = ? OR doctor_id IS NULL";
@@ -66,13 +67,15 @@ $allTimeStats = $allStatsStmt->get_result()->fetch_assoc();
 
 // Ensure values are numbers, not null
 $todayStats['total_today'] = intval($todayStats['total_today'] ?? 0);
-$todayStats['critical_count'] = intval($todayStats['critical_count'] ?? 0);
 $todayStats['high_count'] = intval($todayStats['high_count'] ?? 0);
+$todayStats['medium_count'] = intval($todayStats['medium_count'] ?? 0);
+$todayStats['low_count'] = intval($todayStats['low_count'] ?? 0);
 $todayStats['pending_count'] = intval($todayStats['pending_count'] ?? 0);
 
 $allTimeStats['total_appointments'] = intval($allTimeStats['total_appointments'] ?? 0);
-$allTimeStats['critical_total'] = intval($allTimeStats['critical_total'] ?? 0);
 $allTimeStats['high_total'] = intval($allTimeStats['high_total'] ?? 0);
+$allTimeStats['medium_total'] = intval($allTimeStats['medium_total'] ?? 0);
+$allTimeStats['low_total'] = intval($allTimeStats['low_total'] ?? 0);
 $allTimeStats['pending_total'] = intval($allTimeStats['pending_total'] ?? 0);
 ?>
 
@@ -84,7 +87,7 @@ $allTimeStats['pending_total'] = intval($allTimeStats['pending_total'] ?? 0);
     <title>Doctor Dashboard - HospiLink</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="../css/dashboard.css">
-    <link rel="stylesheet" href="../css/doctor-dashboard-enhanced.css">
+    <link rel="stylesheet" href="../css/doctor-dashboard-enhanced.css?v=6">
     <link rel="icon" href="../images/hosp_favicon.png" type="image/png">
 </head>
 <body>
@@ -151,24 +154,24 @@ $allTimeStats['pending_total'] = intval($allTimeStats['pending_total'] ?? 0);
                 <p class="section-subtitle"><?php echo date('l, F d, Y'); ?></p>
                 
                 <!-- Priority Alert Banner -->
-                <?php if ($todayStats['critical_count'] > 0): ?>
+                <?php if ($todayStats['high_count'] > 0): ?>
                 <div class="alert-banner critical animate-pulse">
                     <div class="alert-icon">
                         <i class="fas fa-exclamation-triangle"></i>
                     </div>
                     <div class="alert-content">
                         <strong>URGENT ATTENTION REQUIRED</strong>
-                        <p>You have <span class="highlight"><?php echo $todayStats['critical_count']; ?></span> critical priority patient(s) requiring immediate attention!</p>
+                        <p>You have <span class="highlight"><?php echo $todayStats['high_count']; ?></span> high priority patient(s) requiring immediate attention!</p>
                     </div>
                 </div>
-                <?php elseif ($todayStats['high_count'] > 0): ?>
+                <?php elseif ($todayStats['medium_count'] > 0): ?>
                 <div class="alert-banner high">
                     <div class="alert-icon">
                         <i class="fas fa-bolt"></i>
                     </div>
                     <div class="alert-content">
-                        <strong>HIGH PRIORITY NOTICE</strong>
-                        <p>You have <span class="highlight"><?php echo $todayStats['high_count']; ?></span> high priority appointment(s) today.</p>
+                        <strong>MEDIUM PRIORITY NOTICE</strong>
+                        <p>You have <span class="highlight"><?php echo $todayStats['medium_count']; ?></span> medium priority appointment(s) today.</p>
                     </div>
                 </div>
                 <?php endif; ?>
@@ -195,16 +198,16 @@ $allTimeStats['pending_total'] = intval($allTimeStats['pending_total'] ?? 0);
                     <div class="stat-card-enhanced">
                         <div class="stat-card-header">
                             <div class="stat-icon-enhanced red">
-                                <i class="fas fa-heartbeat"></i>
+                                <i class="fas fa-exclamation-triangle"></i>
                             </div>
                             <div class="stat-badge urgent">Urgent</div>
                         </div>
                         <div class="stat-card-body">
-                            <div class="stat-number critical"><?php echo $allTimeStats['critical_total']; ?></div>
-                            <div class="stat-label">Critical Priority</div>
+                            <div class="stat-number critical"><?php echo $allTimeStats['high_total']; ?></div>
+                            <div class="stat-label">High Priority</div>
                             <div class="stat-trend red">
                                 <i class="fas fa-exclamation-circle"></i>
-                                <span><?php echo $todayStats['critical_count']; ?> Today</span>
+                                <span><?php echo $todayStats['high_count']; ?> Today</span>
                             </div>
                         </div>
                     </div>
@@ -212,16 +215,33 @@ $allTimeStats['pending_total'] = intval($allTimeStats['pending_total'] ?? 0);
                     <div class="stat-card-enhanced">
                         <div class="stat-card-header">
                             <div class="stat-icon-enhanced orange">
-                                <i class="fas fa-fire"></i>
+                                <i class="fas fa-bolt"></i>
                             </div>
-                            <div class="stat-badge warning">High</div>
+                            <div class="stat-badge warning">Medium</div>
                         </div>
                         <div class="stat-card-body">
-                            <div class="stat-number high"><?php echo $allTimeStats['high_total']; ?></div>
-                            <div class="stat-label">High Priority</div>
+                            <div class="stat-number high"><?php echo $allTimeStats['medium_total']; ?></div>
+                            <div class="stat-label">Medium Priority</div>
                             <div class="stat-trend orange">
-                                <i class="fas fa-bolt"></i>
-                                <span><?php echo $todayStats['high_count']; ?> Today</span>
+                                <i class="fas fa-fire"></i>
+                                <span><?php echo $todayStats['medium_count']; ?> Today</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card-enhanced">
+                        <div class="stat-card-header">
+                            <div class="stat-icon-enhanced green">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="stat-badge success">Low</div>
+                        </div>
+                        <div class="stat-card-body">
+                            <div class="stat-number medium"><?php echo $allTimeStats['low_total']; ?></div>
+                            <div class="stat-label">Low Priority</div>
+                            <div class="stat-trend green">
+                                <i class="fas fa-check"></i>
+                                <span><?php echo $todayStats['low_count']; ?> Today</span>
                             </div>
                         </div>
                     </div>
@@ -275,8 +295,14 @@ $allTimeStats['pending_total'] = intval($allTimeStats['pending_total'] ?? 0);
                         <button class="filter-btn active" data-filter="all">
                             <i class="fas fa-list"></i> All
                         </button>
-                        <button class="filter-btn" data-filter="critical">
-                            <i class="fas fa-exclamation-triangle"></i> Critical
+                        <button class="filter-btn" data-filter="high">
+                            <i class="fas fa-exclamation-triangle"></i> High
+                        </button>
+                        <button class="filter-btn" data-filter="medium">
+                            <i class="fas fa-bolt"></i> Medium
+                        </button>
+                        <button class="filter-btn" data-filter="low">
+                            <i class="fas fa-check-circle"></i> Low
                         </button>
                         <button class="filter-btn" data-filter="pending">
                             <i class="fas fa-clock"></i> Pending
@@ -285,7 +311,7 @@ $allTimeStats['pending_total'] = intval($allTimeStats['pending_total'] ?? 0);
                 </div>
                 <p class="section-description">
                     <i class="fas fa-info-circle"></i>
-                    Appointments are automatically prioritized using AI analysis of patient symptoms. Critical cases appear first.
+                    Appointments are automatically prioritized using AI analysis of patient symptoms. High priority cases appear first.
                 </p>
                 
                 <div class="appointments-container">
@@ -295,7 +321,7 @@ $allTimeStats['pending_total'] = intval($allTimeStats['pending_total'] ?? 0);
                         while($apt = $appointments->fetch_assoc()): 
                             $priorityClass = $apt['priority_level'];
                             $statusClass = $apt['status'];
-                            $isUrgent = in_array($apt['priority_level'], ['critical', 'high']);
+                            $isUrgent = ($apt['priority_level'] === 'high');
                             
                             // Priority colors and icons
                             $priorityConfig = [

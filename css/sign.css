@@ -97,6 +97,20 @@ form {
     pointer-events: none;
 }
 
+.input-group .toggle-password {
+    left: auto;
+    right: 16px;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: all 0.3s ease;
+    opacity: 0.6;
+}
+
+.input-group .toggle-password:hover {
+    opacity: 1;
+    color: #0e545f;
+}
+
 .input-group input,
 .input-group select {
     width: 100%;
@@ -284,4 +298,427 @@ form {
         font-size: 16px;
         padding: 14px;
     }
+    
+    .otp-inputs {
+        gap: 8px;
+    }
+    
+    .otp-input {
+        width: 45px;
+        height: 45px;
+        font-size: 22px;
+    }
+}
+
+/* OTP Modal Styles */
+.otp-modal {
+    display: none !important;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    animation: fadeIn 0.3s ease;
+    overflow-y: auto;
+    padding: 20px 0;
+}
+
+.otp-modal.show {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.otp-modal-content {
+    position: relative;
+    background-color: #ffffff;
+    margin: 20px auto;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 20px;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+    animation: slideDown 0.4s ease-out;
+    overflow: visible;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.otp-modal-header {
+    background: linear-gradient(135deg, #0e545f 0%, #00adb5 100%);
+    padding: 30px;
+    text-align: center;
+    color: white;
+}
+
+.otp-modal-header h2 {
+    margin: 0 0 10px 0;
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.otp-modal-header p {
+    margin: 0;
+    font-size: 15px;
+    opacity: 0.95;
+    line-height: 1.6;
+}
+
+.otp-modal-header strong {
+    color: #ffffff;
+    font-weight: 600;
+    text-decoration: underline;
+    word-break: break-all;
+    display: inline-block;
+    max-width: 100%;
+}
+
+.otp-modal-body {
+    padding: 40px 30px;
+    min-height: 300px;
+}
+
+/* OTP Input Section */
+#otpInputSection {
+    display: block;
+    width: 100%;
+}
+
+/* Loading Spinner */
+.otp-loading {
+    text-align: center;
+    padding: 30px;
+}
+
+.spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #00adb5;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.otp-loading p {
+    color: #666;
+    font-size: 16px;
+    margin: 0;
+}
+
+/* OTP Input Fields */
+.otp-inputs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 25px;
+    flex-wrap: nowrap;
+}
+
+.otp-input {
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    background: #f8f9fa;
+    color: #0e545f;
+    transition: all 0.3s ease;
+    outline: none;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.otp-input:focus {
+    border-color: #00adb5;
+    background: white;
+    box-shadow: 0 0 0 4px rgba(0, 173, 181, 0.1);
+    transform: scale(1.05);
+}
+
+.otp-input:disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+}
+
+/* OTP Timer */
+.otp-timer {
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 12px;
+    background: linear-gradient(135deg, #fff3cd 0%, #ffe69c 100%);
+    border-radius: 10px;
+    border-left: 4px solid #ffc107;
+}
+
+.otp-timer i {
+    color: #856404;
+    margin-right: 8px;
+}
+
+.otp-timer span {
+    color: #856404;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.otp-timer.expired {
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    border-left-color: #dc3545;
+}
+
+.otp-timer.expired i,
+.otp-timer.expired span {
+    color: #721c24;
+}
+
+/* OTP Messages */
+.otp-message {
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    display: none;
+}
+
+.otp-message.error {
+    display: block;
+    background-color: #f8d7da;
+    color: #721c24;
+    border-left: 4px solid #dc3545;
+}
+
+.otp-message.success {
+    display: block;
+    background-color: #d4edda;
+    color: #155724;
+    border-left: 4px solid #28a745;
+}
+
+.otp-message.info {
+    display: block;
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border-left: 4px solid #00adb5;
+}
+
+/* OTP Buttons */
+.otp-verify-btn {
+    width: 100%;
+    margin-bottom: 15px;
+    background: linear-gradient(135deg, #0e545f 0%, #00adb5 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.otp-verify-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 173, 181, 0.4);
+}
+
+.otp-verify-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.otp-verify-btn i,
+.otp-resend-btn i {
+    margin-right: 8px;
+}
+
+.otp-resend-btn {
+    width: 100%;
+    background: transparent;
+    color: #00adb5;
+    border: 2px solid #00adb5;
+}
+
+.otp-resend-btn:hover:not(:disabled) {
+    background: #00adb5;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 173, 181, 0.3);
+}
+
+.otp-resend-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: #e9ecef;
+    color: #6c757d;
+    transform: none;
+}
+
+/* Success Animation */
+@keyframes checkmark {
+    0% {
+        height: 0;
+        width: 0;
+        opacity: 1;
+    }
+    20% {
+        height: 0;
+        width: 10px;
+        opacity: 1;
+    }
+    40% {
+        height: 20px;
+        width: 10px;
+        opacity: 1;
+    }
+    100% {
+        height: 20px;
+        width: 10px;
+        opacity: 1;
+    }
+}
+
+.success-checkmark {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    display: block;
+    stroke-width: 3;
+    stroke: #28a745;
+    stroke-miterlimit: 10;
+    box-shadow: inset 0 0 0 #28a745;
+    animation: fill 0.4s ease-in-out 0.4s forwards, scale 0.3s ease-in-out 0.9s both;
+}
+
+@keyframes fill {
+    100% {
+        box-shadow: inset 0 0 0 30px #28a745;
+    }
+}
+
+@keyframes scale {
+    0%, 100% {
+        transform: none;
+    }
+    50% {
+        transform: scale3d(1.1, 1.1, 1);
+    }
+}
+
+/* Success Modal Styles */
+.success-modal-content {
+    max-width: 500px;
+    text-align: center;
+}
+
+.success-modal-header {
+    padding: 40px 30px 30px;
+}
+
+.success-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    background: linear-gradient(135deg, #00adb5 0%, #0e545f 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: successIconBounce 0.6s ease-out;
+}
+
+.success-icon i {
+    font-size: 40px;
+    color: white;
+}
+
+@keyframes successIconBounce {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.success-modal-header h2 {
+    color: #0e545f;
+    font-size: 28px;
+    margin: 0 0 15px 0;
+    font-weight: 600;
+}
+
+.success-modal-header p {
+    color: #6c757d;
+    font-size: 16px;
+    margin: 0;
+}
+
+.success-modal-body {
+    padding: 20px 30px 40px;
+}
+
+.success-message {
+    color: #495057;
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 0 0 30px 0;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    border-left: 4px solid #00adb5;
+}
+
+.success-login-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #00adb5 0%, #0e545f 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 173, 181, 0.3);
+}
+
+.success-login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 173, 181, 0.4);
+}
+
+.success-login-btn:active {
+    transform: translateY(0);
+}
+
+.success-login-btn i {
+    margin-right: 8px;
 }

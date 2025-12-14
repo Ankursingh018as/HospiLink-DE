@@ -8,7 +8,7 @@
  */
 
 require_once 'email_config.php';
-require_once 'calendar_helper.php';
+// calendar_helper.php is only needed for appointment emails, not OTP emails
 
 class EmailService {
     
@@ -206,19 +206,17 @@ class EmailService {
         
         // Priority badge colors
         $priorityColors = [
-            'CRITICAL' => '#dc3545',
-            'HIGH' => '#fd7e14',
-            'MEDIUM' => '#ffc107',
+            'HIGH' => '#dc3545',
+            'MEDIUM' => '#fd7e14',
             'LOW' => '#28a745'
         ];
         $priorityColor = $priorityColors[$priority] ?? '#6c757d';
         
         // Priority messages
         $priorityMessages = [
-            'CRITICAL' => '🚨 URGENT: Please proceed to the emergency department immediately or call emergency services if symptoms worsen!',
-            'HIGH' => '⚡ Your appointment has been marked as high priority. A doctor will contact you soon.',
-            'MEDIUM' => '📋 Your appointment has been scheduled. Please arrive 10 minutes early.',
-            'LOW' => '✓ Your appointment has been confirmed. See you on the scheduled date.'
+            'HIGH' => '🚨 URGENT: Your appointment has been marked as high priority. Please proceed to the emergency department immediately or call emergency services if symptoms worsen!',
+            'MEDIUM' => '⚡ Your appointment has been scheduled with medium priority. Expected wait time is 3-5 days.',
+            'LOW' => '✓ Your appointment has been confirmed. Suitable for routine care and follow-ups.'
         ];
         $priorityMessage = $priorityMessages[$priority] ?? 'Your appointment has been scheduled.';
         
@@ -529,6 +527,36 @@ HTML;
 HTML;
         
         return $html;
+    }
+    
+    /**
+     * Send OTP verification email
+     */
+    public static function sendOTPEmail($to, $subject, $htmlBody) {
+        if (!EMAIL_ENABLED) {
+            return true; // Email disabled, return success
+        }
+        
+        $emailService = new self();
+        return $emailService->sendEmailViaSMTP($to, $subject, $htmlBody);
+    }
+    
+    /**
+     * Generic send email method
+     */
+    public static function sendEmail($to, $toName, $subject, $htmlBody) {
+        if (!EMAIL_ENABLED) {
+            return ['success' => true, 'message' => 'Email service disabled'];
+        }
+        
+        $emailService = new self();
+        $result = $emailService->sendEmailViaSMTP($to, $subject, $htmlBody);
+        
+        if ($result) {
+            return ['success' => true, 'message' => 'Email sent successfully'];
+        } else {
+            return ['success' => false, 'message' => 'Failed to send email'];
+        }
     }
 }
 ?>
