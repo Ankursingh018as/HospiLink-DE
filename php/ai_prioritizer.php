@@ -4,9 +4,21 @@
  * Uses Google Gemini API to intelligently analyze symptoms and assign priority scores
  */
 
+// Load environment variables
+require_once __DIR__ . '/env_loader.php';
+
 class AIPrioritizer {
-    private $apiKey = 'AIzaSyAA2K-cytaK3QZ4MEXWprbrMssRUX_XI0Y';
-    private $apiEndpoint = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent';
+    private $apiKey;
+    private $apiEndpoint;
+    
+    public function __construct() {
+        $this->apiKey = env('GEMINI_API_KEY', '');
+        $this->apiEndpoint = env('GEMINI_API_ENDPOINT', 'https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent');
+        
+        if (empty($this->apiKey)) {
+            error_log('Warning: GEMINI_API_KEY not set in .env file');
+        }
+    }
     
     /**
      * Analyze symptoms using Google Gemini AI

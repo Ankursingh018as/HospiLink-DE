@@ -2,17 +2,20 @@
 // Email Configuration for HospiLink
 // This file contains email settings for sending appointment confirmations
 
-// Email settings - Gmail SMTP Configuration
-define('SMTP_HOST', 'smtp.gmail.com');                      // Gmail SMTP server
-define('SMTP_PORT', 587);                                    // TLS port (use 465 for SSL)
-define('SMTP_SECURITY', 'tls');                              // TLS or ssl
-define('SMTP_USERNAME', 'asrajput5656@gmail.com');           // Your Gmail address
-define('SMTP_PASSWORD', 'ueyd siaj lkfv iykk');              // Gmail App Password
-define('SMTP_FROM_EMAIL', 'asrajput5656@gmail.com');         // Sender email
-define('SMTP_FROM_NAME', 'HospiLink Hospital');              // Sender name
+// Load environment variables
+require_once __DIR__ . '/env_loader.php';
+
+// Email settings - Gmail SMTP Configuration (from .env file)
+define('SMTP_HOST', env('SMTP_HOST', 'smtp.gmail.com'));
+define('SMTP_PORT', env('SMTP_PORT', 587));
+define('SMTP_SECURITY', env('SMTP_SECURITY', 'tls'));
+define('SMTP_USERNAME', env('SMTP_USERNAME', ''));
+define('SMTP_PASSWORD', env('SMTP_PASSWORD', ''));
+define('SMTP_FROM_EMAIL', env('SMTP_FROM_EMAIL', ''));
+define('SMTP_FROM_NAME', env('SMTP_FROM_NAME', 'HospiLink Hospital'));
 
 // Enable/disable email notifications
-define('EMAIL_ENABLED', true); // Set to true to enable emails
+define('EMAIL_ENABLED', filter_var(env('EMAIL_ENABLED', 'true'), FILTER_VALIDATE_BOOLEAN));
 
 /**
  * IMPORTANT SETUP INSTRUCTIONS:
