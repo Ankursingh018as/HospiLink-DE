@@ -132,34 +132,55 @@ class PatientQRHelper {
     
     /**
      * Get admission details from QR token
+     * Optimized with better error handling and complete data retrieval
      */
     public static function getAdmissionFromToken($conn, $token) {
         if (!self::validateToken($token)) {
+            error_log('Invalid QR token format: ' . $token);
             return null;
         }
         
         $stmt = $conn->prepare("
             SELECT 
                 pa.*,
-                u.first_name, u.last_name, u.email, u.phone,
+                CONCAT(u.first_name, ' ', u.last_name) as patient_name,
+                u.first_name, u.last_name, u.email, u.phone, 
+                COALESCE(u.gender, 'Not specified') as gender,
+                COALESCE(u.age, 0) as age,
+                COALESCE(u.blood_group, 'Unknown') as blood_group,
                 b.ward_name, b.bed_number, b.bed_type,
                 CONCAT(d.first_name, ' ', d.last_name) as doctor_name,
-                d.specialization
+                d.specialization, d.department
             FROM patient_admissions pa
-            JOIN users u ON pa.patient_id = u.user_id
+            INNER JOIN users u ON pa.patient_id = u.user_id
             LEFT JOIN beds b ON pa.bed_id = b.bed_id
             LEFT JOIN users d ON pa.assigned_doctor_id = d.user_id
             WHERE pa.qr_code_token = ? AND pa.status = 'active'
+            LIMIT 1
         ");
         
+        if (!$stmt) {
+            error_log('Failed to prepare getAdmissionFromToken: ' . $conn->error);
+            return null;
+        }
+        
         $stmt->bind_param("s", $token);
-        $stmt->execute();
+        
+        if (!$stmt->execute()) {
+            error_log('Failed to execute getAdmissionFromToken: ' . $stmt->error);
+            $stmt->close();
+            return null;
+        }
+        
         $result = $stmt->get_result();
         
         if ($result->num_rows > 0) {
-            return $result->fetch_assoc();
+            $admission = $result->fetch_assoc();
+            $stmt->close();
+            return $admission;
         }
         
+        $stmt->close();
         return null;
     }
     
@@ -182,24 +203,68 @@ class PatientQRHelper {
     
     /**
      * Create admission and generate QR code
+     * Optimized with validation and better error handling
      */
     public static function createAdmission($conn, $patient_id, $bed_id, $admission_reason, $doctor_id) {
-        // Generate unique QR token
-        $qr_token = self::generateQRToken($patient_id, time());
-        
-        // Handle NULL values properly for foreign keys
-        $bed_id_param = ($bed_id && $bed_id > 0) ? $bed_id : null;
-        $doctor_id_param = ($doctor_id && $doctor_id > 0) ? $doctor_id : null;
-        
-        $stmt = $conn->prepare("
-            INSERT INTO patient_admissions 
-            (patient_id, bed_id, qr_code_token, admission_date, admission_reason, assigned_doctor_id, status)
-            VALUES (?, ?, ?, NOW(), ?, ?, 'active')
-        ");
-        
-        $stmt->bind_param("iissi", $patient_id, $bed_id_param, $qr_token, $admission_reason, $doctor_id_param);
-        
-        if ($stmt->execute()) {
+        try {
+            // Validate patient exists
+            $patient_check = $conn->prepare("SELECT user_id FROM users WHERE user_id = ? AND role = 'patient'");
+            $patient_check->bind_param("i", $patient_id);
+            $patient_check->execute();
+            $patient_result = $patient_check->get_result();
+            
+            if ($patient_result->num_rows === 0) {
+                return ['success' => false, 'error' => 'Invalid patient ID'];
+            }
+            $patient_check->close();
+            
+            // Generate unique QR token with collision detection
+            $max_attempts = 5;
+            $qr_token = null;
+            
+            for ($i = 0; $i < $max_attempts; $i++) {
+                $qr_token = self::generateQRToken($patient_id, time() + $i);
+                
+                // Check if token already exists
+                $token_check = $conn->prepare("SELECT admission_id FROM patient_admissions WHERE qr_code_token = ?");
+                $token_check->bind_param("s", $qr_token);
+                $token_check->execute();
+                $token_result = $token_check->get_result();
+                
+                if ($token_result->num_rows === 0) {
+                    $token_check->close();
+                    break; // Unique token found
+                }
+                $token_check->close();
+                
+                if ($i === $max_attempts - 1) {
+                    return ['success' => false, 'error' => 'Failed to generate unique QR token'];
+                }
+            }
+            
+            // Handle NULL values properly for foreign keys
+            $bed_id_param = ($bed_id && $bed_id > 0) ? $bed_id : null;
+            $doctor_id_param = ($doctor_id && $doctor_id > 0) ? $doctor_id : null;
+            
+            // Prepare admission insertion
+            $stmt = $conn->prepare("
+                INSERT INTO patient_admissions 
+                (patient_id, bed_id, qr_code_token, admission_date, admission_reason, assigned_doctor_id, status)
+                VALUES (?, ?, ?, NOW(), ?, ?, 'active')
+            ");
+            
+            if (!$stmt) {
+                return ['success' => false, 'error' => 'Failed to prepare statement: ' . $conn->error];
+            }
+            
+            $stmt->bind_param("iissi", $patient_id, $bed_id_param, $qr_token, $admission_reason, $doctor_id_param);
+            
+            if (!$stmt->execute()) {
+                $error = $stmt->error;
+                $stmt->close();
+                return ['success' => false, 'error' => 'Failed to create admission: ' . $error];
+            }
+            
             $admission_id = $stmt->insert_id;
             $stmt->close();
             
@@ -208,21 +273,34 @@ class PatientQRHelper {
                 $bed_stmt = $conn->prepare("
                     UPDATE beds 
                     SET status = 'occupied', patient_id = ?, admitted_date = NOW()
-                    WHERE bed_id = ?
+                    WHERE bed_id = ? AND status = 'available'
                 ");
-                $bed_stmt->bind_param("ii", $patient_id, $bed_id_param);
-                $bed_stmt->execute();
-                $bed_stmt->close();
+                
+                if ($bed_stmt) {
+                    $bed_stmt->bind_param("ii", $patient_id, $bed_id_param);
+                    $bed_stmt->execute();
+                    
+                    // Check if bed was actually updated (was available)
+                    if ($bed_stmt->affected_rows === 0) {
+                        // Bed was not available - log warning but don't fail admission
+                        error_log("Warning: Bed $bed_id_param was not available for admission $admission_id");
+                    }
+                    $bed_stmt->close();
+                }
             }
             
             return [
                 'success' => true,
                 'admission_id' => $admission_id,
-                'qr_token' => $qr_token
+                'qr_token' => $qr_token,
+                'bed_assigned' => $bed_id_param !== null,
+                'doctor_assigned' => $doctor_id_param !== null
             ];
+            
+        } catch (Exception $e) {
+            error_log('Create admission error: ' . $e->getMessage());
+            return ['success' => false, 'error' => $e->getMessage()];
         }
-        
-        return ['success' => false, 'error' => $conn->error];
     }
     
     /**
