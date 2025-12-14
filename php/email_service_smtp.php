@@ -8,7 +8,7 @@
  */
 
 require_once 'email_config.php';
-// calendar_helper.php is only needed for appointment emails, not OTP emails
+require_once 'calendar_helper.php';
 
 class EmailService {
     
@@ -30,8 +30,12 @@ class EmailService {
         // Create email body
         $message = self::createEmailTemplate($appointmentData);
         
-        // Send via SMTP without calendar attachment (calendar helper removed)
-        return $emailService->sendEmailViaSMTP($to, $subject, $message);
+        // Generate calendar invite (.ics file)
+        $icsContent = CalendarHelper::generateICS($appointmentData);
+        $icsFilename = "appointment-" . $appointmentData['appointment_id'] . ".ics";
+        
+        // Send via SMTP with calendar attachment
+        return $emailService->sendEmailViaSMTP($to, $subject, $message, $icsContent, $icsFilename);
     }
     
     /**
