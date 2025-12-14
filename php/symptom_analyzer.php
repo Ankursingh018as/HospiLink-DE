@@ -5,8 +5,7 @@
 class SymptomAnalyzer {
     private $conn;
     private $priorityWeights = [
-        'critical' => 100,
-        'high' => 75,
+        'high' => 100,
         'medium' => 50,
         'low' => 25
     ];
@@ -62,8 +61,6 @@ class SymptomAnalyzer {
         
         // Determine priority level based on score
         if ($maxScore >= 100) {
-            $priorityLevel = 'critical';
-        } elseif ($maxScore >= 75) {
             $priorityLevel = 'high';
         } elseif ($maxScore >= 50) {
             $priorityLevel = 'medium';
@@ -94,10 +91,8 @@ class SymptomAnalyzer {
         $keywordString = implode(', ', $keywordList);
         
         switch ($priorityLevel) {
-            case 'critical':
-                return "⚠️ CRITICAL: Your symptoms ($keywordString) indicate a medical emergency. You will be prioritized for immediate attention. Please seek emergency care if symptoms worsen.";
-            
             case 'high':
+                return "⚠️ HIGH PRIORITY: Your symptoms ($keywordString) indicate a medical emergency. You will be prioritized for immediate attention. Please seek emergency care if symptoms worsen.";
                 return "⚡ HIGH PRIORITY: Your symptoms ($keywordString) require urgent medical attention. You will be seen by a doctor as soon as possible.";
             
             case 'medium':
@@ -119,21 +114,12 @@ class SymptomAnalyzer {
         $currentTime = date('H:i:s');
         
         switch ($priorityLevel) {
-            case 'critical':
+            case 'high':
                 return [
                     'suggested_date' => $currentDate,
                     'suggested_time' => date('H:i:s', strtotime('+1 hour')),
                     'message' => 'Emergency appointment recommended within 1 hour',
                     'wait_time' => 'Immediate to 1 hour'
-                ];
-            
-            case 'high':
-                $suggestedDate = date('Y-m-d', strtotime('+1 day'));
-                return [
-                    'suggested_date' => $suggestedDate,
-                    'suggested_time' => '09:00:00',
-                    'message' => 'Urgent appointment recommended within 24 hours',
-                    'wait_time' => '1-24 hours'
                 ];
             
             case 'medium':

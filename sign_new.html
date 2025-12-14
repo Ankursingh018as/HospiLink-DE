@@ -65,11 +65,13 @@
         <div class="input-group">
             <i class="fas fa-lock"></i>
             <input type="password" name="password" id="password" placeholder="Password" minlength="6" required>
+            <i class="fas fa-eye toggle-password" data-target="password"></i>
             <label for="password">Password</label>
         </div>
         <div class="input-group">
             <i class="fas fa-lock"></i>
             <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm Password" minlength="6" required>
+            <i class="fas fa-eye toggle-password" data-target="confirm_password"></i>
             <label for="confirm_password">Confirm Password</label>
         </div>
        <input type="submit" class="btn" value="Sign Up" name="signUp">
@@ -93,6 +95,7 @@
           <div class="input-group">
               <i class="fas fa-lock"></i>
               <input type="password" name="password" id="loginPassword" placeholder="Password" required>
+              <i class="fas fa-eye toggle-password" data-target="loginPassword"></i>
               <label for="loginPassword">Password</label>
           </div>
           <div class="input-group">
@@ -118,7 +121,72 @@
         </div>
     </div>
 
+    <!-- OTP Verification Modal -->
+    <div id="otpModal" class="otp-modal">
+        <div class="otp-modal-content">
+            <div class="otp-modal-header">
+                <h2>Email Verification</h2>
+                <p>We've sent a 6-digit OTP to <strong id="otpEmail"></strong></p>
+            </div>
+            
+            <div class="otp-modal-body">
+                <!-- Loading State -->
+                <div id="otpLoading" class="otp-loading" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Sending OTP...</p>
+                </div>
+                
+                <!-- OTP Input Section -->
+                <div id="otpInputSection">
+                    <div class="otp-inputs">
+                        <input type="text" maxlength="1" class="otp-input" id="otp1" pattern="[0-9]" inputmode="numeric">
+                        <input type="text" maxlength="1" class="otp-input" id="otp2" pattern="[0-9]" inputmode="numeric">
+                        <input type="text" maxlength="1" class="otp-input" id="otp3" pattern="[0-9]" inputmode="numeric">
+                        <input type="text" maxlength="1" class="otp-input" id="otp4" pattern="[0-9]" inputmode="numeric">
+                        <input type="text" maxlength="1" class="otp-input" id="otp5" pattern="[0-9]" inputmode="numeric">
+                        <input type="text" maxlength="1" class="otp-input" id="otp6" pattern="[0-9]" inputmode="numeric">
+                    </div>
+                    
+                    <div class="otp-timer" id="otpTimer">
+                        <i class="fas fa-clock"></i>
+                        <span id="timerText">5:00</span>
+                    </div>
+                    
+                    <div class="otp-message" id="otpMessage"></div>
+                    
+                    <button type="button" class="btn otp-verify-btn" id="verifyOtpBtn">
+                        <i class="fas fa-check-circle"></i> Verify OTP
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="otp-modal" style="display: none;">
+        <div class="otp-modal-content success-modal-content">
+            <div class="success-modal-header">
+                <div class="success-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h2>Registration Successful!</h2>
+                <p>Your account has been created successfully.</p>
+            </div>
+            
+            <div class="success-modal-body">
+                <p class="success-message">
+                    Welcome to HospiLink! To access your account and start using our services, please log in with your credentials.
+                </p>
+                
+                <button type="button" class="btn success-login-btn" id="successLoginBtn">
+                    <i class="fas fa-sign-in-alt"></i> Go to Login
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script src="sign.js"></script>
+    <script src="php/otp_handler.js"></script>
     <script>
         // Show/hide doctor-specific fields based on role selection
         document.getElementById('role').addEventListener('change', function() {
@@ -140,19 +208,25 @@
             }
         });
 
-        // Password confirmation validation
-        document.querySelector('form').addEventListener('submit', function(e) {
-            // Only check for registration form (has confirm_password field)
-            const confirmPassword = document.getElementById('confirm_password');
-            if (confirmPassword && confirmPassword.offsetParent !== null) {
-                const password = document.getElementById('password').value;
-                const confirmPasswordValue = confirmPassword.value;
+        // Note: Password validation is now handled by otp_handler.js
+        // The form submission is intercepted for OTP verification
+
+        // Password visibility toggle
+        document.querySelectorAll('.toggle-password').forEach(icon => {
+            icon.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-target');
+                const passwordInput = document.getElementById(targetId);
                 
-                if (password !== confirmPasswordValue) {
-                    e.preventDefault();
-                    alert('Passwords do not match!');
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    this.classList.remove('fa-eye');
+                    this.classList.add('fa-eye-slash');
+                } else {
+                    passwordInput.type = 'password';
+                    this.classList.remove('fa-eye-slash');
+                    this.classList.add('fa-eye');
                 }
-            }
+            });
         });
     </script>
 </body>

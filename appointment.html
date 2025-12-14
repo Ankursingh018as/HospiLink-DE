@@ -6,7 +6,7 @@
     <title>Appointment</title>
     <link rel="stylesheet" href="css/typography.css">
     <link rel="stylesheet" href="css/style.css?v=2">
-    <link rel="stylesheet" href="css/appointment.css?v=2">
+    <link rel="stylesheet" href="css/appointment_new.css?v=<?php echo time(); ?>">
     <link
     href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css"
     rel="stylesheet"/>
@@ -28,62 +28,314 @@
       </div>
 </div>
     <div class="content">
-         <div class="left">
-    <div class="container">
-        <h1>Book Your <span>Appointment</span> </h1>
-        <br>
-        <form action="php/appointment.php" method="POST">
-            <label for="name">Full Name</label>
-            <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+        <div class="appointment-wrapper">
+            <div class="container">
+                <h1>Book Your <span>Appointment</span></h1>
+                <p class="subtitle">Complete the form in 3 easy steps</p>
 
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+                <!-- Progress Indicator -->
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="progress-steps">
+                        <div class="progress-step active" data-step="1">
+                            <div class="step-circle">
+                                <i class="ri-user-line"></i>
+                                <span class="step-number">1</span>
+                            </div>
+                            <span class="step-label">Personal Details</span>
+                        </div>
+                        <div class="progress-step" data-step="2">
+                            <div class="step-circle">
+                                <i class="ri-hospital-line"></i>
+                                <span class="step-number">2</span>
+                            </div>
+                            <span class="step-label">Appointment Info</span>
+                        </div>
+                        <div class="progress-step" data-step="3">
+                            <div class="step-circle">
+                                <i class="ri-check-line"></i>
+                                <span class="step-number">3</span>
+                            </div>
+                            <span class="step-label">Review & Submit</span>
+                        </div>
+                    </div>
+                </div>
 
-            <div class="form-group">
-                <label for="report-type">Gender</label>
-                <select id="gender" name="gender" required>
-                    <option value="" disabled selected>Select Your Gender</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Others">Others</option>
-            </select>
+                <form action="php/appointment.php" method="POST" id="appointmentForm">
+                    <!-- Step 1: Personal Details -->
+                    <div class="form-step active" id="step1">
+                        <div class="step-header">
+                            <h2><i class="ri-user-line"></i> Personal Details</h2>
+                            <p>Let us know who you are</p>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="name">
+                                    <i class="ri-user-fill"></i> Full Name *
+                                </label>
+                                <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="email">
+                                    <i class="ri-mail-fill"></i> Email Address *
+                                </label>
+                                <input type="email" id="email" name="email" placeholder="your.email@example.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">
+                                    <i class="ri-phone-fill"></i> Phone Number *
+                                </label>
+                                <input type="tel" id="phone" name="phone" placeholder="+91 98765 43210" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="gender">
+                                    <i class="ri-user-heart-fill"></i> Gender *
+                                </label>
+                                <select id="gender" name="gender" required>
+                                    <option value="" disabled selected>Select Your Gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Others">Others</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn-next" onclick="nextStep(1)">
+                                Continue <i class="ri-arrow-right-line"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Appointment Information -->
+                    <div class="form-step" id="step2">
+                        <div class="step-header">
+                            <h2><i class="ri-hospital-line"></i> Appointment Information</h2>
+                            <p>Tell us about your health concern</p>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="symptoms">
+                                    <i class="ri-stethoscope-fill"></i> Describe Your Symptoms *
+                                </label>
+                                <textarea id="symptoms" name="symptoms" placeholder="Please describe your symptoms in detail (e.g., chest pain, high fever, cough, etc.). This helps our AI system prioritize your appointment based on urgency." rows="5" required></textarea>
+                                <small class="form-hint">
+                                    <i class="ri-information-fill"></i> Our AI analyzes symptoms to prioritize urgent cases
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="date">
+                                    <i class="ri-calendar-fill"></i> Preferred Date *
+                                </label>
+                                <input type="date" id="date" name="date" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="time">
+                                    <i class="ri-time-fill"></i> Preferred Time *
+                                </label>
+                                <input type="time" id="time" name="time" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="s_doctor">
+                                    <i class="ri-user-star-fill"></i> Doctor Preference (Optional)
+                                </label>
+                                <select id="s_doctor" name="s_doctor">
+                                    <option value="">Any Available Doctor</option>
+                                    <option value="Dr. Ramesh Patel">Dr. Ramesh Patel - Cardiology</option>
+                                    <option value="Dr. Harsh Shah">Dr. Harsh Shah - General Medicine</option>
+                                    <option value="Dr. Mehul Poonawala">Dr. Mehul Poonawala - Pediatrics</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn-back" onclick="prevStep(2)">
+                                <i class="ri-arrow-left-line"></i> Back
+                            </button>
+                            <button type="button" class="btn-next" onclick="nextStep(2)">
+                                Review <i class="ri-arrow-right-line"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Review & Submit -->
+                    <div class="form-step" id="step3">
+                        <div class="step-header">
+                            <h2><i class="ri-check-line"></i> Review Your Appointment</h2>
+                            <p>Please verify all details before submitting</p>
+                        </div>
+
+                        <div class="review-section">
+                            <div class="review-card">
+                                <h3><i class="ri-user-line"></i> Personal Information</h3>
+                                <div class="review-item">
+                                    <span class="review-label">Name:</span>
+                                    <span class="review-value" id="review-name"></span>
+                                </div>
+                                <div class="review-item">
+                                    <span class="review-label">Email:</span>
+                                    <span class="review-value" id="review-email"></span>
+                                </div>
+                                <div class="review-item">
+                                    <span class="review-label">Phone:</span>
+                                    <span class="review-value" id="review-phone"></span>
+                                </div>
+                                <div class="review-item">
+                                    <span class="review-label">Gender:</span>
+                                    <span class="review-value" id="review-gender"></span>
+                                </div>
+                            </div>
+
+                            <div class="review-card">
+                                <h3><i class="ri-hospital-line"></i> Appointment Details</h3>
+                                <div class="review-item">
+                                    <span class="review-label">Date:</span>
+                                    <span class="review-value" id="review-date"></span>
+                                </div>
+                                <div class="review-item">
+                                    <span class="review-label">Time:</span>
+                                    <span class="review-value" id="review-time"></span>
+                                </div>
+                                <div class="review-item">
+                                    <span class="review-label">Doctor:</span>
+                                    <span class="review-value" id="review-doctor"></span>
+                                </div>
+                                <div class="review-item full-width">
+                                    <span class="review-label">Symptoms:</span>
+                                    <span class="review-value" id="review-symptoms"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn-back" onclick="prevStep(3)">
+                                <i class="ri-arrow-left-line"></i> Back
+                            </button>
+                            <button type="submit" class="btn-submit">
+                                <i class="ri-send-plane-fill"></i> Book Appointment
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
-
-            <label for="phone">Phone Number</label>
-            <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
-
-            <label for="symptoms">Describe Your Symptoms *</label>
-            <textarea id="symptoms" name="symptoms" placeholder="Please describe your symptoms in detail (e.g., chest pain, high fever, cough, etc.). This helps our AI system prioritize your appointment based on urgency." rows="4" required></textarea>
-
-            <label for="date">Preferred Appointment Date</label>
-            <input type="date" id="date" name="date" required>
-
-            <label for="time">Preferred Appointment Time</label>
-            <input type="time" id="time" name="time" required>
-
-            
-            <div class="form-group">
-                <label for="report-type">Doctor Preference (Optional)</label>
-                <select id="s_doctor" name="s_doctor">
-                    <option value="">Any Available Doctor</option>
-                    <option value="Dr. Ramesh Patel">Dr. Ramesh Patel - Cardiology</option>
-                    <option value="Dr. Harsh Shah">Dr. Harsh Shah - General Medicine</option>
-                    <option value="Dr. Mehul Poonawala">Dr. Mehul Poonawala - Pediatrics</option>
-            </select>
-            </div>
-
-            <button type="submit">Book Appointment with AI Priority</button>
-        </form>
-    </div>
         </div>
-         <div class="right">
-            <img src="images/appointment.png" alt="Image">
-         </div>
     </div>
 
     <script>
         // Set minimum date to today
         document.getElementById('date').min = new Date().toISOString().split('T')[0];
+
+        let currentStep = 1;
+
+        function updateProgress() {
+            const steps = document.querySelectorAll('.progress-step');
+            const progressFill = document.getElementById('progressFill');
+            const percentage = ((currentStep - 1) / 2) * 100;
+            
+            progressFill.style.width = percentage + '%';
+            
+            steps.forEach((step, index) => {
+                const stepNum = index + 1;
+                if (stepNum < currentStep) {
+                    step.classList.add('completed');
+                    step.classList.remove('active');
+                } else if (stepNum === currentStep) {
+                    step.classList.add('active');
+                    step.classList.remove('completed');
+                } else {
+                    step.classList.remove('active', 'completed');
+                }
+            });
+        }
+
+        function validateStep(step) {
+            const currentStepElement = document.getElementById('step' + step);
+            const inputs = currentStepElement.querySelectorAll('input[required], select[required], textarea[required]');
+            
+            for (let input of inputs) {
+                if (!input.value.trim()) {
+                    input.focus();
+                    input.classList.add('error-shake');
+                    setTimeout(() => input.classList.remove('error-shake'), 500);
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function nextStep(step) {
+            if (!validateStep(step)) {
+                return;
+            }
+
+            document.getElementById('step' + step).classList.remove('active');
+            currentStep++;
+            document.getElementById('step' + currentStep).classList.add('active');
+            
+            if (currentStep === 3) {
+                updateReview();
+            }
+            
+            updateProgress();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function prevStep(step) {
+            document.getElementById('step' + step).classList.remove('active');
+            currentStep--;
+            document.getElementById('step' + currentStep).classList.add('active');
+            updateProgress();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function updateReview() {
+            document.getElementById('review-name').textContent = document.getElementById('name').value;
+            document.getElementById('review-email').textContent = document.getElementById('email').value;
+            document.getElementById('review-phone').textContent = document.getElementById('phone').value;
+            document.getElementById('review-gender').textContent = document.getElementById('gender').value;
+            
+            const dateValue = document.getElementById('date').value;
+            const formattedDate = new Date(dateValue + 'T00:00:00').toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            document.getElementById('review-date').textContent = formattedDate;
+            
+            const timeValue = document.getElementById('time').value;
+            const [hours, minutes] = timeValue.split(':');
+            const time12 = new Date(2000, 0, 1, hours, minutes).toLocaleTimeString('en-US', {
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            });
+            document.getElementById('review-time').textContent = time12;
+            
+            const doctor = document.getElementById('s_doctor').value || 'Any Available Doctor';
+            document.getElementById('review-doctor').textContent = doctor;
+            
+            document.getElementById('review-symptoms').textContent = document.getElementById('symptoms').value;
+        }
+
+        // Initialize progress
+        updateProgress();
     </script>
 </body>
 </html>

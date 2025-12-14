@@ -23,8 +23,8 @@ $appointmentStatsQuery = "SELECT
     SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending,
     SUM(CASE WHEN status = 'confirmed' THEN 1 ELSE 0 END) as confirmed,
     SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed,
-    SUM(CASE WHEN priority_level = 'critical' THEN 1 ELSE 0 END) as critical,
-    SUM(CASE WHEN priority_level = 'high' THEN 1 ELSE 0 END) as high
+    SUM(CASE WHEN priority_level = 'high' THEN 1 ELSE 0 END) as high,
+    SUM(CASE WHEN priority_level = 'medium' THEN 1 ELSE 0 END) as medium
 FROM appointments";
 $aptStats = $conn->query($appointmentStatsQuery)->fetch_assoc();
 
@@ -167,11 +167,11 @@ $activityLogs = $conn->query($activityQuery);
                             <div class="stat-badge urgent">Urgent</div>
                         </div>
                         <div class="stat-card-body">
-                            <div class="stat-number critical"><?php echo $aptStats['critical']; ?></div>
-                            <div class="stat-label">Critical Cases</div>
+                            <div class="stat-number critical"><?php echo $aptStats['high']; ?></div>
+                            <div class="stat-label">High Priority</div>
                             <div class="stat-trend red">
                                 <i class="fas fa-bolt"></i>
-                                <span><?php echo $aptStats['high']; ?> High Priority</span>
+                                <span><?php echo $aptStats['medium']; ?> Medium Priority</span>
                             </div>
                         </div>
                     </div>
