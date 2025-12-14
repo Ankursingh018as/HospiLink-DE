@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once 'php/db.php';
-require_once 'php/patient_qr_helper.php';
+require_once '../php/db.php';
+require_once '../php/patient_qr_helper.php';
 
 // Get QR token from URL
 $token = isset($_GET['token']) ? $_GET['token'] : '';

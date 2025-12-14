@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once 'php/db.php';
-require_once 'php/patient_qr_helper.php';
+require_once '../php/db.php';
+require_once '../php/patient_qr_helper.php';
 
 $admission_id = isset($_GET['admission_id']) ? intval($_GET['admission_id']) : 0;
 

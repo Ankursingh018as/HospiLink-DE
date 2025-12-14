@@ -23,12 +23,13 @@ class CalendarHelper {
         $doctor = isset($appointmentData['doctor_name']) ? $appointmentData['doctor_name'] : 'To be assigned';
         $priority = isset($appointmentData['priority_level']) ? strtoupper($appointmentData['priority_level']) : 'MEDIUM';
         
-        // Create start and end datetime
-        $startDateTime = new DateTime($date . ' ' . $time);
+        // Create start and end datetime with timezone
+        date_default_timezone_set('Asia/Kolkata');
+        $startDateTime = new DateTime($date . ' ' . $time, new DateTimeZone('Asia/Kolkata'));
         $endDateTime = clone $startDateTime;
         $endDateTime->modify('+1 hour'); // Default 1 hour appointment
         
-        // Format dates for iCalendar (YYYYMMDDTHHMMSS)
+        // Format dates for iCalendar (YYYYMMDDTHHMMSS with timezone)
         $dtStart = $startDateTime->format('Ymd\THis');
         $dtEnd = $endDateTime->format('Ymd\THis');
         $dtStamp = gmdate('Ymd\THis\Z');
@@ -60,7 +61,7 @@ class CalendarHelper {
         ];
         $priority_value = $calendarPriority[$priority] ?? 5;
         
-        // Build iCalendar content
+        // Build iCalendar content with timezone support
         $ics = "BEGIN:VCALENDAR\r\n";
         $ics .= "VERSION:2.0\r\n";
         $ics .= "PRODID:-//HospiLink//Hospital Management System//EN\r\n";
@@ -69,11 +70,22 @@ class CalendarHelper {
         $ics .= "X-WR-CALNAME:HospiLink Appointments\r\n";
         $ics .= "X-WR-TIMEZONE:Asia/Kolkata\r\n";
         
+        // Add timezone definition
+        $ics .= "BEGIN:VTIMEZONE\r\n";
+        $ics .= "TZID:Asia/Kolkata\r\n";
+        $ics .= "BEGIN:STANDARD\r\n";
+        $ics .= "DTSTART:19700101T000000\r\n";
+        $ics .= "TZOFFSETFROM:+0530\r\n";
+        $ics .= "TZOFFSETTO:+0530\r\n";
+        $ics .= "TZNAME:IST\r\n";
+        $ics .= "END:STANDARD\r\n";
+        $ics .= "END:VTIMEZONE\r\n";
+        
         $ics .= "BEGIN:VEVENT\r\n";
         $ics .= "UID:$uid\r\n";
         $ics .= "DTSTAMP:$dtStamp\r\n";
-        $ics .= "DTSTART:$dtStart\r\n";
-        $ics .= "DTEND:$dtEnd\r\n";
+        $ics .= "DTSTART;TZID=Asia/Kolkata:$dtStart\r\n";
+        $ics .= "DTEND;TZID=Asia/Kolkata:$dtEnd\r\n";
         $ics .= "SUMMARY:$summary\r\n";
         $ics .= "DESCRIPTION:$description\r\n";
         $ics .= "LOCATION:$location\r\n";

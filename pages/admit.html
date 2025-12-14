@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admit Patient</title>
-    <link rel="stylesheet" href="css/typography.css">
-    <link rel="stylesheet" href="css/style.css?v=2">
-    <link rel="stylesheet" href="css/admit.css?v=3">
+    <link rel="stylesheet" href="../css/typography.css">
+    <link rel="stylesheet" href="../css/style.css?v=2">
+    <link rel="stylesheet" href="../css/admit.css?v=3">
     <link
     href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css"
     rel="stylesheet"/>
@@ -15,9 +15,9 @@
 <body>
    <div class="main">
       <div class="nav">
-         <a href="index.html"> <img src="images/logo.png" alt=""> </a>
+         <a href="../index.html"> <img src="../images/logo.png" alt=""> </a>
          <div class="nav-part2">
-            <h4><a href="index.html"><abbr title="Home">Home</abbr></a></h4>
+            <h4><a href="../index.html"><abbr title="Home">Home</abbr></a></h4>
             <h4><a href="appointment.html"><abbr title="Book Appointment">Book Appointment</abbr></a></h4>
             <h4><a href="beds.html"><abbr title="Beds Availability">Beds</abbr></a></h4>
             <h4><a href="admit.html"><abbr title="Admit Patient"> Admit Patient</abbr></a></h4>
@@ -32,7 +32,7 @@
           
     <div class="upload-section">
       <h2>Patient Details</h2>
-      <form action="php/admit_patient.php" method="post" enctype="multipart/form-data">
+      <form action="../php/admit_patient.php" method="post" enctype="multipart/form-data">
           <div class="form-row">
               <div class="form-group">
                   <label for="patient-name">Patient Name</label>
@@ -110,10 +110,95 @@
 </div>
 
 <script>
-    // Note: Bed and doctor assignment fields have been removed from the form
+    // Form validation and submission handling
+    const form = document.querySelector('form');
+    const submitBtn = form.querySelector('button[type="submit"]');
+    let isSubmitting = false;
+
+    // Client-side validation
+    function validateForm() {
+        const phone = document.getElementById('phno').value;
+        const email = document.getElementById('email').value;
+        const dob = new Date(document.getElementById('dob').value);
+        const admitDate = new Date(document.getElementById('admit-date').value);
+        const today = new Date();
+        
+        // Phone validation (10 digits)
+        const phoneRegex = /^[6-9]\d{9}$/;
+        if (!phoneRegex.test(phone)) {
+            alert('Please enter a valid 10-digit Indian phone number (starting with 6-9)');
+            return false;
+        }
+        
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            alert('Please enter a valid email address');
+            return false;
+        }
+        
+        // Age validation (must be born before today)
+        if (dob >= today) {
+            alert('Date of birth must be in the past');
+            return false;
+        }
+        
+        // Check if patient is too old (>120 years)
+        const age = (today - dob) / (365.25 * 24 * 60 * 60 * 1000);
+        if (age > 120) {
+            alert('Please check the date of birth - age seems incorrect');
+            return false;
+        }
+        
+        // Admit date validation (not in past)
+        admitDate.setHours(0, 0, 0, 0);
+        today.setHours(0, 0, 0, 0);
+        if (admitDate < today) {
+            alert('Admission date cannot be in the past');
+            return false;
+        }
+        
+        // Check terms & conditions
+        if (!document.getElementById('checkbox').checked) {
+            alert('Please accept the terms and conditions');
+            return false;
+        }
+        
+        return true;
+    }
+
+    // Handle form submission
+    form.addEventListener('submit', function(e) {
+        if (isSubmitting) {
+            e.preventDefault();
+            return false;
+        }
+        
+        if (!validateForm()) {
+            e.preventDefault();
+            return false;
+        }
+        
+        // Show loading state
+        isSubmitting = true;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Processing...';
+        submitBtn.style.opacity = '0.6';
+        
+        // Form will submit normally
+        return true;
+    });
+
+    // Set today as minimum admit date
+    const admitDateInput = document.getElementById('admit-date');
+    const today = new Date().toISOString().split('T')[0];
+    admitDateInput.setAttribute('min', today);
+    admitDateInput.value = today; // Default to today
+    
+    // Set maximum DOB to today
+    const dobInput = document.getElementById('dob');
+    dobInput.setAttribute('max', today);
 </script>
-      </form>
-  </div>
 
 
     </div>

@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'php/db.php';
+include '../php/db.php';
 
 // Get appointment ID from session instead of URL
 $appointment_id = isset($_SESSION['appointment_id']) ? intval($_SESSION['appointment_id']) : 0;
@@ -39,7 +39,7 @@ if ($appointment_id > 0) {
     <title>Appointment Confirmed - HospiLink</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="icon" href="images/hosp_favicon.png" type="image/png">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
     <style>
         * {
             margin: 0;
@@ -596,7 +596,7 @@ if ($appointment_id > 0) {
                         <i class="fas fa-tachometer-alt"></i> View Dashboard
                     </a>
                 <?php endif; ?>
-                <a href="index.html" class="btn btn-secondary">
+                <a href="../index.html" class="btn btn-secondary">
                     <i class="fas fa-home"></i> Back to Home
                 </a>
                 <button onclick="window.print()" class="btn btn-secondary">

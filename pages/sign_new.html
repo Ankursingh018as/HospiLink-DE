@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register & Login - HospiLink</title>
-    <link rel="stylesheet" href="css/typography.css">
+    <link rel="stylesheet" href="../css/typography.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="css/sign.css">
+    <link rel="stylesheet" href="../css/sign.css">
     <link rel="icon" href="images/hosp_favicon.png" type="image/png">
 </head>
 <body>
     <!-- Registration Form -->
     <div class="container" id="signup" style="display:none;">
       <h1 class="form-title">Register</h1>
-      <form method="post" action="php/auth.php">
+      <form method="post" action="../php/auth.php">
         <div class="input-group">
            <i class="fas fa-user"></i>
            <input type="text" name="fName" id="fName" placeholder="First Name" required>
@@ -100,7 +100,7 @@
     <!-- Login Form -->
     <div class="container" id="signIn" style="display:block;">
         <h1 class="form-title">Sign In</h1>
-        <form method="post" action="php/auth.php">
+        <form method="post" action="../php/auth.php">
           <div class="input-group">
               <i class="fas fa-envelope"></i>
               <input type="email" name="email" id="loginEmail" placeholder="Email" required>
@@ -200,8 +200,8 @@
         </div>
     </div>
 
-    <script src="sign.js"></script>
-    <script src="php/otp_handler.js"></script>
+    <script src="../scripts/sign.js"></script>
+    <script src="../php/"otp_handler.js"></script>
     <script>
         // Show/hide role-specific fields based on role selection
         document.getElementById('role').addEventListener('change', function() {

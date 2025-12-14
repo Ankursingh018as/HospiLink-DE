@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once 'php/db.php';
-require_once 'php/patient_qr_helper.php';
+require_once '../php/db.php';
+require_once '../php/patient_qr_helper.php';
 
 // Check if user is logged in and authorized
 if (!isset($_SESSION['logged_in']) || !in_array($_SESSION['role'], ['doctor', 'nurse', 'admin'])) {
