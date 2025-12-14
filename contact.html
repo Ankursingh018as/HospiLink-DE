@@ -31,7 +31,11 @@
     <div class="contact-section">
         <h2>Contact Us</h2>
         <br>
-        <form action="https://formsubmit.co/el/yeliyo" method="post">
+        
+        <!-- Success/Error Messages -->
+        <div id="messageContainer"></div>
+        
+        <form action="/HospiLink-DE/php/contact_form.php" method="POST" id="contactForm">
             <div class="form-row">
                 <div class="form-group">
                     <label for="name">Your Name</label>
@@ -45,9 +49,9 @@
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="Speciality">Select Speciality</label>
-                    <select id="Speciality" name="Speciality" required>
-                        <option value="Select Speciality" disabled selected>Select Speciality</option>
+                    <label for="speciality">Select Speciality</label>
+                    <select id="speciality" name="speciality" required>
+                        <option value="">Select Speciality</option>
                         <option value="Spine Surgery">Spine Surgery</option>
                         <option value="Nephrology">Nephrology</option>
                         <option value="Radiology">Radiology</option>
@@ -59,12 +63,12 @@
                 </div>  
 
                 <div class="form-group">
-                    <label for="Select Doctor">Select Doctor</label>
-                    <select id="Select Doctor" name="Select Doctor" required>
-                        <option value="" disabled selected>Select Doctor</option>
+                    <label for="doctor">Select Doctor</label>
+                    <select id="doctor" name="doctor" required>
+                        <option value="">Select Doctor</option>
                         <option value="Dr. Patel">Dr. Patel</option>
                         <option value="Dr. HM Shah">Dr. HM Shah</option>
-                        <option value="Dr. poonawala">Dr. poonawala</option>
+                        <option value="Dr. Poonawala">Dr. Poonawala</option>
                     </select>
                 </div>
             </div>
@@ -73,9 +77,51 @@
                 <label for="message">Your Message</label>
                 <textarea id="message" name="message" placeholder="Write your message here..." required></textarea>
             </div>
-            <button type="submit">Send Message</button>
+            <button type="submit" id="submitBtn">Send Message</button>
         </form>
     </div>
+
+    <script>
+        // Display success or error messages from PHP session
+        window.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const messageContainer = document.getElementById('messageContainer');
+            
+            // Check for messages in URL parameters
+            if (urlParams.has('success')) {
+                showMessage('success', decodeURIComponent(urlParams.get('success')));
+                // Clear URL parameters
+                window.history.replaceState({}, document.title, window.location.pathname);
+            } else if (urlParams.has('error')) {
+                showMessage('error', decodeURIComponent(urlParams.get('error')));
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        });
+
+        function showMessage(type, message) {
+            const messageContainer = document.getElementById('messageContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `alert alert-${type}`;
+            messageDiv.innerHTML = `
+                <i class="ri-${type === 'success' ? 'check-line' : 'error-warning-line'}"></i>
+                <span>${message}</span>
+            `;
+            messageContainer.appendChild(messageDiv);
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                messageDiv.style.opacity = '0';
+                setTimeout(() => messageDiv.remove(), 300);
+            }, 5000);
+        }
+
+        // Form submission handling
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="ri-loader-4-line"></i> Sending...';
+        });
+    </script>
 
 </body>
 </html>

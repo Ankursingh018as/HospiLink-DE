@@ -1,4 +1,30 @@
-/* Appointment Booking - Three Step Flow */
+/* Appointment Booking - Three Step Flow - Fresh Version */
+* {
+    box-sizing: border-box;
+}
+
+/* Page Header Section */
+.page-header-appointment {
+    background: linear-gradient(135deg, #00adb5 0%, #0e545f 100%);
+    padding: 40px 20px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 173, 181, 0.3);
+}
+
+.page-header-appointment h1 {
+    color: #fff;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.page-header-appointment h1 i {
+    font-size: 2.5rem;
+}
 
 .appointment-wrapper {
     width: 100%;
@@ -32,7 +58,16 @@
     margin-bottom: 40px;
 }
 
-/* Progress Indicator */
+/* Override navigation button color for appointment page */
+.nav button {
+    background-color: #00adb5 !important;
+}
+
+.nav button:hover {
+    background-color: #0e545f !important;
+}
+
+/* ===== PROGRESS INDICATOR ===== */
 .progress-container {
     margin-bottom: 50px;
 }
@@ -56,16 +91,17 @@
 }
 
 .progress-steps {
-    display: flex;
+    display: flex !important;
+    flex-direction: row !important;
     justify-content: space-between;
     align-items: flex-start;
     position: relative;
-    flex-direction: row;
+    gap: 20px;
 }
 
 .progress-step {
-    display: flex;
-    flex-direction: column;
+    display: flex !important;
+    flex-direction: column !important;
     align-items: center;
     flex: 1;
     position: relative;
@@ -83,7 +119,7 @@
     height: 60px;
     border-radius: 50%;
     background-color: #e9ecef;
-    display: flex;
+    display: flex !important;
     align-items: center;
     justify-content: center;
     position: relative;
@@ -116,7 +152,7 @@
 }
 
 .step-number {
-    display: none;
+    display: none !important;
 }
 
 .step-label {
@@ -126,6 +162,7 @@
     text-align: center;
     transition: color 0.3s ease;
     white-space: nowrap;
+    display: block;
 }
 
 .progress-step.active .step-label {
@@ -136,14 +173,14 @@
     color: #28a745;
 }
 
-/* Form Steps */
+/* ===== FORM STEPS ===== */
 .form-step {
     display: none;
     animation: fadeIn 0.4s ease;
 }
 
 .form-step.active {
-    display: block;
+    display: block !important;
 }
 
 @keyframes fadeIn {
@@ -183,7 +220,7 @@
     font-size: 0.95rem;
 }
 
-/* Form Layout */
+/* ===== FORM LAYOUT ===== */
 .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -254,7 +291,7 @@ textarea {
     color: #00adb5;
 }
 
-/* Error Animation */
+/* ===== ERROR ANIMATION ===== */
 @keyframes shake {
     0%, 100% { transform: translateX(0); }
     10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
@@ -266,7 +303,7 @@ textarea {
     border-color: #dc3545 !important;
 }
 
-/* Form Actions */
+/* ===== FORM ACTIONS ===== */
 .form-actions {
     display: flex;
     justify-content: space-between;
@@ -317,15 +354,16 @@ textarea {
 }
 
 .btn-submit {
-    background: linear-gradient(135deg, #28a745 0%, #218838 100%);
-    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+    background: linear-gradient(135deg, #00adb5 0%, #0e545f 100%);
+    box-shadow: 0 4px 15px rgba(0, 173, 181, 0.3);
 }
 
 .btn-submit:hover {
-    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+    box-shadow: 0 6px 20px rgba(0, 173, 181, 0.4);
+    transform: translateY(-2px);
 }
 
-/* Review Section */
+/* ===== REVIEW SECTION ===== */
 .review-section {
     display: grid;
     gap: 24px;
@@ -364,7 +402,8 @@ textarea {
 }
 
 .review-item.full-width {
-    grid-template-columns: 1fr;
+    grid-template-columns: 140px 1fr;
+    align-items: flex-start;
 }
 
 .review-label {
@@ -377,9 +416,11 @@ textarea {
     color: #222831;
     font-size: 0.95rem;
     word-break: break-word;
+    line-height: 1.6;
+    text-align: left;
 }
 
-/* Responsive Design */
+/* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {
     .container {
         padding: 24px;
@@ -390,8 +431,7 @@ textarea {
     }
 
     .progress-steps {
-        gap: 5px;
-        flex-direction: row;
+        gap: 10px;
     }
 
     .step-circle {
@@ -404,9 +444,7 @@ textarea {
     }
 
     .step-label {
-        font-size: 0.7rem;
-        max-width: 80px;
-        line-height: 1.2;
+        font-size: 0.75rem;
     }
 
     .form-row {
@@ -433,6 +471,10 @@ textarea {
         grid-template-columns: 1fr;
         gap: 8px;
     }
+    
+    .review-item.full-width {
+        grid-template-columns: 1fr;
+    }
 
     .review-label {
         font-weight: 700;
@@ -449,14 +491,8 @@ textarea {
         border-radius: 12px;
     }
 
-    .progress-steps {
-        flex-direction: row;
-        justify-content: space-around;
-    }
-
     .step-label {
-        font-size: 0.65rem;
-        max-width: 70px;
+        font-size: 0.7rem;
     }
 
     .step-circle {
@@ -479,7 +515,7 @@ textarea {
     }
 }
 
-/* Smooth scrolling */
+/* ===== SMOOTH SCROLLING ===== */
 html {
     scroll-behavior: smooth;
 }

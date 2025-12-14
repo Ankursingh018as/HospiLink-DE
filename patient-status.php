@@ -3,12 +3,6 @@ session_start();
 require_once 'php/db.php';
 require_once 'php/patient_qr_helper.php';
 
-// Check if user is logged in and authorized (doctor or nurse)
-if (!isset($_SESSION['logged_in']) || !in_array($_SESSION['user_role'], ['doctor', 'nurse', 'admin'])) {
-    header("Location: sign_new.html?redirect=" . urlencode($_SERVER['REQUEST_URI']));
-    exit();
-}
-
 // Get QR token from URL
 $token = isset($_GET['token']) ? $_GET['token'] : '';
 
@@ -23,8 +17,11 @@ if (!$admission) {
     die("Error: Invalid or expired QR code");
 }
 
-// Log the scan
-PatientQRHelper::logScan($conn, $admission['admission_id'], $_SESSION['user_id'], 'view');
+// Check if user is logged in (for logging purposes)
+$logged_in_user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+
+// Log the scan (use NULL for user_id if not logged in - for public/bedside access)
+PatientQRHelper::logScan($conn, $admission['admission_id'], $logged_in_user_id, 'view');
 
 $admission_id = $admission['admission_id'];
 

@@ -187,27 +187,33 @@ class PatientQRHelper {
         // Generate unique QR token
         $qr_token = self::generateQRToken($patient_id, time());
         
+        // Handle NULL values properly for foreign keys
+        $bed_id_param = ($bed_id && $bed_id > 0) ? $bed_id : null;
+        $doctor_id_param = ($doctor_id && $doctor_id > 0) ? $doctor_id : null;
+        
         $stmt = $conn->prepare("
             INSERT INTO patient_admissions 
             (patient_id, bed_id, qr_code_token, admission_date, admission_reason, assigned_doctor_id, status)
             VALUES (?, ?, ?, NOW(), ?, ?, 'active')
         ");
         
-        $stmt->bind_param("iissi", $patient_id, $bed_id, $qr_token, $admission_reason, $doctor_id);
+        $stmt->bind_param("iissi", $patient_id, $bed_id_param, $qr_token, $admission_reason, $doctor_id_param);
         
         if ($stmt->execute()) {
             $admission_id = $stmt->insert_id;
             $stmt->close();
             
-            // Update bed status
-            $bed_stmt = $conn->prepare("
-                UPDATE beds 
-                SET status = 'occupied', patient_id = ?, admitted_date = NOW()
-                WHERE bed_id = ?
-            ");
-            $bed_stmt->bind_param("ii", $patient_id, $bed_id);
-            $bed_stmt->execute();
-            $bed_stmt->close();
+            // Update bed status only if bed was assigned
+            if ($bed_id_param) {
+                $bed_stmt = $conn->prepare("
+                    UPDATE beds 
+                    SET status = 'occupied', patient_id = ?, admitted_date = NOW()
+                    WHERE bed_id = ?
+                ");
+                $bed_stmt->bind_param("ii", $patient_id, $bed_id_param);
+                $bed_stmt->execute();
+                $bed_stmt->close();
+            }
             
             return [
                 'success' => true,

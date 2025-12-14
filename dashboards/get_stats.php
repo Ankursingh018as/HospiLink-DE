@@ -15,8 +15,9 @@ $today = date('Y-m-d');
 // Get today's stats
 $todayStatsQuery = "SELECT 
                         COUNT(*) as total_today,
-                        COALESCE(SUM(CASE WHEN priority_level = 'critical' THEN 1 ELSE 0 END), 0) as critical_count,
                         COALESCE(SUM(CASE WHEN priority_level = 'high' THEN 1 ELSE 0 END), 0) as high_count,
+                        COALESCE(SUM(CASE WHEN priority_level = 'medium' THEN 1 ELSE 0 END), 0) as medium_count,
+                        COALESCE(SUM(CASE WHEN priority_level = 'low' THEN 1 ELSE 0 END), 0) as low_count,
                         COALESCE(SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END), 0) as pending_count
                     FROM appointments 
                     WHERE (doctor_id = ? OR doctor_id IS NULL) 

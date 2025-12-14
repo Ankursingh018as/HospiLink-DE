@@ -25,7 +25,7 @@ CREATE TABLE users (
 CREATE TABLE symptom_keywords (
     keyword_id INT AUTO_INCREMENT PRIMARY KEY,
     keyword VARCHAR(100) NOT NULL,
-    priority_level ENUM('critical', 'high', 'medium', 'low') NOT NULL,
+    priority_level ENUM('high', 'medium', 'low') NOT NULL,
     description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -42,7 +42,7 @@ CREATE TABLE appointments (
     appointment_date DATE NOT NULL,
     appointment_time TIME NOT NULL,
     symptoms TEXT NOT NULL,
-    priority_level ENUM('critical', 'high', 'medium', 'low') NOT NULL,
+    priority_level ENUM('high', 'medium', 'low') NOT NULL,
     priority_score INT DEFAULT 0,
     status ENUM('pending', 'confirmed', 'completed', 'cancelled') DEFAULT 'pending',
     doctor_notes TEXT,
@@ -94,26 +94,25 @@ CREATE TABLE activity_logs (
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE SET NULL
 );
 
--- Insert critical symptom keywords for AI prioritization
+-- Insert symptom keywords for AI prioritization
 INSERT INTO symptom_keywords (keyword, priority_level, description) VALUES
--- Critical symptoms
-('chest pain', 'critical', 'Potential heart attack or serious cardiac issue'),
-('heart attack', 'critical', 'Immediate medical emergency'),
-('stroke', 'critical', 'Immediate medical emergency'),
-('unconscious', 'critical', 'Loss of consciousness'),
-('seizure', 'critical', 'Neurological emergency'),
-('severe bleeding', 'critical', 'Major blood loss'),
-('difficulty breathing', 'critical', 'Respiratory distress'),
-('cannot breathe', 'critical', 'Severe respiratory emergency'),
-('choking', 'critical', 'Airway obstruction'),
-('severe head injury', 'critical', 'Potential traumatic brain injury'),
-('poisoning', 'critical', 'Toxic ingestion'),
-('suicide', 'critical', 'Mental health emergency'),
-('overdose', 'critical', 'Drug overdose'),
-('anaphylaxis', 'critical', 'Severe allergic reaction'),
-('cardiac arrest', 'critical', 'Heart stopped'),
+-- High priority symptoms (urgent medical attention required)
+('chest pain', 'high', 'Potential heart attack or serious cardiac issue'),
+('heart attack', 'high', 'Immediate medical emergency'),
+('stroke', 'high', 'Immediate medical emergency'),
+('unconscious', 'high', 'Loss of consciousness'),
+('seizure', 'high', 'Neurological emergency'),
+('severe bleeding', 'high', 'Major blood loss'),
+('difficulty breathing', 'high', 'Respiratory distress'),
+('cannot breathe', 'high', 'Severe respiratory emergency'),
+('choking', 'high', 'Airway obstruction'),
+('severe head injury', 'high', 'Potential traumatic brain injury'),
+('poisoning', 'high', 'Toxic ingestion'),
+('suicide', 'high', 'Mental health emergency'),
+('overdose', 'high', 'Drug overdose'),
+('anaphylaxis', 'high', 'Severe allergic reaction'),
+('cardiac arrest', 'high', 'Heart stopped'),
 
--- High priority symptoms
 ('high fever', 'high', 'Fever above 103°F'),
 ('severe pain', 'high', 'Intense pain requiring urgent attention'),
 ('broken bone', 'high', 'Fracture requiring treatment'),

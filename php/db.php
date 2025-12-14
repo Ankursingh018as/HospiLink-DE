@@ -24,4 +24,8 @@ if ($conn->connect_error) {
 
 // Set charset to utf8mb4 for better character support
 $conn->set_charset("utf8mb4");
+
+// Set timezone to match server timezone
+date_default_timezone_set('Asia/Kolkata'); // Adjust to your timezone
+$conn->query("SET time_zone = '+05:30'"); // IST timezone
 ?>

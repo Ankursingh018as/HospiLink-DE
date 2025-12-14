@@ -74,6 +74,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $checkPatient->close();
     }
 
+    // Ensure AI analysis column exists (add if missing)
+    $colCheck = $conn->query("SHOW COLUMNS FROM appointments LIKE 'ai_analysis'");
+    if ($colCheck && $colCheck->num_rows === 0) {
+        $conn->query("ALTER TABLE appointments ADD COLUMN ai_analysis TEXT NULL");
+    }
+
     // Insert appointment with AI priority
     $sql = $conn->prepare("INSERT INTO appointments (patient_id, doctor_id, full_name, email, gender, phone, appointment_date, appointment_time, symptoms, priority_level, priority_score, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')");
     $sql->bind_param("iissssssssi", $patient_id, $doctor_id, $name, $email, $gender, $phone, $date, $time, $symptoms, $priorityLevel, $priorityScore);
@@ -95,6 +101,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $doctorQuery->close();
         }
         
+        // Store AI analysis in appointments.ai_analysis as JSON
+        $ai_json = json_encode($analysis);
+        $safe_ai = $conn->real_escape_string($ai_json);
+        $conn->query("UPDATE appointments SET ai_analysis = '{$safe_ai}' WHERE appointment_id = {$appointment_id}");
+
         // Prepare email data with AI analysis
         $emailData = [
             'appointment_id' => $appointment_id,

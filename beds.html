@@ -6,7 +6,7 @@
     <title>Beds Availability</title>
     <link rel="stylesheet" href="css/typography.css">
     <link rel="stylesheet" href="css/style.css?v=2">
-    <link rel="stylesheet" href="css/beds.css?v=2">
+    <link rel="stylesheet" href="css/beds_new.css?v=3">
     <link
     href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css"
     rel="stylesheet"/>
@@ -27,80 +27,173 @@
          </div>
       </div>
    </div>
+       <!-- Page Header -->
+       <section class="page-header-beds">
+           <div class="header-content">
+               <h1><i class="ri-hotel-bed-line"></i> Real-time Beds Availability</h1>
+               <p>Monitor live bed availability across all wards</p>
+               <div class="last-updated">
+                   <i class="ri-time-line"></i> Last updated: <span id="lastUpdated"></span>
+               </div>
+           </div>
+       </section>
+
        <!-- Beds -->
        <section id="beds" class="beds">
-       <h1>Real-time<span> Beds Availability</span></h1>
         <div class="beds-container">
-           <div class="beds-box stat-card">
-                <i class="ri-hospital-line stat-icon"></i>
-                <h2>Total Wards</h2>
-                <h3 class="stat-number">20</h3>
+           <div class="stat-card available-card">
+                <div class="stat-icon-wrapper">
+                    <i class="ri-check-double-line stat-icon"></i>
+                </div>
+                <div class="stat-content">
+                    <h2>Available Beds</h2>
+                    <h3 class="stat-number">45</h3>
+                    <span class="stat-label">Ready for patients</span>
+                </div>
            </div>
 
-           <div class="beds-box stat-card">
-                <i class="ri-hotel-bed-line stat-icon"></i>
-                <h2>Total Beds</h2>
-                <h3 class="stat-number">127</h3>
+           <div class="stat-card total-card">
+                <div class="stat-icon-wrapper">
+                    <i class="ri-hotel-bed-line stat-icon"></i>
+                </div>
+                <div class="stat-content">
+                    <h2>Total Beds</h2>
+                    <h3 class="stat-number">127</h3>
+                    <span class="stat-label">Across all wards</span>
+                </div>
            </div>
 
-           <div class="beds-box stat-card">
-                <i class="ri-check-line stat-icon"></i>
-                <h2>Available Beds</h2>
-                <h3 class="stat-number">45</h3>
+           <div class="stat-card occupied-card">
+                <div class="stat-icon-wrapper">
+                    <i class="ri-user-fill stat-icon"></i>
+                </div>
+                <div class="stat-content">
+                    <h2>Occupied Beds</h2>
+                    <h3 class="stat-number">82</h3>
+                    <span class="stat-label">Currently in use</span>
+                </div>
            </div>
 
-           <div class="beds-box stat-card">
-                <i class="ri-time-line stat-icon"></i>
-                <h2>Occupied Beds</h2>
-                <h3 class="stat-number">82</h3>
+           <div class="stat-card ward-card">
+                <div class="stat-icon-wrapper">
+                    <i class="ri-hospital-line stat-icon"></i>
+                </div>
+                <div class="stat-content">
+                    <h2>Total Wards</h2>
+                    <h3 class="stat-number">20</h3>
+                    <span class="stat-label">Specialized units</span>
+                </div>
            </div>
        </div>
 
        <div class="ward-section">
-            <h2>Ward-wise Availability</h2>
+            <div class="section-header">
+                <h2><i class="ri-building-line"></i> Ward-wise Breakdown</h2>
+                <p>Detailed availability across specialized units</p>
+            </div>
             <div class="ward-grid">
-                <div class="ward-card">
-                    <h3>General Ward</h3>
+                <div class="ward-card ward-general">
+                    <div class="ward-header">
+                        <div class="ward-icon">
+                            <i class="ri-hospital-line"></i>
+                        </div>
+                        <h3>General Ward</h3>
+                    </div>
+                    <div class="bed-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 40%"></div>
+                        </div>
+                    </div>
                     <div class="bed-stats">
                         <span class="available">12 Available</span>
                         <span class="total">/ 30 Total</span>
                     </div>
                 </div>
 
-                <div class="ward-card">
-                    <h3>Emergency Ward</h3>
+                <div class="ward-card ward-emergency">
+                    <div class="ward-header">
+                        <div class="ward-icon">
+                            <i class="ri-alarm-warning-line"></i>
+                        </div>
+                        <h3>Emergency Ward</h3>
+                    </div>
+                    <div class="bed-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 40%"></div>
+                        </div>
+                    </div>
                     <div class="bed-stats">
                         <span class="available">8 Available</span>
                         <span class="total">/ 20 Total</span>
                     </div>
                 </div>
 
-                <div class="ward-card">
-                    <h3>Intensive Care Unit (ICU)</h3>
+                <div class="ward-card ward-icu">
+                    <div class="ward-header">
+                        <div class="ward-icon">
+                            <i class="ri-heart-pulse-line"></i>
+                        </div>
+                        <h3>Intensive Care Unit (ICU)</h3>
+                    </div>
+                    <div class="bed-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 20%"></div>
+                        </div>
+                    </div>
                     <div class="bed-stats">
                         <span class="available">3 Available</span>
                         <span class="total">/ 15 Total</span>
                     </div>
                 </div>
 
-                <div class="ward-card">
-                    <h3>Neonatal ICU (NICU)</h3>
+                <div class="ward-card ward-nicu">
+                    <div class="ward-header">
+                        <div class="ward-icon">
+                            <i class="ri-parent-line"></i>
+                        </div>
+                        <h3>Neonatal ICU (NICU)</h3>
+                    </div>
+                    <div class="bed-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 42%"></div>
+                        </div>
+                    </div>
                     <div class="bed-stats">
                         <span class="available">5 Available</span>
                         <span class="total">/ 12 Total</span>
                     </div>
                 </div>
 
-                <div class="ward-card">
-                    <h3>Pediatric Ward</h3>
+                <div class="ward-card ward-pediatric">
+                    <div class="ward-header">
+                        <div class="ward-icon">
+                            <i class="ri-mickey-line"></i>
+                        </div>
+                        <h3>Pediatric Ward</h3>
+                    </div>
+                    <div class="bed-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 39%"></div>
+                        </div>
+                    </div>
                     <div class="bed-stats">
                         <span class="available">7 Available</span>
                         <span class="total">/ 18 Total</span>
                     </div>
                 </div>
 
-                <div class="ward-card">
-                    <h3>Maternity Ward</h3>
+                <div class="ward-card ward-maternity">
+                    <div class="ward-header">
+                        <div class="ward-icon">
+                            <i class="ri-women-line"></i>
+                        </div>
+                        <h3>Maternity Ward</h3>
+                    </div>
+                    <div class="bed-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 45%"></div>
+                        </div>
+                    </div>
                     <div class="bed-stats">
                         <span class="available">10 Available</span>
                         <span class="total">/ 22 Total</span>
@@ -110,23 +203,55 @@
        </div>
 
        <div class="action-section">
-            <h2>Quick Actions</h2>
+            <div class="section-header">
+                <h2><i class="ri-flashlight-line"></i> Quick Actions</h2>
+                <p>Get started with essential services</p>
+            </div>
             <div class="action-buttons">
-                <a href="appointment.html" class="action-btn">
-                    <i class="ri-calendar-line"></i>
-                    <span>Book Appointment</span>
+                <a href="appointment.html" class="action-btn action-primary">
+                    <div class="btn-icon">
+                        <i class="ri-calendar-check-line"></i>
+                    </div>
+                    <div class="btn-content">
+                        <span class="btn-title">Book Appointment</span>
+                        <span class="btn-desc">Schedule your visit</span>
+                    </div>
                 </a>
-                <a href="admit.html" class="action-btn">
-                    <i class="ri-hospital-line"></i>
-                    <span>Admit Patient</span>
+                <a href="admit.html" class="action-btn action-secondary">
+                    <div class="btn-icon">
+                        <i class="ri-hospital-line"></i>
+                    </div>
+                    <div class="btn-content">
+                        <span class="btn-title">Admit Patient</span>
+                        <span class="btn-desc">Start admission process</span>
+                    </div>
                 </a>
-                <a href="contact.html" class="action-btn">
-                    <i class="ri-phone-line"></i>
-                    <span>Contact Us</span>
+                <a href="contact.html" class="action-btn action-tertiary">
+                    <div class="btn-icon">
+                        <i class="ri-customer-service-line"></i>
+                    </div>
+                    <div class="btn-content">
+                        <span class="btn-title">Contact Support</span>
+                        <span class="btn-desc">We're here to help</span>
+                    </div>
                 </a>
             </div>
        </div>
     </section>
 
+    <script>
+        // Update last updated time
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: true 
+            });
+            document.getElementById('lastUpdated').textContent = timeString;
+        }
+        updateTime();
+        setInterval(updateTime, 60000); // Update every minute
+    </script>
 </body>
 </html>

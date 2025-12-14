@@ -215,19 +215,14 @@ if ($appointment_id > 0) {
             box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
 
-        .priority-badge.critical {
+        .priority-badge.high {
             background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
             color: white;
         }
 
-        .priority-badge.high {
+        .priority-badge.medium {
             background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
             color: white;
-        }
-
-        .priority-badge.medium {
-            background: linear-gradient(135deg, #FFC107 0%, #FFA000 100%);
-            color: #333;
         }
 
         .priority-badge.low {
@@ -251,22 +246,16 @@ if ($appointment_id > 0) {
             to { opacity: 1; transform: translateX(0); }
         }
 
-        .alert-box.critical {
+        .alert-box.high {
             background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
             border-left-color: #f44336;
             color: #c62828;
         }
 
-        .alert-box.high {
+        .alert-box.medium {
             background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
             border-left-color: #FF9800;
             color: #e65100;
-        }
-
-        .alert-box.medium {
-            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-            border-left-color: #2196F3;
-            color: #1565c0;
         }
 
         .alert-box.low {
@@ -424,21 +413,17 @@ if ($appointment_id > 0) {
             <!-- Priority Alert -->
             <?php
             $priorityMessages = [
-                'critical' => [
-                    'icon' => 'fa-exclamation-triangle',
-                    'message' => 'Critical Priority - Your symptoms require immediate medical attention. Please proceed to emergency if symptoms worsen.'
-                ],
                 'high' => [
-                    'icon' => 'fa-bolt',
-                    'message' => 'High Priority - A doctor will review your case and contact you within 24 hours.'
+                    'icon' => 'fa-exclamation-triangle',
+                    'message' => 'High Priority - Your symptoms require immediate medical attention. A doctor will review your case within 1 hour.'
                 ],
                 'medium' => [
-                    'icon' => 'fa-info-circle',
+                    'icon' => 'fa-bolt',
                     'message' => 'Medium Priority - Expected wait time is 3-5 days. You will receive confirmation shortly.'
                 ],
                 'low' => [
                     'icon' => 'fa-check-circle',
-                    'message' => 'Scheduled - You will receive a confirmation call within 1-2 weeks.'
+                    'message' => 'Low Priority - You will receive a confirmation call within 1-2 weeks. Suitable for routine care.'
                 ]
             ];
 
@@ -507,6 +492,38 @@ if ($appointment_id > 0) {
                     <span class="detail-value"><?php echo $appointment['priority_score']; ?>/100</span>
                 </div>
             </div>
+
+                <!-- AI Detailed Summary (if available) -->
+                <?php
+                $ai = null;
+                if (!empty($appointment['ai_analysis'])) {
+                    $ai = json_decode($appointment['ai_analysis'], true);
+                }
+
+                if ($ai): ?>
+                <div style="margin-top:20px; padding:20px; border-radius:12px; background:linear-gradient(135deg,#f0f8ff 0%,#ffffff 100%); border:1px solid #e6f2ff;">
+                    <h3 style="margin-top:0; color:#0e545f;">🤖 AI Medical Assessment</h3>
+                    <?php if(!empty($ai['urgency_reason'])): ?>
+                    <p><strong>Urgency:</strong> <?php echo htmlspecialchars($ai['urgency_reason']); ?></p>
+                    <?php endif; ?>
+                    <?php if(!empty($ai['suspected_conditions'])): ?>
+                    <p><strong>Suspected conditions:</strong> <?php echo htmlspecialchars(is_array($ai['suspected_conditions']) ? implode(', ', $ai['suspected_conditions']) : $ai['suspected_conditions']); ?></p>
+                    <?php endif; ?>
+                    <?php if(!empty($ai['recommended_specialist'])): ?>
+                    <p><strong>Recommended specialist:</strong> <?php echo htmlspecialchars($ai['recommended_specialist']); ?></p>
+                    <?php endif; ?>
+                    <?php if(!empty($ai['next_steps']) && is_array($ai['next_steps'])): ?>
+                    <div style="margin-top:10px;">
+                        <strong>Next steps:</strong>
+                        <ul>
+                            <?php foreach($ai['next_steps'] as $step): ?>
+                            <li><?php echo htmlspecialchars($step); ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                    <?php endif; ?>
+                </div>
+                <?php endif; ?>
 
             <!-- Next Steps -->
             <div class="next-steps">

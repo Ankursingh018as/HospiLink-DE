@@ -7,6 +7,7 @@ include 'patient_qr_helper.php';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get form data
     $patient_name = mysqli_real_escape_string($conn, $_POST['patient_name']);
+    $email = mysqli_real_escape_string($conn, $_POST['email']);
     $gender = mysqli_real_escape_string($conn, $_POST['gender']);
     $dob = mysqli_real_escape_string($conn, $_POST['dob']);
     $admit_date = mysqli_real_escape_string($conn, $_POST['admit_date']);
@@ -24,24 +25,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $first_name = $name_parts[0];
     $last_name = isset($name_parts[1]) ? $name_parts[1] : '';
     
-    // Check if patient already exists by phone
-    $check_stmt = $conn->prepare("SELECT user_id FROM users WHERE phone = ? AND role = 'patient'");
-    $check_stmt->bind_param("s", $phone_number);
+    // Check if patient already exists by email or phone
+    $check_stmt = $conn->prepare("SELECT user_id, email FROM users WHERE (email = ? OR phone = ?) AND role = 'patient'");
+    $check_stmt->bind_param("ss", $email, $phone_number);
     $check_stmt->execute();
     $result = $check_stmt->get_result();
     
     if ($result->num_rows > 0) {
-        // Patient exists
+        // Patient exists - update if needed
         $row = $result->fetch_assoc();
         $user_id = $row['user_id'];
+        
+        // Update patient info if email changed
+        if ($row['email'] !== $email) {
+            $update_stmt = $conn->prepare("UPDATE users SET email = ?, first_name = ?, last_name = ?, phone = ? WHERE user_id = ?");
+            $update_stmt->bind_param("ssssi", $email, $first_name, $last_name, $phone_number, $user_id);
+            $update_stmt->execute();
+            $update_stmt->close();
+        }
         $check_stmt->close();
     } else {
-        // Create new patient
-        $temp_email = 'patient_' . time() . '@hospilink.temp';
+        // Create new patient with real email
         $temp_password = password_hash('temp123', PASSWORD_BCRYPT);
         
         $stmt = $conn->prepare("INSERT INTO users (first_name, last_name, email, password, role, phone, status) VALUES (?, ?, ?, ?, 'patient', ?, 'active')");
-        $stmt->bind_param("sssss", $first_name, $last_name, $temp_email, $temp_password, $phone_number);
+        $stmt->bind_param("sssss", $first_name, $last_name, $email, $temp_password, $phone_number);
         
         if (!$stmt->execute()) {
             echo "<script>alert('Error creating patient record: " . $conn->error . "'); window.location.href='../admit.html';</script>";
