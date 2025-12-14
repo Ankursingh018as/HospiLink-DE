@@ -111,7 +111,7 @@
           </div>
 
           <div class="form-group">
-          <h4><input type="checkbox" id="checkbox" name="checkbox" required> <span>I Accept all the<a href="tc.html"> terms & conditions</a></span></h4>  
+          <h4><input type="checkbox" id="checkbox" name="checkbox" required> <span>I Accept all the </span><a href="javascript:void(0);" onclick="openTCModal()" style="color: #00adb5; font-weight: 600; text-decoration: none; cursor: pointer;">terms & conditions</a></h4>  
           </div>
           <button type="submit">Submit</button>
       </form>
@@ -152,11 +152,259 @@
 
     </div>
     
+    <!-- Terms & Conditions Modal -->
+    <div id="tcModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Terms & Conditions</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="tc-content">
+                    <p><strong>1.</strong> Admission to the hospital is subject to the availability of beds and facilities, as well as the patient's medical condition.</p>
+                    
+                    <p><strong>2.</strong> The hospital reserves the right to transfer a patient to another facility if necessary for better medical care or due to lack of resources.</p>
+                    
+                    <p><strong>3.</strong> The patient or their representative has the right to refuse treatment at any time, but must sign a refusal form acknowledging the risks involved.</p>
+                    
+                    <p><strong>4.</strong> The hospital collects personal information to provide proper care and treatment. This information will be kept confidential and used only for medical and administrative purposes.</p>
+                    
+                    <p><strong>5.</strong> Patients have the right to receive information about their diagnosis, treatment options, and the risks involved in their care.</p>
+                    
+                    <p><strong>6.</strong> All medical procedures and treatments will be explained to the patient or their representative before being performed.</p>
+                    
+                    <p><strong>7.</strong> The hospital is not responsible for personal belongings. Patients are advised to keep valuables with their family members.</p>
+                    
+                    <p><strong>8.</strong> Payment for services is due at the time of discharge unless prior arrangements have been made with the billing department.</p>
+                    
+                    <p><strong>9.</strong> Visitors must follow hospital visiting hours and policies to ensure patient rest and recovery.</p>
+                    
+                    <p><strong>10.</strong> The hospital reserves the right to modify these terms and conditions at any time without prior notice.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-accept" onclick="acceptTerms()">I Accept</button>
+                <button class="btn-close-modal" onclick="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+    
+    <style>
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            margin: 3% auto;
+            padding: 0;
+            border: none;
+            width: 90%;
+            max-width: 700px;
+            border-radius: 15px;
+            box-shadow: 0 10px 50px rgba(0, 173, 181, 0.2);
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #00adb5 0%, #0e545f 100%);
+            padding: 25px 30px;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            color: white;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .close {
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            line-height: 1;
+        }
+
+        .close:hover {
+            color: #ff6b6b;
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 30px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .modal-body::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-body::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .modal-body::-webkit-scrollbar-thumb {
+            background: #00adb5;
+            border-radius: 10px;
+        }
+
+        .modal-body::-webkit-scrollbar-thumb:hover {
+            background: #0e545f;
+        }
+
+        .tc-content p {
+            margin: 15px 0;
+            line-height: 1.8;
+            color: #333;
+            font-size: 15px;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #00adb5;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .tc-content p strong {
+            color: #00adb5;
+            font-size: 18px;
+            margin-right: 10px;
+        }
+
+        .modal-footer {
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-radius: 0 0 15px 15px;
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+        }
+
+        .btn-accept,
+        .btn-close-modal {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-accept {
+            background: linear-gradient(135deg, #00adb5 0%, #0e545f 100%);
+            color: white;
+        }
+
+        .btn-accept:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 173, 181, 0.3);
+        }
+
+        .btn-close-modal {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-close-modal:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        #openTCModal {
+            color: #00adb5;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        #openTCModal:hover {
+            color: #0e545f;
+            text-decoration: underline;
+        }
+    </style>
+    
     <script>
         // Set minimum admit date to today
         document.getElementById('admit-date').min = new Date().toISOString().split('T')[0];
         // Set maximum DOB to today
         document.getElementById('dob').max = new Date().toISOString().split('T')[0];
+
+        // Modal functionality - using global functions for inline onclick
+        function openTCModal() {
+            const modal = document.getElementById('tcModal');
+            if (modal) {
+                modal.style.display = 'block';
+            }
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('tcModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        function acceptTerms() {
+            const checkbox = document.getElementById('checkbox');
+            const modal = document.getElementById('tcModal');
+            if (checkbox) {
+                checkbox.checked = true;
+            }
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Close modal when clicking X button
+        document.addEventListener('DOMContentLoaded', function() {
+            const closeBtn = document.querySelector('.close');
+            if (closeBtn) {
+                closeBtn.onclick = closeModal;
+            }
+
+            // Close modal when clicking outside
+            window.onclick = function(event) {
+                const modal = document.getElementById('tcModal');
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            }
+        });
     </script>
 </body>
 </html>

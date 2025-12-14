@@ -1,5 +1,7 @@
-# Ignore all markdown files
+# Documentation files
 *.md
+README_EMAIL_SYSTEM.txt
+EMAIL_API_DOCUMENTATION.php
 
 # OS generated files
 .DS_Store
@@ -36,6 +38,18 @@ vendor/
 tmp/
 temp/
 *.tmp
+
+# Backup files
+*.bak
+*~
+*.backup
+
+# Image files (development)
+*.jpg
+*.jpeg
+*.png
+!images/**
+!css/images/**
 
 
 # Database files

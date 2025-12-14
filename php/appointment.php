@@ -1,6 +1,6 @@
 <?php
 include 'db.php';
-include 'symptom_analyzer.php';
+include 'ai_prioritizer.php'; // AI-powered medical prioritizer using Google Gemini
 include 'email_service_smtp.php'; // Include Gmail SMTP email service
 
 // Only process POST requests
@@ -17,14 +17,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $symptoms = mysqli_real_escape_string($conn, $_POST['symptoms']);
     $doctor_preference = isset($_POST['s_doctor']) ? mysqli_real_escape_string($conn, $_POST['s_doctor']) : null;
     
-    // Initialize AI Symptom Analyzer
-    $analyzer = new SymptomAnalyzer($conn);
+    // Get patient age and existing conditions if available
+    $patient_age = isset($_POST['age']) ? intval($_POST['age']) : null;
+    $existing_conditions = isset($_POST['medical_history']) ? mysqli_real_escape_string($conn, $_POST['medical_history']) : null;
     
-    // Analyze symptoms and get priority
-    $analysis = $analyzer->analyzeSymptoms($symptoms);
+    // Initialize AI Prioritizer (uses Google Gemini API)
+    $aiPrioritizer = new AIPrioritizer();
+    
+    // Analyze symptoms using AI and get comprehensive assessment
+    $analysis = $aiPrioritizer->getDetailedAssessment($symptoms, $patient_age, $existing_conditions);
     $priorityLevel = $analysis['priority_level'];
     $priorityScore = $analysis['priority_score'];
-    $analysisMessage = $analysis['analysis'];
+    $analysisMessage = $analysis['urgency_reason'];
+    $suspectedConditions = implode(', ', $analysis['suspected_conditions']);
+    $recommendedSpecialist = $analysis['recommended_specialist'];
+    $timeSensitivity = $analysis['time_sensitivity'];
     
     // Get doctor ID if preference specified
     $doctor_id = null;
@@ -88,7 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $doctorQuery->close();
         }
         
-        // Prepare email data
+        // Prepare email data with AI analysis
         $emailData = [
             'appointment_id' => $appointment_id,
             'full_name' => $name,
@@ -98,23 +105,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             'symptoms' => $symptoms,
             'priority_level' => $priorityLevel,
             'priority_score' => $priorityScore,
-            'doctor_name' => $doctor_name
+            'doctor_name' => $doctor_name,
+            'ai_analysis' => $analysis,
+            'suspected_conditions' => $suspectedConditions,
+            'recommended_specialist' => $recommendedSpecialist
         ];
         
         // Send email confirmation
         $emailSent = EmailService::sendAppointmentConfirmation($emailData);
         
-        // Get suggestions
-        $suggestions = $analyzer->getAppointmentSuggestions($priorityLevel);
-        
-        // Prepare response message
+        // Prepare response message with AI insights
         $message = "✅ Appointment booked successfully!\n\n";
         $message .= "📋 Appointment ID: #" . $appointment_id . "\n";
         $message .= "👤 Patient: " . $name . "\n";
         $message .= "📅 Date: " . date('d M Y', strtotime($date)) . "\n";
         $message .= "🕐 Time: " . date('h:i A', strtotime($time)) . "\n\n";
-        $message .= "🔍 AI Analysis:\n" . $analysisMessage . "\n\n";
-        $message .= "⏱️ Expected Wait Time: " . $suggestions['wait_time'] . "\n\n";
+        $message .= "🤖 AI Medical Analysis:\n";
+        $message .= "Priority: " . strtoupper($priorityLevel) . " (Score: $priorityScore/100)\n";
+        $message .= "Urgency: " . $analysisMessage . "\n";
+        if ($suspectedConditions) {
+            $message .= "Suspected conditions: " . $suspectedConditions . "\n";
+        }
+        $message .= "Recommended specialist: " . $recommendedSpecialist . "\n";
+        $message .= "Time sensitivity: " . strtoupper($timeSensitivity) . "\n\n";
         
         if ($emailSent) {
             $message .= "📧 Confirmation email sent to: " . $email . "\n\n";
@@ -122,10 +135,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $message .= "⚠️ Note: Email confirmation could not be sent.\n\n";
         }
         
-        if ($priorityLevel === 'critical') {
+        if ($timeSensitivity === 'immediate' || $priorityLevel === 'critical') {
             $message .= "🚨 URGENT: Please proceed to the emergency department immediately or call emergency services if symptoms worsen!";
-        } elseif ($priorityLevel === 'high') {
-            $message .= "⚡ Your appointment has been marked as high priority. A doctor will contact you soon.";
+        } elseif ($timeSensitivity === 'urgent' || $priorityLevel === 'high') {
+            $message .= "⚡ Your appointment has been marked as high priority. A doctor will contact you within 2-4 hours.";
+        } else {
+            $message .= "✓ Your appointment is confirmed. Please arrive 15 minutes early.";
         }
         
         // Store appointment ID in session and redirect to success page

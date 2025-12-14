@@ -30,12 +30,8 @@ class EmailService {
         // Create email body
         $message = self::createEmailTemplate($appointmentData);
         
-        // Generate calendar ICS file
-        $icsContent = CalendarHelper::generateICS($appointmentData);
-        $icsFilename = CalendarHelper::getICSFilename($appointmentData['appointment_id']);
-        
-        // Send via SMTP with calendar attachment
-        return $emailService->sendEmailViaSMTP($to, $subject, $message, $icsContent, $icsFilename);
+        // Send via SMTP without calendar attachment (calendar helper removed)
+        return $emailService->sendEmailViaSMTP($to, $subject, $message);
     }
     
     /**
@@ -208,6 +204,12 @@ class EmailService {
         $priority = strtoupper($data['priority_level']);
         $doctor = $data['doctor_name'] ?? 'To be assigned';
         
+        // Get AI analysis data if available
+        $aiAnalyzed = isset($data['ai_analysis']) && isset($data['ai_analysis']['ai_analyzed']) ? $data['ai_analysis']['ai_analyzed'] : false;
+        $suspectedConditions = isset($data['suspected_conditions']) ? $data['suspected_conditions'] : '';
+        $recommendedSpecialist = isset($data['recommended_specialist']) ? $data['recommended_specialist'] : '';
+        $urgencyReason = isset($data['ai_analysis']) ? $data['ai_analysis']['urgency_reason'] : '';
+        
         // Priority badge colors
         $priorityColors = [
             'CRITICAL' => '#dc3545',
@@ -225,6 +227,37 @@ class EmailService {
             'LOW' => '✓ Your appointment has been confirmed. See you on the scheduled date.'
         ];
         $priorityMessage = $priorityMessages[$priority] ?? 'Your appointment has been scheduled.';
+        
+        // Build AI analysis section
+        $aiAnalysisSection = '';
+        if ($aiAnalyzed && !empty($urgencyReason)) {
+            $aiAnalysisSection = <<<AIHTML
+                            <!-- AI Analysis -->
+                            <tr>
+                                <td style="padding: 0 30px 20px 30px;">
+                                    <div style="background: linear-gradient(135deg, #e7f3ff 0%, #f0f9ff 100%); padding: 20px; border-radius: 8px; border-left: 4px solid #00adb5;">
+                                        <h3 style="color: #0e545f; margin: 0 0 15px 0; font-size: 18px;">🤖 AI Medical Analysis</h3>
+                                        <p style="color: #333; margin: 10px 0;"><strong>Assessment:</strong> {$urgencyReason}</p>
+AIHTML;
+            
+            if (!empty($suspectedConditions)) {
+                $aiAnalysisSection .= <<<AIHTML
+                                        <p style="color: #333; margin: 10px 0;"><strong>Possible Conditions:</strong> {$suspectedConditions}</p>
+AIHTML;
+            }
+            
+            if (!empty($recommendedSpecialist)) {
+                $aiAnalysisSection .= <<<AIHTML
+                                        <p style="color: #333; margin: 10px 0;"><strong>Recommended Specialist:</strong> {$recommendedSpecialist}</p>
+AIHTML;
+            }
+            
+            $aiAnalysisSection .= <<<AIHTML
+                                    </div>
+                                </td>
+                            </tr>
+AIHTML;
+        }
         
         $html = <<<HTML
 <!DOCTYPE html>
@@ -307,6 +340,9 @@ class EmailService {
                                     </td>
                                 </tr>
                             </table>
+                            
+                            <!-- AI Medical Analysis -->
+                            {$aiAnalysisSection}
                             
                             <!-- Symptoms Summary -->
                             <div style="margin: 20px 0; padding: 15px; background-color: #f0f8ff; border-radius: 8px;">

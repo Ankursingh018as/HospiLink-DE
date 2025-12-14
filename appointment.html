@@ -11,6 +11,91 @@
     href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css"
     rel="stylesheet"/>
     <link rel="icon" href="images/hosp_favicon.png" type="image/png">
+    <style>
+        .ai-analysis-preview {
+            background: linear-gradient(135deg, #e7f3ff 0%, #f0f9ff 100%);
+            border-left: 4px solid #00adb5;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+        
+        .ai-analysis-preview.active {
+            display: block;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .priority-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+        
+        .priority-critical {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+            box-shadow: 0 4px 10px rgba(220, 53, 69, 0.3);
+        }
+        
+        .priority-high {
+            background: linear-gradient(135deg, #fd7e14 0%, #e8590c 100%);
+            color: white;
+            box-shadow: 0 4px 10px rgba(253, 126, 20, 0.3);
+        }
+        
+        .priority-medium {
+            background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+            color: #333;
+            box-shadow: 0 4px 10px rgba(255, 193, 7, 0.3);
+        }
+        
+        .priority-low {
+            background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+            color: white;
+            box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
+        }
+        
+        .analyzing-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #00adb5;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .ai-detail {
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+        }
+        
+        .ai-detail strong {
+            color: #0e545f;
+        }
+        
+        .warning-icon {
+            color: #dc3545;
+            margin-right: 5px;
+        }
+    </style>
 </head>
 <body>
    <div class="main">
@@ -54,6 +139,10 @@
 
             <label for="symptoms">Describe Your Symptoms *</label>
             <textarea id="symptoms" name="symptoms" placeholder="Please describe your symptoms in detail (e.g., chest pain, high fever, cough, etc.). This helps our AI system prioritize your appointment based on urgency." rows="4" required></textarea>
+            
+            <div id="aiAnalysisPreview" class="ai-analysis-preview">
+                <!-- AI analysis will appear here -->
+            </div>
 
             <label for="date">Preferred Appointment Date</label>
             <input type="date" id="date" name="date" required>
@@ -84,6 +173,88 @@
     <script>
         // Set minimum date to today
         document.getElementById('date').min = new Date().toISOString().split('T')[0];
+        
+        // AI Analysis Integration
+        let analysisTimeout;
+        const symptomsField = document.getElementById('symptoms');
+        const analysisPreview = document.getElementById('aiAnalysisPreview');
+        
+        symptomsField.addEventListener('input', function() {
+            clearTimeout(analysisTimeout);
+            
+            const symptoms = this.value.trim();
+            
+            if (symptoms.length < 10) {
+                analysisPreview.classList.remove('active');
+                return;
+            }
+            
+            // Show analyzing message
+            analysisPreview.innerHTML = '<div class="analyzing-spinner"></div> AI is analyzing your symptoms...';
+            analysisPreview.classList.add('active');
+            
+            // Debounce API call
+            analysisTimeout = setTimeout(() => {
+                analyzeSymptoms(symptoms);
+            }, 1500);
+        });
+        
+        async function analyzeSymptoms(symptoms) {
+            try {
+                const response = await fetch('php/test_ai_prioritizer.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'symptoms=' + encodeURIComponent(symptoms)
+                });
+                
+                const data = await response.json();
+                displayAnalysis(data);
+            } catch (error) {
+                console.error('AI Analysis Error:', error);
+                analysisPreview.innerHTML = '<p style="color: #dc3545;">⚠️ Unable to analyze symptoms. Your appointment will still be processed.</p>';
+            }
+        }
+        
+        function displayAnalysis(data) {
+            const priorityClass = 'priority-' + data.priority_level;
+            const aiSource = data.ai_analyzed ? '🤖 AI Analyzed' : '📋 Keyword Match';
+            
+            let html = '<div style="text-align: center;">';
+            html += '<span class="priority-badge ' + priorityClass + '">';
+            html += data.priority_level.toUpperCase() + ' PRIORITY - Score: ' + data.priority_score + '/100';
+            html += '</span>';
+            html += '<p style="font-size: 12px; color: #666; margin-top: 5px;">' + aiSource + '</p>';
+            html += '</div>';
+            
+            html += '<div class="ai-detail">';
+            html += '<strong>Assessment:</strong> ' + data.urgency_reason;
+            html += '</div>';
+            
+            if (data.suspected_conditions && data.suspected_conditions.length > 0) {
+                html += '<div class="ai-detail">';
+                html += '<strong>Possible Conditions:</strong> ' + data.suspected_conditions.join(', ');
+                html += '</div>';
+            }
+            
+            html += '<div class="ai-detail">';
+            html += '<strong>Recommended Specialist:</strong> ' + data.recommended_specialist;
+            html += '</div>';
+            
+            html += '<div class="ai-detail">';
+            html += '<strong>Time Sensitivity:</strong> ' + data.time_sensitivity.toUpperCase();
+            html += '</div>';
+            
+            if (data.time_sensitivity === 'immediate') {
+                html += '<div class="ai-detail" style="background: #fff3cd; border-left: 3px solid #dc3545;">';
+                html += '<span class="warning-icon">⚠️</span>';
+                html += '<strong>URGENT:</strong> These symptoms may require immediate medical attention. Consider visiting emergency services if symptoms worsen.';
+                html += '</div>';
+            }
+            
+            analysisPreview.innerHTML = html;
+        }
     </script>
 </body>
 </html>
