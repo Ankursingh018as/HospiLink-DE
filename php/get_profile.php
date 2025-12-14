@@ -10,8 +10,17 @@ if (!isset($_SESSION['logged_in'])) {
 include 'db.php';
 
 $user_id = $_SESSION['user_id'];
+$user_role = $_SESSION['user_role'];
 
-$query = "SELECT first_name, last_name, email, phone, age, gender, address FROM users WHERE user_id = ?";
+// Select fields based on role
+if ($user_role === 'staff') {
+    $query = "SELECT first_name, last_name, email, phone, address, department, staff_id FROM users WHERE user_id = ?";
+} elseif ($user_role === 'doctor') {
+    $query = "SELECT first_name, last_name, email, phone, address, specialization, license_number FROM users WHERE user_id = ?";
+} else {
+    $query = "SELECT first_name, last_name, email, phone, age, gender, address FROM users WHERE user_id = ?";
+}
+
 $stmt = $conn->prepare($query);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();

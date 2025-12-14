@@ -89,7 +89,7 @@ $user_name = $_SESSION['user_name'];
                                     <label for="email">
                                         <i class="fas fa-envelope"></i> Email Address
                                     </label>
-                                    <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($_SESSION['email'] ?? ''); ?>" required>
+                                    <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($_SESSION['email'] ?? ''); ?>" readonly style="background: #f8f9fa; cursor: not-allowed; opacity: 0.7;">
                                 </div>
                                 
                                 <div class="form-group">

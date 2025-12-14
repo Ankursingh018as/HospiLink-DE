@@ -10,17 +10,24 @@ if (!isset($_SESSION['logged_in'])) {
 include 'db.php';
 
 $user_id = $_SESSION['user_id'];
+$user_role = $_SESSION['user_role'];
 
 // Get form data
 $first_name = trim($_POST['first_name'] ?? '');
 $last_name = trim($_POST['last_name'] ?? '');
 $email = trim($_POST['email'] ?? '');
 $phone = trim($_POST['phone'] ?? '');
-$age = intval($_POST['age'] ?? 0);
-$gender = trim($_POST['gender'] ?? '');
 $address = trim($_POST['address'] ?? '');
 $current_password = $_POST['current_password'] ?? '';
 $new_password = $_POST['new_password'] ?? '';
+
+// Role-specific fields
+$age = intval($_POST['age'] ?? 0);
+$gender = trim($_POST['gender'] ?? '');
+$department = trim($_POST['department'] ?? '');
+$staff_id = trim($_POST['staff_id'] ?? '');
+$specialization = trim($_POST['specialization'] ?? '');
+$license_number = trim($_POST['license_number'] ?? '');
 
 // Validate required fields
 if (empty($first_name) || empty($last_name) || empty($email)) {
@@ -28,7 +35,8 @@ if (empty($first_name) || empty($last_name) || empty($email)) {
     exit();
 }
 
-// Check if email is already taken by another user
+// Check if email is already taken by another user (email is not being changed, so skip this check)
+/*
 $checkEmailQuery = "SELECT user_id FROM users WHERE email = ? AND user_id != ?";
 $stmt = $conn->prepare($checkEmailQuery);
 $stmt->bind_param("si", $email, $user_id);
@@ -37,6 +45,7 @@ if ($stmt->get_result()->num_rows > 0) {
     echo json_encode(['success' => false, 'message' => 'Email already in use by another account']);
     exit();
 }
+*/
 
 // If password change is requested, verify current password
 if (!empty($new_password)) {
@@ -61,15 +70,35 @@ if (!empty($new_password)) {
     // Hash new password
     $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
     
-    // Update with new password
-    $updateQuery = "UPDATE users SET first_name = ?, last_name = ?, email = ?, phone = ?, age = ?, gender = ?, address = ?, password = ? WHERE user_id = ?";
-    $stmt = $conn->prepare($updateQuery);
-    $stmt->bind_param("ssssisssi", $first_name, $last_name, $email, $phone, $age, $gender, $address, $hashed_password, $user_id);
+    // Update based on role with new password
+    if ($user_role === 'staff') {
+        $updateQuery = "UPDATE users SET first_name = ?, last_name = ?, phone = ?, address = ?, department = ?, staff_id = ?, password = ? WHERE user_id = ?";
+        $stmt = $conn->prepare($updateQuery);
+        $stmt->bind_param("ssssssi", $first_name, $last_name, $phone, $address, $department, $staff_id, $hashed_password, $user_id);
+    } elseif ($user_role === 'doctor') {
+        $updateQuery = "UPDATE users SET first_name = ?, last_name = ?, phone = ?, address = ?, specialization = ?, license_number = ?, password = ? WHERE user_id = ?";
+        $stmt = $conn->prepare($updateQuery);
+        $stmt->bind_param("sssssssi", $first_name, $last_name, $phone, $address, $specialization, $license_number, $hashed_password, $user_id);
+    } else {
+        $updateQuery = "UPDATE users SET first_name = ?, last_name = ?, phone = ?, age = ?, gender = ?, address = ?, password = ? WHERE user_id = ?";
+        $stmt = $conn->prepare($updateQuery);
+        $stmt->bind_param("ssissssi", $first_name, $last_name, $phone, $age, $gender, $address, $hashed_password, $user_id);
+    }
 } else {
-    // Update without password change
-    $updateQuery = "UPDATE users SET first_name = ?, last_name = ?, email = ?, phone = ?, age = ?, gender = ?, address = ? WHERE user_id = ?";
-    $stmt = $conn->prepare($updateQuery);
-    $stmt->bind_param("ssssissi", $first_name, $last_name, $email, $phone, $age, $gender, $address, $user_id);
+    // Update based on role without password change
+    if ($user_role === 'staff') {
+        $updateQuery = "UPDATE users SET first_name = ?, last_name = ?, phone = ?, address = ?, department = ?, staff_id = ? WHERE user_id = ?";
+        $stmt = $conn->prepare($updateQuery);
+        $stmt->bind_param("ssssssi", $first_name, $last_name, $phone, $address, $department, $staff_id, $user_id);
+    } elseif ($user_role === 'doctor') {
+        $updateQuery = "UPDATE users SET first_name = ?, last_name = ?, phone = ?, address = ?, specialization = ?, license_number = ? WHERE user_id = ?";
+        $stmt = $conn->prepare($updateQuery);
+        $stmt->bind_param("ssssssi", $first_name, $last_name, $phone, $address, $specialization, $license_number, $user_id);
+    } else {
+        $updateQuery = "UPDATE users SET first_name = ?, last_name = ?, phone = ?, age = ?, gender = ?, address = ? WHERE user_id = ?";
+        $stmt = $conn->prepare($updateQuery);
+        $stmt->bind_param("ssisssi", $first_name, $last_name, $phone, $age, $gender, $address, $user_id);
+    }
 }
 
 if ($stmt->execute()) {

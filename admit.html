@@ -6,7 +6,7 @@
     <title>Admit Patient</title>
     <link rel="stylesheet" href="css/typography.css">
     <link rel="stylesheet" href="css/style.css?v=2">
-    <link rel="stylesheet" href="css/admit.css?v=2">
+    <link rel="stylesheet" href="css/admit.css?v=3">
     <link
     href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css"
     rel="stylesheet"/>
@@ -101,22 +101,6 @@
             <input type="text" id="address" name="address" placeholder="Enter your address" required>
           </div>
 
-          <div class="form-row">
-              <div class="form-group">
-                  <label for="bed_id">Assign Bed (Optional)</label>
-                  <select id="bed_id" name="bed_id">
-                      <option value="">-- Select Bed --</option>
-                  </select>
-              </div>
-
-              <div class="form-group">
-                  <label for="doctor_id">Assign Doctor (Optional)</label>
-                  <select id="doctor_id" name="doctor_id">
-                      <option value="">-- Select Doctor --</option>
-                  </select>
-              </div>
-          </div>
-
           <div class="form-group">
           <h4><input type="checkbox" id="checkbox" name="checkbox" required> <span>I Accept all the </span><a href="javascript:void(0);" onclick="openTCModal()" style="color: #00adb5; font-weight: 600; text-decoration: none; cursor: pointer;">terms & conditions</a></h4>  
           </div>
@@ -126,32 +110,7 @@
 </div>
 
 <script>
-    // Load available beds and doctors
-    fetch('php/get_admission_options.php')
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                const bedSelect = document.getElementById('bed_id');
-                const doctorSelect = document.getElementById('doctor_id');
-                
-                // Populate beds
-                data.beds.forEach(bed => {
-                    const option = document.createElement('option');
-                    option.value = bed.bed_id;
-                    option.textContent = `${bed.ward_name} - ${bed.bed_number} (${bed.bed_type})`;
-                    bedSelect.appendChild(option);
-                });
-                
-                // Populate doctors
-                data.doctors.forEach(doctor => {
-                    const option = document.createElement('option');
-                    option.value = doctor.user_id;
-                    option.textContent = `Dr. ${doctor.name} - ${doctor.specialization || doctor.department}`;
-                    doctorSelect.appendChild(option);
-                });
-            }
-        })
-        .catch(error => console.error('Error loading options:', error));
+    // Note: Bed and doctor assignment fields have been removed from the form
 </script>
       </form>
   </div>

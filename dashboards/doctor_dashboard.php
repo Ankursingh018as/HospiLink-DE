@@ -273,59 +273,43 @@ $allTimeStats['pending_total'] = intval($allTimeStats['pending_total'] ?? 0);
                 </div>
 
                 <!-- Quick Actions for QR Patient Management -->
-                <div class="quick-actions" style="margin-top: 30px;">
-                    <h3 style="margin-bottom: 15px; color: #333;">
-                        <i class="fas fa-qrcode"></i> QR Patient Management
+                <div class="qr-management-section" style="margin-top: 30px;">
+                    <h3 style="margin-bottom: 20px; color: #0e545f; font-size: 20px; display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-qrcode" style="color: #00adb5;"></i> QR Patient Management
                     </h3>
-                    <div class="stats-grid">
-                        <a href="../scan.php" class="stat-card action-card" style="text-decoration: none; cursor: pointer; transition: transform 0.2s;">
-                            <div class="stat-icon" style="background: #00adb5;">
-                                <i class="fas fa-camera"></i>
-                            </div>
-                            <div class="stat-info">
-                                <h3 style="color: #00adb5;">Scan QR Code</h3>
-                                <p>View patient status by scanning bedside QR code</p>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                        <a href="../scan.php" class="qr-action-card" style="text-decoration: none; background: white; border-radius: 16px; padding: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: all 0.3s ease; display: block; border: 2px solid transparent;">
+                            <div style="display: flex; align-items: flex-start; gap: 20px;">
+                                <div style="background: linear-gradient(135deg, #00adb5, #0e545f); width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                    <i class="fas fa-camera" style="color: white; font-size: 24px;"></i>
+                                </div>
+                                <div>
+                                    <h4 style="color: #00adb5; font-size: 18px; margin: 0 0 8px 0; font-weight: 600;">Scan QR Code</h4>
+                                    <p style="color: #666; margin: 0; font-size: 14px; line-height: 1.5;">View patient status by scanning bedside QR code</p>
+                                </div>
                             </div>
                         </a>
-                        <a href="../admit.html" class="stat-card action-card" style="text-decoration: none; cursor: pointer; transition: transform 0.2s;">
-                            <div class="stat-icon" style="background: #4CAF50;">
-                                <i class="fas fa-user-plus"></i>
-                            </div>
-                            <div class="stat-info">
-                                <h3 style="color: #4CAF50;">Admit Patient</h3>
-                                <p>Admit new patient and generate QR code</p>
+                        <a href="../admit.html" class="qr-action-card" style="text-decoration: none; background: white; border-radius: 16px; padding: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: all 0.3s ease; display: block; border: 2px solid transparent;">
+                            <div style="display: flex; align-items: flex-start; gap: 20px;">
+                                <div style="background: linear-gradient(135deg, #4CAF50, #388E3C); width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                    <i class="fas fa-user-plus" style="color: white; font-size: 24px;"></i>
+                                </div>
+                                <div>
+                                    <h4 style="color: #4CAF50; font-size: 18px; margin: 0 0 8px 0; font-weight: 600;">Admit Patient</h4>
+                                    <p style="color: #666; margin: 0; font-size: 14px; line-height: 1.5;">Admit new patient and generate QR code</p>
+                                </div>
                             </div>
                         </a>
                     </div>
                 </div>
 
-                <!-- Standard Quick Actions -->
-                <div class="quick-actions" style="margin-top: 20px;">
-                    <button class="quick-action-btn primary">
-                        <i class="fas fa-plus-circle"></i>
-                        <span>New Consultation</span>
-                    </button>
-                    <button class="quick-action-btn secondary">
-                        <i class="fas fa-file-prescription"></i>
-                        <span>Write Prescription</span>
-                    </button>
-                    <button class="quick-action-btn secondary">
-                        <i class="fas fa-notes-medical"></i>
-                        <span>View Reports</span>
-                    </button>
-                    <button class="quick-action-btn secondary">
-                        <i class="fas fa-calendar-alt"></i>
-                        <span>Manage Schedule</span>
-                    </button>
-                </div>
-            </section>
-
-            <style>
-                .action-card:hover {
-                    transform: translateY(-5px);
-                    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-                }
-            </style>
+                <style>
+                    .qr-action-card:hover {
+                        transform: translateY(-5px);
+                        box-shadow: 0 12px 28px rgba(0,0,0,0.15) !important;
+                        border-color: #00adb5 !important;
+                    }
+                </style>
 
             <!-- AI-Prioritized Appointments Queue -->
             <section id="appointments" class="content-section">
