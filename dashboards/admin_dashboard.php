@@ -279,6 +279,9 @@ $activityLogs = $conn->query($activityQuery);
                                     <button class="btn-small" onclick="assignDoctor(<?php echo $apt['appointment_id']; ?>)">
                                         <i class="fas fa-user-plus"></i>
                                     </button>
+                                    <button class="btn-small" onclick="viewAIDetails(<?php echo $apt['appointment_id']; ?>)">
+                                        <i class="fas fa-robot"></i>
+                                    </button>
                                 </td>
                             </tr>
                             <?php endwhile; endif; ?>
@@ -398,6 +401,70 @@ $activityLogs = $conn->query($activityQuery);
                 }
             });
         });
+    </script>
+    <!-- AI Modal -->
+    <div id="aiModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); align-items:center; justify-content:center; z-index:9999;">
+        <div style="background:white; border-radius:10px; max-width:700px; width:95%; padding:20px; box-shadow:0 10px 40px rgba(0,0,0,0.3);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <h3 style="margin:0;">AI Analysis</h3>
+                <button onclick="closeAIModal()" style="background:none;border:none;font-size:18px;cursor:pointer;">✕</button>
+            </div>
+            <div id="aiModalContent">Loading...</div>
+        </div>
+    </div>
+
+    <script>
+        function viewAIDetails(id) {
+            const modal = document.getElementById('aiModal');
+            const content = document.getElementById('aiModalContent');
+            modal.style.display = 'flex';
+            content.innerHTML = 'Loading AI analysis...';
+
+            fetch('../php/get_ai_analysis.php?appointment_id=' + id)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.error) {
+                        content.innerHTML = '<div style="color:#c62828;">' + data.error + '</div>';
+                        return;
+                    }
+
+                    const ai = data.ai || {};
+                    let html = '';
+                    html += '<p><strong>Priority:</strong> ' + (data.priority_level || '-') + ' (Score: ' + (data.priority_score || '-') + '/100)</p>';
+                    if (ai.urgency_reason) html += '<p><strong>Urgency:</strong> ' + ai.urgency_reason + '</p>';
+                    if (ai.suspected_conditions) html += '<p><strong>Suspected:</strong> ' + (ai.suspected_conditions.join ? ai.suspected_conditions.join(', ') : ai.suspected_conditions) + '</p>';
+                    if (ai.recommended_specialist) html += '<p><strong>Specialist:</strong> ' + ai.recommended_specialist + '</p>';
+                    if (ai.warning_signs) html += '<p><strong>Warning signs:</strong> ' + (ai.warning_signs.join ? ai.warning_signs.join(', ') : ai.warning_signs) + '</p>';
+                    if (ai.next_steps) html += '<p><strong>Next steps:</strong><br>' + (ai.next_steps.join ? '<ul>' + ai.next_steps.map(s=>'<li>'+s+'</li>').join('') + '</ul>' : ai.next_steps) + '</p>';
+                    html += '<div style="margin-top:10px;"><button class="btn-small" onclick="reanalyze('+id+')">Re-run AI</button></div>';
+
+                    content.innerHTML = html;
+                })
+                .catch(err => content.innerHTML = '<div style="color:#c62828;">Error fetching AI analysis</div>');
+        }
+
+        function closeAIModal() {
+            document.getElementById('aiModal').style.display = 'none';
+        }
+
+        function reanalyze(id) {
+            const content = document.getElementById('aiModalContent');
+            content.innerHTML = 'Re-running AI analysis...';
+            fetch('../php/reanalyze_ai.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: 'appointment_id=' + id
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.error) {
+                    content.innerHTML = '<div style="color:#c62828;">' + data.error + '</div>';
+                    return;
+                }
+                viewAIDetails(id);
+            })
+            .catch(() => content.innerHTML = '<div style="color:#c62828;">Error running AI</div>');
+        }
     </script>
 </body>
 </html>

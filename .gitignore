@@ -60,4 +60,8 @@ temp/
 !css/images/**
 
 
+# Database files
+db.php
+
+
 

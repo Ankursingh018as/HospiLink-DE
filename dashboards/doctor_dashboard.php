@@ -118,6 +118,14 @@ $allTimeStats['pending_total'] = intval($allTimeStats['pending_total'] ?? 0);
                     <i class="fas fa-users"></i>
                     <span>My Patients</span>
                 </a>
+                <a href="../scan.php" class="nav-item">
+                    <i class="fas fa-qrcode"></i>
+                    <span>Scan Patient QR</span>
+                </a>
+                <a href="../admit.html" class="nav-item">
+                    <i class="fas fa-user-plus"></i>
+                    <span>Admit Patient</span>
+                </a>
                 <a href="#schedule" class="nav-item">
                     <i class="fas fa-clock"></i>
                     <span>My Schedule</span>
@@ -264,8 +272,35 @@ $allTimeStats['pending_total'] = intval($allTimeStats['pending_total'] ?? 0);
                     </div>
                 </div>
 
-                <!-- Quick Actions -->
-                <div class="quick-actions">
+                <!-- Quick Actions for QR Patient Management -->
+                <div class="quick-actions" style="margin-top: 30px;">
+                    <h3 style="margin-bottom: 15px; color: #333;">
+                        <i class="fas fa-qrcode"></i> QR Patient Management
+                    </h3>
+                    <div class="stats-grid">
+                        <a href="../scan.php" class="stat-card action-card" style="text-decoration: none; cursor: pointer; transition: transform 0.2s;">
+                            <div class="stat-icon" style="background: #00adb5;">
+                                <i class="fas fa-camera"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 style="color: #00adb5;">Scan QR Code</h3>
+                                <p>View patient status by scanning bedside QR code</p>
+                            </div>
+                        </a>
+                        <a href="../admit.html" class="stat-card action-card" style="text-decoration: none; cursor: pointer; transition: transform 0.2s;">
+                            <div class="stat-icon" style="background: #4CAF50;">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 style="color: #4CAF50;">Admit Patient</h3>
+                                <p>Admit new patient and generate QR code</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Standard Quick Actions -->
+                <div class="quick-actions" style="margin-top: 20px;">
                     <button class="quick-action-btn primary">
                         <i class="fas fa-plus-circle"></i>
                         <span>New Consultation</span>
@@ -284,6 +319,13 @@ $allTimeStats['pending_total'] = intval($allTimeStats['pending_total'] ?? 0);
                     </button>
                 </div>
             </section>
+
+            <style>
+                .action-card:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+                }
+            </style>
 
             <!-- AI-Prioritized Appointments Queue -->
             <section id="appointments" class="content-section">
@@ -407,6 +449,10 @@ $allTimeStats['pending_total'] = intval($allTimeStats['pending_total'] ?? 0);
                             <button class="action-btn-modern info" onclick="addNotes(<?php echo $apt['appointment_id']; ?>)">
                                 <i class="fas fa-notes-medical"></i>
                                 <span>Add Notes</span>
+                            </button>
+                            <button class="action-btn-modern secondary" onclick="viewAIDetails(<?php echo $apt['appointment_id']; ?>)">
+                                <i class="fas fa-robot"></i>
+                                <span>AI</span>
                             </button>
                         </div>
                     </div>
@@ -640,7 +686,70 @@ $allTimeStats['pending_total'] = intval($allTimeStats['pending_total'] ?? 0);
         document.querySelectorAll('.appointment-card.urgent').forEach(card => {
             card.style.animation = 'subtle-pulse 2s ease-in-out infinite';
         });
+
+        // AI modal functions
+        function viewAIDetails(id) {
+            const modal = document.getElementById('aiModal');
+            const content = document.getElementById('aiModalContent');
+            modal.style.display = 'flex';
+            content.innerHTML = 'Loading AI analysis...';
+
+            fetch('../php/get_ai_analysis.php?appointment_id=' + id)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.error) {
+                        content.innerHTML = '<div style="color:#c62828;">' + data.error + '</div>';
+                        return;
+                    }
+
+                    const ai = data.ai || {};
+                    let html = '';
+                    html += '<p><strong>Priority:</strong> ' + (data.priority_level || '-') + ' (Score: ' + (data.priority_score || '-') + '/100)</p>';
+                    if (ai.urgency_reason) html += '<p><strong>Urgency:</strong> ' + ai.urgency_reason + '</p>';
+                    if (ai.suspected_conditions) html += '<p><strong>Suspected:</strong> ' + (ai.suspected_conditions.join ? ai.suspected_conditions.join(', ') : ai.suspected_conditions) + '</p>';
+                    if (ai.recommended_specialist) html += '<p><strong>Specialist:</strong> ' + ai.recommended_specialist + '</p>';
+                    if (ai.warning_signs) html += '<p><strong>Warning signs:</strong> ' + (ai.warning_signs.join ? ai.warning_signs.join(', ') : ai.warning_signs) + '</p>';
+                    if (ai.next_steps) html += '<p><strong>Next steps:</strong><br>' + (ai.next_steps.join ? '<ul>' + ai.next_steps.map(s=>'<li>'+s+'</li>').join('') + '</ul>' : ai.next_steps) + '</p>';
+                    html += '<div style="margin-top:10px;"><button class="btn-small" onclick="reanalyze('+id+')">Re-run AI</button></div>';
+
+                    content.innerHTML = html;
+                })
+                .catch(err => content.innerHTML = '<div style="color:#c62828;">Error fetching AI analysis</div>');
+        }
+
+        function closeAIModal() {
+            document.getElementById('aiModal').style.display = 'none';
+        }
+
+        function reanalyze(id) {
+            const content = document.getElementById('aiModalContent');
+            content.innerHTML = 'Re-running AI analysis...';
+            fetch('../php/reanalyze_ai.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: 'appointment_id=' + id
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.error) {
+                    content.innerHTML = '<div style="color:#c62828;">' + data.error + '</div>';
+                    return;
+                }
+                viewAIDetails(id);
+            })
+            .catch(() => content.innerHTML = '<div style="color:#c62828;">Error running AI</div>');
+        }
     </script>
+    <!-- AI Modal -->
+    <div id="aiModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); align-items:center; justify-content:center; z-index:9999;">
+        <div style="background:white; border-radius:10px; max-width:700px; width:95%; padding:20px; box-shadow:0 10px 40px rgba(0,0,0,0.3);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <h3 style="margin:0;">AI Analysis</h3>
+                <button onclick="closeAIModal()" style="background:none;border:none;font-size:18px;cursor:pointer;">✕</button>
+            </div>
+            <div id="aiModalContent">Loading...</div>
+        </div>
+    </div>
 </body>
 </html>
 
