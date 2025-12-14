@@ -1,6 +1,7 @@
 # Documentation files
 *.md
 !README.md
+!ENV_SETUP.md
 README_EMAIL_SYSTEM.txt
 EMAIL_API_DOCUMENTATION.php
 OTP_SETUP_GUIDE.md
@@ -37,10 +38,16 @@ yarn-error.log*
 node_modules/
 vendor/
 
-# Environment variables
+# Environment variables - NEVER COMMIT THESE!
 .env
 .env.local
 .env.*.local
+.env.backup
+
+# Database files
+db.php.bak
+email_config.php.bak
+ai_prioritizer.php.bak
 
 # Temporary files
 tmp/
@@ -59,9 +66,6 @@ temp/
 !images/**
 !css/images/**
 
-
-# Database files
-db.php
 
 
 
