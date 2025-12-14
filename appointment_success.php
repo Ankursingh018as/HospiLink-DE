@@ -502,7 +502,10 @@ if ($appointment_id > 0) {
 
                 if ($ai): ?>
                 <div style="margin-top:20px; padding:20px; border-radius:12px; background:linear-gradient(135deg,#f0f8ff 0%,#ffffff 100%); border:1px solid #e6f2ff;">
-                    <h3 style="margin-top:0; color:#0e545f;">🤖 AI Medical Assessment</h3>
+                    <h3 style="margin-top:0; color:#0e545f; display:flex; align-items:center; gap:10px;">
+                        <i class="fas fa-robot" style="color:#00adb5;"></i>
+                        AI Medical Assessment
+                    </h3>
                     <?php if(!empty($ai['urgency_reason'])): ?>
                     <p><strong>Urgency:</strong> <?php echo htmlspecialchars($ai['urgency_reason']); ?></p>
                     <?php endif; ?>
@@ -557,22 +560,25 @@ if ($appointment_id > 0) {
                 <div style="display: flex; align-items: flex-start; gap: 15px;">
                     <i class="fas fa-calendar-plus" style="font-size: 28px; color: #2196F3; margin-top: 2px;"></i>
                     <div>
-                        <h4 style="color: #1976D2; margin: 0 0 10px 0; font-size: 16px;">📅 Add to Your Calendar</h4>
+                        <h4 style="color: #1976D2; margin: 0 0 10px 0; font-size: 16px; display:flex; align-items:center; gap:8px;">
+                            <i class="fas fa-calendar-plus" style="font-size:16px;"></i>
+                            Add to Your Calendar
+                        </h4>
                         <p style="color: #555; margin: 0; line-height: 1.6;">
                             Check your email for a calendar invite (.ics file) that you can add to:
                         </p>
                         <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px;">
-                            <span style="background: white; padding: 6px 12px; border-radius: 15px; font-size: 13px; color: #666;">
-                                📅 Google Calendar
+                            <span style="background: white; padding: 6px 12px; border-radius: 15px; font-size: 13px; color: #666; display:flex; align-items:center; gap:5px;">
+                                <i class="fab fa-google" style="color:#4285F4;"></i> Google Calendar
                             </span>
-                            <span style="background: white; padding: 6px 12px; border-radius: 15px; font-size: 13px; color: #666;">
-                                📧 Outlook
+                            <span style="background: white; padding: 6px 12px; border-radius: 15px; font-size: 13px; color: #666; display:flex; align-items:center; gap:5px;">
+                                <i class="fab fa-microsoft" style="color:#0078D4;"></i> Outlook
                             </span>
-                            <span style="background: white; padding: 6px 12px; border-radius: 15px; font-size: 13px; color: #666;">
-                                🍎 Apple Calendar
+                            <span style="background: white; padding: 6px 12px; border-radius: 15px; font-size: 13px; color: #666; display:flex; align-items:center; gap:5px;">
+                                <i class="fab fa-apple" style="color:#555;"></i> Apple Calendar
                             </span>
-                            <span style="background: white; padding: 6px 12px; border-radius: 15px; font-size: 13px; color: #666;">
-                                ⚡ & More
+                            <span style="background: white; padding: 6px 12px; border-radius: 15px; font-size: 13px; color: #666; display:flex; align-items:center; gap:5px;">
+                                <i class="fas fa-ellipsis-h" style="color:#666;"></i> & More
                             </span>
                         </div>
                         <p style="color: #555; margin: 12px 0 0 0; font-size: 13px;">

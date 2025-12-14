@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['logged_in']) || $_SESSION['user_role'] !== 'doctor') {
+if (!isset($_SESSION['logged_in']) || !in_array($_SESSION['user_role'], ['staff', 'nurse'])) {
     header("Location: ../sign_new.html");
     exit();
 }
@@ -16,7 +16,7 @@ $user_name = $_SESSION['user_name'];
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Profile - HospiLink</title>
+    <title>Edit Profile - HospiLink Staff</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="../css/doctor-dashboard-enhanced.css">
@@ -30,29 +30,25 @@ $user_name = $_SESSION['user_name'];
                 <img src="../images/logo.png" alt="HospiLink">
             </div>
             <nav class="sidebar-nav">
-                <a href="doctor_dashboard.php#overview" class="nav-item">
+                <a href="staff_dashboard.php" class="nav-item">
                     <i class="fas fa-home"></i>
-                    <span>Overview</span>
+                    <span>Dashboard</span>
                 </a>
-                <a href="doctor_dashboard.php#appointments" class="nav-item">
-                    <i class="fas fa-calendar-alt"></i>
-                    <span>Appointments Queue</span>
+                <a href="staff_patients.php" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>All Patients</span>
                 </a>
-                <a href="doctor_dashboard.php#activity-logs" class="nav-item">
-                    <i class="fas fa-history"></i>
-                    <span>Activity Logs</span>
+                <a href="staff_beds.php" class="nav-item">
+                    <i class="fas fa-bed"></i>
+                    <span>Bed Management</span>
                 </a>
-                <a href="doctor_profile.php" class="nav-item active">
+                <a href="../admit.html" class="nav-item">
+                    <i class="fas fa-user-plus"></i>
+                    <span>Admit Patient</span>
+                </a>
+                <a href="staff_profile.php" class="nav-item active">
                     <i class="fas fa-user-edit"></i>
                     <span>Edit Profile</span>
-                </a>
-                <a href="doctor_dashboard.php#patients" class="nav-item">
-                    <i class="fas fa-users"></i>
-                    <span>My Patients</span>
-                </a>
-                <a href="doctor_dashboard.php#schedule" class="nav-item">
-                    <i class="fas fa-clock"></i>
-                    <span>My Schedule</span>
                 </a>
                 <a href="../php/auth.php?logout=true" class="nav-item logout">
                     <i class="fas fa-sign-out-alt"></i>
@@ -67,7 +63,7 @@ $user_name = $_SESSION['user_name'];
             <header class="dashboard-header">
                 <h1><i class="fas fa-user-edit"></i> Edit Profile</h1>
                 <div class="user-info">
-                    <span class="user-role"><i class="fas fa-user-md"></i> Doctor</span>
+                    <span class="user-role"><i class="fas fa-user-nurse"></i> Staff</span>
                 </div>
             </header>
 
@@ -110,17 +106,25 @@ $user_name = $_SESSION['user_name'];
                             
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label for="specialization">
-                                        <i class="fas fa-stethoscope"></i> Specialization
+                                    <label for="department">
+                                        <i class="fas fa-building"></i> Department
                                     </label>
-                                    <input type="text" id="specialization" name="specialization" value="" placeholder="e.g., Cardiology, Neurology">
+                                    <select id="department" name="department">
+                                        <option value="">Select Department</option>
+                                        <option value="General Ward">General Ward</option>
+                                        <option value="ICU">ICU</option>
+                                        <option value="Emergency">Emergency</option>
+                                        <option value="Pediatrics">Pediatrics</option>
+                                        <option value="Maternity">Maternity</option>
+                                        <option value="Administration">Administration</option>
+                                    </select>
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="department">
-                                        <i class="fas fa-hospital"></i> Department
+                                    <label for="staff_id">
+                                        <i class="fas fa-id-badge"></i> Staff ID
                                     </label>
-                                    <input type="text" id="department" name="department" value="" placeholder="Enter department">
+                                    <input type="text" id="staff_id" name="staff_id" value="" placeholder="Enter staff ID">
                                 </div>
                             </div>
                             
@@ -155,7 +159,7 @@ $user_name = $_SESSION['user_name'];
                                 <button type="submit" class="btn-save">
                                     <i class="fas fa-save"></i> Save Changes
                                 </button>
-                                <button type="button" class="btn-cancel" onclick="window.location.href='doctor_dashboard.php'">
+                                <button type="button" class="btn-cancel" onclick="window.location.href='staff_dashboard.php'">
                                     <i class="fas fa-arrow-left"></i> Back to Dashboard
                                 </button>
                             </div>
@@ -180,8 +184,8 @@ $user_name = $_SESSION['user_name'];
                     document.getElementById('last_name').value = data.data.last_name || '';
                     document.getElementById('email').value = data.data.email || '';
                     document.getElementById('phone').value = data.data.phone || '';
-                    document.getElementById('specialization').value = data.data.specialization || '';
                     document.getElementById('department').value = data.data.department || '';
+                    document.getElementById('staff_id').value = data.data.staff_id || '';
                     document.getElementById('address').value = data.data.address || '';
                 }
             } catch (error) {
@@ -214,7 +218,7 @@ $user_name = $_SESSION['user_name'];
                     
                     // Redirect to dashboard after 2 seconds
                     setTimeout(() => {
-                        window.location.href = 'doctor_dashboard.php';
+                        window.location.href = 'staff_dashboard.php';
                     }, 2000);
                 }
             } catch (error) {

@@ -57,6 +57,7 @@ body {
 .upload-section input[type="text"],
 .upload-section input[type="date"],
 .upload-section input[type="tel"],
+.upload-section input[type="email"],
 .upload-section select {
     width: 100%;
     padding: 14px 16px;
@@ -67,16 +68,26 @@ body {
     transition: all 0.3s ease;
     background: #f8f9fa;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
 }
 
 .upload-section input[type="text"]:focus,
 .upload-section input[type="date"]:focus,
 .upload-section input[type="tel"]:focus,
+.upload-section input[type="email"]:focus,
 .upload-section select:focus {
     outline: none;
     border-color: #00adb5;
     background: white;
     box-shadow: 0 0 0 3px rgba(0, 173, 181, 0.1);
+}
+
+/* Ensure email field specifically matches other inputs */
+.upload-section input[type="email"] {
+    background: #f8f9fa !important;
+    border: 2px solid #e9ecef !important;
 }
 
 .upload-section input::placeholder {

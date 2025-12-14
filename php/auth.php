@@ -74,6 +74,12 @@ if (isset($_POST['signUp'])) {
         
         $stmt = $conn->prepare("INSERT INTO users (first_name, last_name, email, password, role, phone, specialization, department, license_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt->bind_param("sssssssss", $firstName, $lastName, $email, $hashedPassword, $role, $phone, $specialization, $department, $license_number);
+    } elseif ($role === 'staff') {
+        $staff_department = mysqli_real_escape_string($conn, trim($_POST['staff_department']));
+        $staff_id = mysqli_real_escape_string($conn, trim($_POST['staff_id']));
+        
+        $stmt = $conn->prepare("INSERT INTO users (first_name, last_name, email, password, role, phone, department, staff_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssssssss", $firstName, $lastName, $email, $hashedPassword, $role, $phone, $staff_department, $staff_id);
     } else {
         $stmt = $conn->prepare("INSERT INTO users (first_name, last_name, email, password, role, phone) VALUES (?, ?, ?, ?, ?, ?)");
         $stmt->bind_param("ssssss", $firstName, $lastName, $email, $hashedPassword, $role, $phone);
@@ -97,8 +103,14 @@ if (isset($_POST['signIn'])) {
     $role = mysqli_real_escape_string($conn, $_POST['role']);
     
     // Prepare and execute query
-    $stmt = $conn->prepare("SELECT user_id, first_name, last_name, email, password, role, status FROM users WHERE email = ? AND role = ?");
-    $stmt->bind_param("ss", $email, $role);
+    // For staff role, also check for 'nurse' role (backward compatibility)
+    if ($role === 'staff') {
+        $stmt = $conn->prepare("SELECT user_id, first_name, last_name, email, password, role, status FROM users WHERE email = ? AND (role = 'staff' OR role = 'nurse')");
+        $stmt->bind_param("s", $email);
+    } else {
+        $stmt = $conn->prepare("SELECT user_id, first_name, last_name, email, password, role, status FROM users WHERE email = ? AND role = ?");
+        $stmt->bind_param("ss", $email, $role);
+    }
     $stmt->execute();
     $result = $stmt->get_result();
     
@@ -130,6 +142,10 @@ if (isset($_POST['signIn'])) {
                     break;
                 case 'doctor':
                     header("Location: ../dashboards/doctor_dashboard.php");
+                    break;
+                case 'staff':
+                case 'nurse':
+                    header("Location: ../dashboards/staff_dashboard.php");
                     break;
                 case 'patient':
                     header("Location: ../dashboards/patient_dashboard.php");
