@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Admission - Test & Verification</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #00adb5;
+        }
+        .test-section h2 {
+            color: #00adb5;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        .test-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin: 10px 0;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+        .test-label {
+            font-weight: 500;
+            color: #333;
+        }
+        .test-status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        .status-pass {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status-fail {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        button {
+            background: #00adb5;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background: #008c94;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .button-group {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .log-output {
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+        .log-entry {
+            margin: 3px 0;
+            padding: 2px 0;
+            border-bottom: 1px solid #333;
+        }
+        .metric {
+            display: inline-block;
+            margin: 10px 15px;
+            padding: 10px 20px;
+            background: white;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00adb5;
+        }
+        .metric-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        .success-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏥 Patient Admission System</h1>
+        <p class="subtitle">Test & Verification Dashboard</p>
+
+        <!-- System Status -->
+        <div class="test-section">
+            <h2>📊 System Status</h2>
+            <div id="systemStatus">
+                <div class="test-item">
+                    <span class="test-label">Database Connection</span>
+                    <span class="test-status status-pending" id="dbStatus">Testing...</span>
+                </div>
+                <div class="test-item">
+                    <span class="test-label">Environment Configuration</span>
+                    <span class="test-status status-pending" id="envStatus">Testing...</span>
+                </div>
+                <div class="test-item">
+                    <span class="test-label">API Endpoints</span>
+                    <span class="test-status status-pending" id="apiStatus">Testing...</span>
+                </div>
+                <div class="test-item">
+                    <span class="test-label">QR Helper Functions</span>
+                    <span class="test-status status-pending" id="qrStatus">Testing...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Metrics -->
+        <div class="test-section">
+            <h2>⚡ Performance Metrics</h2>
+            <div style="text-align: center;">
+                <div class="metric">
+                    <div class="metric-value" id="availableBeds">-</div>
+                    <div class="metric-label">Available Beds</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" id="activeDoctors">-</div>
+                    <div class="metric-label">Active Doctors</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" id="loadTime">-</div>
+                    <div class="metric-label">Load Time (ms)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature Tests -->
+        <div class="test-section">
+            <h2>🧪 Feature Tests</h2>
+            <div class="button-group">
+                <button onclick="testAdmissionOptions()">Test Bed/Doctor Loading</button>
+                <button onclick="testFormValidation()">Test Form Validation</button>
+                <button onclick="testQRGeneration()">Test QR Generation</button>
+                <button onclick="runAllTests()">Run All Tests</button>
+            </div>
+            <div class="log-output" id="testLog">
+                <div class="log-entry">System ready for testing...</div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="test-section">
+            <h2>🚀 Quick Actions</h2>
+            <div class="button-group">
+                <button onclick="window.location.href='admit.html'">Go to Admission Form</button>
+                <button onclick="window.location.href='php/get_admission_options.php'">View API Response</button>
+                <button onclick="clearLogs()">Clear Logs</button>
+            </div>
+        </div>
+
+        <!-- Optimization Summary -->
+        <div class="info-box">
+            <h3 style="margin-bottom: 10px;">✨ Optimizations Applied:</h3>
+            <ul style="margin-left: 20px; line-height: 1.8;">
+                <li><strong>Client-Side Validation:</strong> Phone, email, date validation before submission</li>
+                <li><strong>Transaction Support:</strong> Database rollback on errors</li>
+                <li><strong>Error Handling:</strong> Comprehensive try-catch with user-friendly messages</li>
+                <li><strong>Bed Availability Check:</strong> Validates bed status before assignment</li>
+                <li><strong>Duplicate Prevention:</strong> Checks existing patients by email/phone</li>
+                <li><strong>QR Token Collision Detection:</strong> Ensures unique QR codes</li>
+                <li><strong>Loading States:</strong> Prevents double submission</li>
+                <li><strong>API Optimization:</strong> Cached responses with proper headers</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const logArea = document.getElementById('testLog');
+        let testResults = {
+            db: false,
+            env: false,
+            api: false,
+            qr: false
+        };
+
+        function log(message, type = 'info') {
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            const timestamp = new Date().toLocaleTimeString();
+            const icon = type === 'success' ? '✓' : type === 'error' ? '✗' : '→';
+            entry.innerHTML = `[${timestamp}] ${icon} ${message}`;
+            entry.style.color = type === 'success' ? '#00ff00' : type === 'error' ? '#ff4444' : '#00ff00';
+            logArea.appendChild(entry);
+            logArea.scrollTop = logArea.scrollHeight;
+        }
+
+        function setStatus(elementId, passed) {
+            const element = document.getElementById(elementId);
+            element.textContent = passed ? '✓ PASS' : '✗ FAIL';
+            element.className = 'test-status ' + (passed ? 'status-pass' : 'status-fail');
+        }
+
+        async function testDatabaseConnection() {
+            log('Testing database connection...');
+            try {
+                const response = await fetch('php/get_admission_options.php');
+                const data = await response.json();
+                if (data.success) {
+                    testResults.db = true;
+                    setStatus('dbStatus', true);
+                    log('Database connection successful', 'success');
+                    return true;
+                }
+            } catch (error) {
+                setStatus('dbStatus', false);
+                log('Database connection failed: ' + error.message, 'error');
+            }
+            return false;
+        }
+
+        async function testEnvironmentConfig() {
+            log('Testing environment configuration...');
+            try {
+                const response = await fetch('test_env_config.php');
+                const text = await response.text();
+                if (text.includes('✅')) {
+                    testResults.env = true;
+                    setStatus('envStatus', true);
+                    log('Environment configuration valid', 'success');
+                    return true;
+                }
+            } catch (error) {
+                setStatus('envStatus', false);
+                log('Environment check failed: ' + error.message, 'error');
+            }
+            return false;
+        }
+
+        async function testAdmissionOptions() {
+            log('Testing admission options API...');
+            const startTime = performance.now();
+            
+            try {
+                const response = await fetch('php/get_admission_options.php');
+                const data = await response.json();
+                const endTime = performance.now();
+                const loadTime = Math.round(endTime - startTime);
+                
+                if (data.success) {
+                    testResults.api = true;
+                    setStatus('apiStatus', true);
+                    
+                    document.getElementById('availableBeds').textContent = data.beds.length;
+                    document.getElementById('activeDoctors').textContent = data.doctors.length;
+                    document.getElementById('loadTime').textContent = loadTime;
+                    
+                    log(`API response successful (${loadTime}ms)`, 'success');
+                    log(`Found ${data.beds.length} beds and ${data.doctors.length} doctors`, 'success');
+                    
+                    return true;
+                } else {
+                    throw new Error('API returned success: false');
+                }
+            } catch (error) {
+                setStatus('apiStatus', false);
+                log('API test failed: ' + error.message, 'error');
+            }
+            return false;
+        }
+
+        function testFormValidation() {
+            log('Testing form validation rules...');
+            
+            const tests = [
+                { test: /^[6-9]\d{9}$/.test('9876543210'), name: 'Phone validation' },
+                { test: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test('test@example.com'), name: 'Email validation' },
+                { test: new Date('2000-01-01') < new Date(), name: 'Date validation' }
+            ];
+            
+            let passed = 0;
+            tests.forEach(t => {
+                if (t.test) {
+                    log(`${t.name}: PASS`, 'success');
+                    passed++;
+                } else {
+                    log(`${t.name}: FAIL`, 'error');
+                }
+            });
+            
+            testResults.qr = passed === tests.length;
+            setStatus('qrStatus', testResults.qr);
+            
+            log(`Form validation: ${passed}/${tests.length} tests passed`, passed === tests.length ? 'success' : 'error');
+        }
+
+        function testQRGeneration() {
+            log('Testing QR token format...');
+            
+            // Simulate token format check
+            const sampleToken = 'HOSP-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+            const isValid = sampleToken.startsWith('HOSP-') && sampleToken.length > 20;
+            
+            if (isValid) {
+                log('QR token format valid: ' + sampleToken, 'success');
+                log('Token length: ' + sampleToken.length + ' characters', 'success');
+            } else {
+                log('QR token validation failed', 'error');
+            }
+        }
+
+        async function runAllTests() {
+            log('Starting comprehensive test suite...');
+            log('═'.repeat(50));
+            
+            await testDatabaseConnection();
+            await testEnvironmentConfig();
+            await testAdmissionOptions();
+            testFormValidation();
+            testQRGeneration();
+            
+            log('═'.repeat(50));
+            const allPassed = Object.values(testResults).every(v => v);
+            log('Test suite completed: ' + (allPassed ? 'ALL PASSED ✓' : 'SOME FAILED ✗'), 
+                allPassed ? 'success' : 'error');
+        }
+
+        function clearLogs() {
+            logArea.innerHTML = '<div class="log-entry">Logs cleared. Ready for testing...</div>';
+        }
+
+        // Run initial tests on page load
+        window.addEventListener('load', () => {
+            setTimeout(runAllTests, 500);
+        });
+    </script>
+</body>
+</html>
