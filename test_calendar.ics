@@ -1,0 +1,41 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//HospiLink//Hospital Management System//EN
+CALSCALE:GREGORIAN
+METHOD:REQUEST
+X-WR-CALNAME:HospiLink Appointments
+X-WR-TIMEZONE:Asia/Kolkata
+BEGIN:VTIMEZONE
+TZID:Asia/Kolkata
+BEGIN:STANDARD
+DTSTART:19700101T000000
+TZOFFSETFROM:+0530
+TZOFFSETTO:+0530
+TZNAME:IST
+END:STANDARD
+END:VTIMEZONE
+BEGIN:VEVENT
+UID:appointment-999@hospilink.com
+DTSTAMP:20251214T102058Z
+DTSTART;TZID=Asia/Kolkata:20251220T143000
+DTEND;TZID=Asia/Kolkata:20251220T153000
+SUMMARY:HospiLink Appointment - Test Patient
+DESCRIPTION:Appointment Details:\n\nAppointment ID: #999\nPatient: Test Patient\nDoctor: Dr. Test Doctor\nPriority: MEDIUM\nSymptoms: Regular checkup\n\nImportant Information:\n- Please arrive 15 minutes before your appointment time\n- Bring a valid ID and any previous medical records\n- Wear a mask and maintain social distancing\n\nContact: hospilink@gmail.com | +91-9856594589
+LOCATION:HospiLink Hospital\, Dahod\, Gujarat\, India
+STATUS:CONFIRMED
+SEQUENCE:0
+PRIORITY:5
+ORGANIZER;CN=HospiLink Hospital:mailto:hospilink@gmail.com
+ATTENDEE;CN=Test Patient;RSVP=TRUE:mailto:test@example.com
+BEGIN:VALARM
+TRIGGER:-PT24H
+ACTION:DISPLAY
+DESCRIPTION:Appointment reminder - Tomorrow at 2:30 PM
+END:VALARM
+BEGIN:VALARM
+TRIGGER:-PT2H
+ACTION:DISPLAY
+DESCRIPTION:Appointment in 2 hours
+END:VALARM
+END:VEVENT
+END:VCALENDAR
