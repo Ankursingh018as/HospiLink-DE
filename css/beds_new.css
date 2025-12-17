@@ -24,38 +24,46 @@ body {
 }
 
 .header-content h1 {
-    font-size: 2.8rem;
-    font-weight: 700;
-    margin-bottom: 15px;
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 15px;
+    color: #ffffff;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
 
 .header-content h1 i {
-    font-size: 3rem;
+    font-size: 3.2rem;
 }
 
 .header-content p {
-    font-size: 1.2rem;
-    opacity: 0.95;
-    margin-bottom: 20px;
+    font-size: 1.3rem;
+    opacity: 1;
+    margin-bottom: 25px;
+    color: #ffffff;
+    font-weight: 500;
+    text-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
 }
 
 .last-updated {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    background: rgba(255, 255, 255, 0.2);
-    padding: 10px 20px;
-    border-radius: 25px;
-    font-size: 0.95rem;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.25);
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 1rem;
     backdrop-filter: blur(10px);
+    color: #ffffff;
+    font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .last-updated i {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
 }
 
 /* Main Content */
@@ -150,11 +158,15 @@ body {
 }
 
 .stat-card:hover .stat-icon-wrapper {
-    transform: scale(1.1) rotate(5deg);
+    transform: scale(1.1);
 }
 
 .stat-content {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
 
 .stat-card h2 {
@@ -164,6 +176,7 @@ body {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    text-align: center;
 }
 
 .stat-number {
@@ -217,7 +230,37 @@ body {
     gap: 25px;
 }
 
-.ward-card {
+.beds-container .stat-card.ward-card {
+    background: white !important;
+    padding: 30px !important;
+    border-radius: 20px !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08) !important;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    position: relative;
+    overflow: hidden;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+}
+
+.beds-container .stat-card.ward-card::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: auto !important;
+    height: 5px !important;
+    background: linear-gradient(90deg, #00adb5 0%, #0e545f 100%) !important;
+}
+
+.beds-container .stat-card.ward-card:hover {
+    transform: translateY(-10px) !important;
+    box-shadow: 0 20px 60px rgba(0, 173, 181, 0.15) !important;
+}
+
+.ward-grid .ward-card {
     background: white;
     padding: 30px;
     border-radius: 16px;
@@ -227,7 +270,7 @@ body {
     overflow: hidden;
 }
 
-.ward-card::before {
+.ward-grid .ward-card::before {
     content: '';
     position: absolute;
     top: 0;
@@ -237,7 +280,7 @@ body {
     background: linear-gradient(180deg, #00adb5 0%, #0e545f 100%);
 }
 
-.ward-card:hover {
+.ward-grid .ward-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 15px 50px rgba(0, 173, 181, 0.15);
 }
