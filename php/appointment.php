@@ -65,13 +65,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $firstName = $nameParts[0];
             $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
             
-            $createPatient = $conn->prepare("INSERT INTO users (first_name, last_name, email, password, role, phone) VALUES (?, ?, ?, ?, 'patient', ?)");
+            $createPatient = $conn->prepare("INSERT INTO users (first_name, last_name, email, password, role, phone, status) VALUES (?, ?, ?, ?, 'patient', ?, 'active')");
             $createPatient->bind_param("sssss", $firstName, $lastName, $email, $tempPassword, $phone);
-            $createPatient->execute();
-            $patient_id = $createPatient->insert_id;
+            
+            if ($createPatient->execute()) {
+                $patient_id = $conn->insert_id;
+            } else {
+                $error_msg = addslashes($conn->error);
+                echo "<script>
+                    alert('Error creating patient account: " . $error_msg . "');
+                    window.location.href='../appointment.html';
+                </script>";
+                exit();
+            }
             $createPatient->close();
         }
         $checkPatient->close();
+    }
+    
+    // Verify patient_id exists before continuing
+    if (!$patient_id || $patient_id <= 0) {
+        echo "<script>
+            alert('Error: Unable to create or retrieve patient account. Please try again.');
+            window.location.href='../appointment.html';
+        </script>";
+        exit();
     }
 
     // Ensure AI analysis column exists (add if missing)
@@ -160,8 +178,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
         
     } else {
+        $error_msg = addslashes($conn->error);
         echo "<script>
-            alert('Error booking appointment: " . $conn->error . "');
+            alert('Error booking appointment: " . $error_msg . "');
             window.location.href='../appointment.html';
         </script>";
     }

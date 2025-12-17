@@ -555,6 +555,48 @@ if ($appointment_id > 0) {
                 </ul>
             </div>
 
+            <!-- QR Code Check-in Section -->
+            <?php if (!empty($appointment['qr_token'])): ?>
+            <div style="background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%); border-left: 4px solid #9c27b0; padding: 25px; border-radius: 12px; margin: 25px 0; text-align: center;">
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
+                    <div>
+                        <h4 style="color: #7b1fa2; margin: 0 0 10px 0; font-size: 18px; display:flex; align-items:center; justify-content:center; gap:8px;">
+                            <i class="fas fa-qrcode" style="font-size:20px;"></i>
+                            Your Appointment QR Code
+                        </h4>
+                        <p style="color: #555; margin: 0 0 15px 0; line-height: 1.6; font-size: 14px;">
+                            Show this QR code at the reception for quick check-in on your appointment day
+                        </p>
+                    </div>
+                    
+                    <!-- QR Code Image -->
+                    <div style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=<?php echo urlencode($appointment['qr_token']); ?>" 
+                             alt="Appointment QR Code" 
+                             style="display: block; width: 200px; height: 200px;">
+                    </div>
+                    
+                    <div style="background: rgba(255,255,255,0.7); padding: 10px 20px; border-radius: 20px; font-family: 'Courier New', monospace; font-size: 13px; color: #666; margin-top: 5px;">
+                        Token: <?php echo htmlspecialchars($appointment['qr_token']); ?>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; justify-content: center;">
+                        <button onclick="downloadQR()" class="btn btn-secondary" style="font-size: 14px; padding: 10px 20px;">
+                            <i class="fas fa-download"></i> Download QR Code
+                        </button>
+                        <button onclick="shareQR()" class="btn btn-secondary" style="font-size: 14px; padding: 10px 20px;">
+                            <i class="fas fa-share-alt"></i> Share
+                        </button>
+                    </div>
+                    
+                    <p style="color: #666; margin: 15px 0 0 0; font-size: 12px; line-height: 1.5;">
+                        <i class="fas fa-info-circle" style="color: #9c27b0;"></i>
+                        This QR code can be scanned by hospital staff for instant appointment verification and faster check-in process.
+                    </p>
+                </div>
+            </div>
+            <?php endif; ?>
+
             <!-- Calendar Notice -->
             <div style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border-left: 4px solid #2196F3; padding: 20px; border-radius: 8px; margin: 25px 0;">
                 <div style="display: flex; align-items: flex-start; gap: 15px;">
@@ -595,6 +637,10 @@ if ($appointment_id > 0) {
                     <a href="dashboards/patient_dashboard.php" class="btn btn-primary">
                         <i class="fas fa-tachometer-alt"></i> View Dashboard
                     </a>
+                <?php else: ?>
+                    <a href="appointment.html" class="btn btn-primary">
+                        <i class="fas fa-calendar-plus"></i> Track Appointment
+                    </a>
                 <?php endif; ?>
                 <a href="index.html" class="btn btn-secondary">
                     <i class="fas fa-home"></i> Back to Home
@@ -605,6 +651,49 @@ if ($appointment_id > 0) {
             </div>
         </div>
     </div>
+    
+    <script>
+        function downloadQR() {
+            const qrToken = '<?php echo htmlspecialchars($appointment['qr_token'] ?? ''); ?>';
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(qrToken)}`;
+            
+            fetch(qrUrl)
+                .then(response => response.blob())
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `HospiLink-Appointment-${<?php echo $appointment['appointment_id']; ?>}-QR.png`;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                })
+                .catch(err => {
+                    alert('Failed to download QR code. Please try again.');
+                    console.error(err);
+                });
+        }
+        
+        function shareQR() {
+            const shareData = {
+                title: 'HospiLink Appointment',
+                text: `My appointment #<?php echo $appointment['appointment_id']; ?> is confirmed for <?php echo date('d M Y', strtotime($appointment['appointment_date'])); ?> at <?php echo date('h:i A', strtotime($appointment['appointment_time'])); ?>`,
+                url: window.location.href
+            };
+            
+            if (navigator.share) {
+                navigator.share(shareData)
+                    .catch(err => console.log('Share cancelled or failed'));
+            } else {
+                // Fallback: copy to clipboard
+                const textToCopy = `${shareData.text}\nQR Token: <?php echo htmlspecialchars($appointment['qr_token'] ?? ''); ?>`;
+                navigator.clipboard.writeText(textToCopy)
+                    .then(() => alert('Appointment details copied to clipboard!'))
+                    .catch(err => alert('Failed to copy. Please try manually.'));
+            }
+        }
+    </script>
 </body>
 </html>
 

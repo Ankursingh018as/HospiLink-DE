@@ -48,38 +48,42 @@ class SymptomAnalyzer {
         // Calculate final priority
         if (empty($priorityScores)) {
             // No keywords matched - default to medium priority
-            return [
-                'priority_level' => 'medium',
-                'priority_score' => 50,
-                'matched_keywords' => [],
-                'analysis' => 'No specific symptoms detected. Please provide more details.'
-            ];
-        }
-        
-        // Get highest priority level
-        $maxScore = max($priorityScores);
-        
-        // Determine priority level based on score
-        if ($maxScore >= 100) {
-            $priorityLevel = 'high';
-        } elseif ($maxScore >= 50) {
             $priorityLevel = 'medium';
+            $finalScore = 50;
         } else {
-            $priorityLevel = 'low';
+            // Get highest priority level
+            $maxScore = max($priorityScores);
+            
+            // Determine priority level based on score
+            if ($maxScore >= 100) {
+                $priorityLevel = 'high';
+            } elseif ($maxScore >= 50) {
+                $priorityLevel = 'medium';
+            } else {
+                $priorityLevel = 'low';
+            }
+            
+            // Calculate average score for more nuanced prioritization
+            $avgScore = array_sum($priorityScores) / count($priorityScores);
+            $finalScore = max($maxScore, $avgScore);
         }
         
-        // Calculate average score for more nuanced prioritization
-        $avgScore = array_sum($priorityScores) / count($priorityScores);
-        $finalScore = max($maxScore, $avgScore);
+        // Detect specialization
+        $specialization = $this->detectSpecialization($symptoms);
         
         // Generate analysis message
         $analysis = $this->generateAnalysis($priorityLevel, $matchedKeywords);
         
         return [
+            'priority' => $priorityLevel,
             'priority_level' => $priorityLevel,
+            'score' => round($finalScore),
             'priority_score' => round($finalScore),
             'matched_keywords' => $matchedKeywords,
-            'analysis' => $analysis
+            'analysis' => $analysis,
+            'reason' => $analysis,
+            'specialization' => $specialization,
+            'recommended_specialist' => ucfirst($specialization)
         ];
     }
     

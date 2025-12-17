@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test AI Prediction System - HospiLink</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #00adb5 0%, #0e545f 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #0e545f;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #00adb5;
+        }
+        .test-section h3 {
+            color: #0e545f;
+            margin-bottom: 15px;
+        }
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 100px;
+        }
+        textarea:focus {
+            border-color: #00adb5;
+            outline: none;
+        }
+        button {
+            background: linear-gradient(135deg, #00adb5 0%, #0e545f 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 173, 181, 0.4);
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .result-box {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            background: white;
+            border: 2px solid #00adb5;
+        }
+        .result-box h4 {
+            color: #0e545f;
+            margin-bottom: 10px;
+        }
+        .result-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        .result-label {
+            font-weight: 600;
+            color: #555;
+            display: inline-block;
+            width: 180px;
+        }
+        .result-value {
+            color: #333;
+        }
+        .priority-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: white;
+        }
+        .priority-critical { background: #d32f2f; }
+        .priority-high { background: #f57c00; }
+        .priority-medium { background: #00adb5; }
+        .priority-low { background: #4caf50; }
+        .error-box {
+            background: #ffebee;
+            border-left: 4px solid #d32f2f;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        .success-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            color: #2e7d32;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        .example-symptoms {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .example-chip {
+            background: white;
+            border: 1px solid #00adb5;
+            color: #00adb5;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .example-chip:hover {
+            background: #00adb5;
+            color: white;
+        }
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #00adb5;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 AI Prediction System Test</h1>
+        <p class="subtitle">Test the HospiLink AI symptom analysis and doctor recommendation system</p>
+        
+        <!-- Test 1: Quick Examples -->
+        <div class="test-section">
+            <h3>Quick Test Examples</h3>
+            <p style="color: #666; margin-bottom: 15px;">Click on an example to test:</p>
+            <div class="example-symptoms">
+                <div class="example-chip" onclick="testSymptom('Severe chest pain and difficulty breathing')">💔 Chest Pain (Critical)</div>
+                <div class="example-chip" onclick="testSymptom('High fever 103F with severe headache')">🤒 High Fever (High)</div>
+                <div class="example-chip" onclick="testSymptom('Persistent cough for 5 days')">😷 Cough (Medium)</div>
+                <div class="example-chip" onclick="testSymptom('Regular checkup and health consultation')">📋 Checkup (Low)</div>
+                <div class="example-chip" onclick="testSymptom('Pediatric vaccination for my 2 year old child')">👶 Pediatric</div>
+                <div class="example-chip" onclick="testSymptom('Heart palpitations and irregular heartbeat')">❤️ Cardiology</div>
+            </div>
+        </div>
+        
+        <!-- Test 2: Custom Input -->
+        <div class="test-section">
+            <h3>Custom Symptom Test</h3>
+            <textarea id="customSymptoms" placeholder="Enter custom symptoms here... (e.g., 'Severe stomach pain with vomiting and dizziness')"></textarea>
+            <button onclick="testCustom()" id="testBtn">Analyze Symptoms</button>
+            <div id="customResult"></div>
+        </div>
+        
+        <!-- Test 3: API Endpoint Direct Test -->
+        <div class="test-section">
+            <h3>System Status</h3>
+            <div id="systemStatus">
+                <p>Click "Check Status" to verify API endpoint is working</p>
+                <button onclick="checkSystemStatus()">Check Status</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function testSymptom(symptomText) {
+            document.getElementById('customSymptoms').value = symptomText;
+            testCustom();
+        }
+        
+        async function testCustom() {
+            const symptoms = document.getElementById('customSymptoms').value.trim();
+            const resultDiv = document.getElementById('customResult');
+            const btn = document.getElementById('testBtn');
+            
+            if (!symptoms) {
+                resultDiv.innerHTML = '<div class="error-box">⚠️ Please enter symptoms to test</div>';
+                return;
+            }
+            
+            btn.disabled = true;
+            btn.textContent = 'Analyzing...';
+            resultDiv.innerHTML = '<div class="loader"></div>';
+            
+            try {
+                const response = await fetch('php/get_ai_preview.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'symptoms=' + encodeURIComponent(symptoms)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayResult(data, resultDiv);
+                } else {
+                    resultDiv.innerHTML = `<div class="error-box">❌ Error: ${data.message || 'Analysis failed'}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error-box">❌ Network Error: ${error.message}</div>`;
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Analyze Symptoms';
+            }
+        }
+        
+        function displayResult(data, container) {
+            const priorityClass = 'priority-' + data.priority_level.toLowerCase();
+            
+            const html = `
+                <div class="result-box">
+                    <h4>📊 Analysis Results</h4>
+                    <div class="result-item">
+                        <span class="result-label">Priority Level:</span>
+                        <span class="priority-badge ${priorityClass}">${data.priority_level.toUpperCase()}</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Priority Score:</span>
+                        <span class="result-value">${data.priority_score}/100</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Time Sensitivity:</span>
+                        <span class="result-value">${data.time_sensitivity}</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Urgency Reason:</span>
+                        <span class="result-value">${data.urgency_reason}</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Recommended Specialist:</span>
+                        <span class="result-value">${data.recommended_specialist}</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Recommended Doctor:</span>
+                        <span class="result-value"><strong>${data.recommended_doctor || 'N/A'}</strong></span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Analysis Method:</span>
+                        <span class="result-value">${data.analysis_method}</span>
+                    </div>
+                </div>
+                <div class="success-box">
+                    ✅ AI analysis completed successfully! The system is working correctly.
+                </div>
+            `;
+            
+            container.innerHTML = html;
+        }
+        
+        async function checkSystemStatus() {
+            const statusDiv = document.getElementById('systemStatus');
+            statusDiv.innerHTML = '<div class="loader"></div>';
+            
+            try {
+                // Test with a simple symptom
+                const response = await fetch('php/get_ai_preview.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'symptoms=test'
+                });
+                
+                const data = await response.json();
+                
+                if (data.success || response.ok) {
+                    statusDiv.innerHTML = `
+                        <div class="success-box">
+                            ✅ System Status: ONLINE<br>
+                            API Endpoint: php/get_ai_preview.php<br>
+                            Status: Working correctly<br>
+                            Response Time: ${Date.now() - window.testStartTime}ms
+                        </div>
+                        <button onclick="checkSystemStatus()">Refresh Status</button>
+                    `;
+                } else {
+                    statusDiv.innerHTML = `
+                        <div class="error-box">
+                            ⚠️ System Status: API Error<br>
+                            Message: ${data.message || 'Unknown error'}
+                        </div>
+                        <button onclick="checkSystemStatus()">Retry</button>
+                    `;
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `
+                    <div class="error-box">
+                        ❌ System Status: OFFLINE<br>
+                        Error: ${error.message}<br>
+                        Please check if the server is running
+                    </div>
+                    <button onclick="checkSystemStatus()">Retry</button>
+                `;
+            }
+        }
+        
+        // Track test start time
+        window.testStartTime = Date.now();
+    </script>
+</body>
+</html>

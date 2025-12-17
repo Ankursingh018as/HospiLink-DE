@@ -173,7 +173,7 @@ body {
 .contact-section button i.ri-loader-4-line {
     animation: spin 1s linear infinite;
 }
-}
+
 
 .contact-section button:hover {
     transform: translateY(-2px);
