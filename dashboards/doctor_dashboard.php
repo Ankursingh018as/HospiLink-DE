@@ -358,7 +358,10 @@ $allTimeStats['pending_total'] = intval($allTimeStats['pending_total'] ?? 0);
                             ];
                             $config = $priorityConfig[$priorityClass];
                     ?>
-                    <div class="appointment-card <?php echo $isUrgent ? 'urgent' : ''; ?>" data-priority="<?php echo $priorityClass; ?>" data-status="<?php echo $statusClass; ?>">
+                    <div class="appointment-card <?php echo $isUrgent ? 'urgent' : ''; ?>" 
+                         data-appointment-id="<?php echo $apt['appointment_id']; ?>"
+                         data-priority="<?php echo $priorityClass; ?>" 
+                         data-status="<?php echo $statusClass; ?>">
                         <div class="appointment-priority-bar" style="background: <?php echo $config['color']; ?>"></div>
                         
                         <div class="appointment-header">
@@ -438,6 +441,12 @@ $allTimeStats['pending_total'] = intval($allTimeStats['pending_total'] ?? 0);
                                 <i class="fas fa-robot"></i>
                                 <span>AI</span>
                             </button>
+                            <?php if($apt['status'] === 'confirmed' || $apt['status'] === 'pending'): ?>
+                            <button class="action-btn-modern" style="background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%); color: white;" onclick="admitFromAppointment(<?php echo $apt['appointment_id']; ?>, <?php echo $apt['patient_id']; ?>)">
+                                <i class="fas fa-bed"></i>
+                                <span>Admit Patient</span>
+                            </button>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <?php 
@@ -723,6 +732,157 @@ $allTimeStats['pending_total'] = intval($allTimeStats['pending_total'] ?? 0);
             })
             .catch(() => content.innerHTML = '<div style="color:#c62828;">Error running AI</div>');
         }
+        
+        // Admit patient from appointment
+        function admitFromAppointment(appointmentId, patientId) {
+            if (confirm('Do you want to admit this patient? This will redirect you to the admission form with pre-filled data.')) {
+                // Redirect to admit page with appointment ID parameter
+                window.location.href = `../admit.html?appointment_id=${appointmentId}&patient_id=${patientId}`;
+            }
+        }
+        
+        // ========================================
+        // REAL-TIME NOTIFICATIONS (Server-Sent Events)
+        // ========================================
+        
+        let eventSource = null;
+        let lastAppointmentId = 0;
+        
+        // Get highest current appointment ID
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.appointment-card');
+            cards.forEach(card => {
+                const id = parseInt(card.getAttribute('data-appointment-id'));
+                if (id > lastAppointmentId) lastAppointmentId = id;
+            });
+            
+            // Initialize real-time notifications
+            initializeRealtimeNotifications();
+        });
+        
+        function initializeRealtimeNotifications() {
+            if (typeof(EventSource) === "undefined") {
+                console.log("Server-Sent Events not supported");
+                return;
+            }
+            
+            eventSource = new EventSource('../php/dashboard_events.php?last_id=' + lastAppointmentId);
+            
+            eventSource.addEventListener('connected', function(e) {
+                console.log('Real-time notifications connected');
+            });
+            
+            eventSource.addEventListener('new_appointment', function(e) {
+                const data = JSON.parse(e.data);
+                showNewAppointmentNotification(data);
+                lastAppointmentId = data.appointment_id;
+                
+                // Refresh page after short delay to show new appointment
+                setTimeout(() => {
+                    location.reload();
+                }, 3000);
+            });
+            
+            eventSource.addEventListener('heartbeat', function(e) {
+                console.log('SSE heartbeat:', e.data);
+            });
+            
+            eventSource.addEventListener('error', function(e) {
+                console.error('SSE error:', e);
+                // Reconnect after 10 seconds
+                setTimeout(() => {
+                    eventSource.close();
+                    initializeRealtimeNotifications();
+                }, 10000);
+            });
+        }
+        
+        function showNewAppointmentNotification(data) {
+            // Create notification toast
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+                color: white;
+                padding: 20px 25px;
+                border-radius: 12px;
+                box-shadow: 0 8px 24px rgba(244, 67, 54, 0.4);
+                z-index: 10000;
+                min-width: 350px;
+                animation: slideInRight 0.5s ease-out;
+            `;
+            
+            const priorityEmoji = data.priority_level === 'critical' ? '🚨' : '⚡';
+            const priorityText = data.priority_level.toUpperCase();
+            
+            toast.innerHTML = `
+                <div style="display: flex; align-items: start; gap: 15px;">
+                    <div style="font-size: 2rem;">${priorityEmoji}</div>
+                    <div style="flex: 1;">
+                        <div style="font-weight: 700; font-size: 1.1rem; margin-bottom: 8px;">
+                            ${priorityText} PRIORITY APPOINTMENT
+                        </div>
+                        <div style="font-size: 0.9rem; line-height: 1.5; opacity: 0.95;">
+                            <strong>${data.patient_name}</strong><br>
+                            ${data.symptoms}<br>
+                            <small style="opacity: 0.8;">
+                                ${data.appointment_date} at ${data.appointment_time}
+                            </small>
+                        </div>
+                        <div style="margin-top: 12px;">
+                            <button onclick="this.parentElement.parentElement.parentElement.parentElement.remove()" 
+                                    style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 6px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85rem;">
+                                Dismiss
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            // Play notification sound
+            try {
+                const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGJ0fPTgjMGHm7A7+OZURE=');
+                audio.play();
+            } catch (e) {
+                console.log('Could not play notification sound');
+            }
+            
+            // Auto-remove after 10 seconds
+            setTimeout(() => {
+                toast.style.animation = 'slideOutRight 0.5s ease-in';
+                setTimeout(() => toast.remove(), 500);
+            }, 10000);
+        }
+        
+        // Add animation styles
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from {
+                    transform: translateX(400px);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            @keyframes slideOutRight {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(400px);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
     <!-- AI Modal -->
     <div id="aiModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); align-items:center; justify-content:center; z-index:9999;">
