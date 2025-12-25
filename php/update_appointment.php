@@ -7,6 +7,9 @@ header('Content-Type: application/json');
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $response = ['success' => false, 'message' => ''];
     
+    // Release session lock immediately to prevent blocking
+    session_write_close();
+    
     if (isset($_POST['appointment_id'])) {
         $appointment_id = intval($_POST['appointment_id']);
         
