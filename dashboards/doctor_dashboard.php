@@ -612,6 +612,12 @@ $allTimeStats['pending_total'] = intval($allTimeStats['pending_total'] ?? 0);
                         btn.innerHTML = '<i class="fas fa-check"></i> <span>Confirm</span>';
                         btn.disabled = false;
                     }
+                })
+                .catch(error => {
+                    console.error('Confirm error:', error);
+                    showNotification('Network error! Check connection.', 'error');
+                    btn.innerHTML = '<i class="fas fa-check"></i> <span>Confirm</span>';
+                    btn.disabled = false;
                 });
             }
         }
@@ -756,8 +762,8 @@ $allTimeStats['pending_total'] = intval($allTimeStats['pending_total'] ?? 0);
                 if (id > lastAppointmentId) lastAppointmentId = id;
             });
             
-            // Initialize real-time notifications
-            initializeRealtimeNotifications();
+            // DISABLED: Initialize real-time notifications (causing page reloads)
+            // initializeRealtimeNotifications();
         });
         
         function initializeRealtimeNotifications() {
@@ -777,10 +783,11 @@ $allTimeStats['pending_total'] = intval($allTimeStats['pending_total'] ?? 0);
                 showNewAppointmentNotification(data);
                 lastAppointmentId = data.appointment_id;
                 
-                // Refresh page after short delay to show new appointment
-                setTimeout(() => {
-                    location.reload();
-                }, 3000);
+                // DISABLED: Auto-reload breaks confirm button processing
+                // User can manually refresh to see new appointments
+                // setTimeout(() => {
+                //     location.reload();
+                // }, 3000);
             });
             
             eventSource.addEventListener('heartbeat', function(e) {
