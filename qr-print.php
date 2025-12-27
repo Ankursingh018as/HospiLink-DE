@@ -38,16 +38,15 @@ $conn->close();
 $qr_token = $admission['qr_code_token'];
 $qr_url = PatientQRHelper::getQRScanURL($qr_token);
 
-// Use online API (works best for scanning)
-$google_qr_api = PatientQRHelper::generateQRCodeURL($qr_token, 400);
+// Use multiple QR code APIs for redundancy
+$quickchart_qr = "https://quickchart.io/qr?text=" . urlencode($qr_url) . "&size=400&margin=2";
+$qrserver_api = "https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=" . urlencode($qr_url);
+$google_qr_api = "https://chart.googleapis.com/chart?cht=qr&chs=400x400&chl=" . urlencode($qr_url);
 
-// Also generate using QuickChart as primary (more reliable)
-$quickchart_qr = "https://quickchart.io/qr?text=" . urlencode($qr_url) . "&size=400";
-
-// Debug: Echo the QR URL to check
-// echo "<!-- DEBUG: QR Token: $qr_token -->";
-// echo "<!-- DEBUG: QR URL: $qr_url -->";
-// echo "<!-- DEBUG: QuickChart: $quickchart_qr -->";
+// Debug output
+error_log("QR Token: " . $qr_token);
+error_log("QR URL: " . $qr_url);
+error_log("QuickChart URL: " . $quickchart_qr);
 ?>
 
 <!DOCTYPE html>
@@ -317,8 +316,13 @@ $quickchart_qr = "https://quickchart.io/qr?text=" . urlencode($qr_url) . "&size=
                 
                 <div class="qr-code-container">
                     <img src="<?php echo htmlspecialchars($quickchart_qr); ?>" 
-                         onerror="this.src='<?php echo htmlspecialchars($google_qr_api); ?>'" 
-                         alt="QR Code">
+                         onerror="this.onerror=null; this.src='<?php echo htmlspecialchars($qrserver_api); ?>'; if(this.onerror===null) this.src='<?php echo htmlspecialchars($google_qr_api); ?>';" 
+                         alt="QR Code"
+                         loading="eager"
+                         style="display: block; max-width: 100%; height: auto;">
+                    <noscript>
+                        <p style="color: red; text-align: center;">QR Code cannot be displayed. Please enable JavaScript.</p>
+                    </noscript>
                 </div>
                 
                 <div class="patient-info">
@@ -370,8 +374,10 @@ $quickchart_qr = "https://quickchart.io/qr?text=" . urlencode($qr_url) . "&size=
                 
                 <div class="qr-code-container">
                     <img src="<?php echo htmlspecialchars($quickchart_qr); ?>" 
-                         onerror="this.src='<?php echo htmlspecialchars($google_qr_api); ?>'" 
-                         alt="QR Code" style="max-width: 200px;">
+                         onerror="this.onerror=null; this.src='<?php echo htmlspecialchars($qrserver_api); ?>';" 
+                         alt="QR Code" 
+                         style="max-width: 200px; display: block; height: auto;"
+                         loading="eager">
                 </div>
                 
                 <div style="margin-top: 15px;">

@@ -50,8 +50,8 @@ switch ($action) {
             exit();
         }
         
-        // Validate role
-        $allowedRoles = ['patient', 'doctor', 'admin'];
+        // Validate role (allow staff and nurse)
+        $allowedRoles = ['patient', 'doctor', 'admin', 'staff', 'nurse'];
         if (!in_array($input['role'], $allowedRoles)) {
             http_response_code(400);
             echo json_encode(['success' => false, 'message' => 'Invalid role']);
@@ -82,6 +82,12 @@ switch ($action) {
             $userData['specialization'] = trim($input['specialization']);
             $userData['department'] = trim($input['department']);
             $userData['license_number'] = trim($input['license_number']);
+        }
+        
+        // Add staff-specific fields
+        if ($input['role'] === 'staff' || $input['role'] === 'nurse') {
+            $userData['department'] = !empty($input['staff_department']) ? trim($input['staff_department']) : 'General Ward';
+            $userData['staff_id'] = !empty($input['staff_id']) ? trim($input['staff_id']) : 'STAFF' . time();
         }
         
         $result = $otpService->generateAndSendOTP($userData);

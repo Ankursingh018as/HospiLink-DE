@@ -22,9 +22,11 @@ $statsQuery = "SELECT
                 COUNT(*) as total_admitted,
                 SUM(CASE WHEN bed_id IS NULL THEN 1 ELSE 0 END) as awaiting_bed,
                 SUM(CASE WHEN bed_id IS NOT NULL THEN 1 ELSE 0 END) as bed_assigned,
-                SUM(CASE WHEN status = 'critical' THEN 1 ELSE 0 END) as critical_patients
-              FROM admitted_patients 
-              WHERE discharge_date IS NULL";
+                SUM(CASE WHEN a.priority_level = 'high' THEN 1 ELSE 0 END) as critical_patients
+              FROM patient_admissions pa
+              LEFT JOIN appointments a ON pa.patient_id = a.patient_id AND a.status != 'cancelled'
+              WHERE pa.status = 'active' AND pa.discharge_date IS NULL
+              GROUP BY NULL";
 $statsResult = $conn->query($statsQuery);
 $stats = $statsResult ? $statsResult->fetch_assoc() : ['total_admitted' => 0, 'awaiting_bed' => 0, 'bed_assigned' => 0, 'critical_patients' => 0];
 
@@ -33,14 +35,40 @@ $bedsQuery = "SELECT COUNT(*) as available_beds FROM beds WHERE status = 'availa
 $bedsResult = $conn->query($bedsQuery);
 $bedsStats = $bedsResult ? $bedsResult->fetch_assoc() : ['available_beds' => 0];
 
-// Get admitted patients list
-$patientsQuery = "SELECT ap.*, b.ward_name, b.bed_number, u.first_name, u.last_name 
-                  FROM admitted_patients ap 
-                  LEFT JOIN beds b ON ap.bed_id = b.bed_id
-                  LEFT JOIN users u ON ap.assigned_staff_id = u.user_id
-                  WHERE ap.discharge_date IS NULL
-                  ORDER BY ap.admission_date DESC, ap.priority DESC
-                  LIMIT 10";
+// Get admitted patients list with full details
+$patientsQuery = "SELECT 
+                    pa.admission_id,
+                    pa.patient_id,
+                    pa.admission_date,
+                    pa.admission_reason as diagnosis,
+                    COALESCE(MAX(a.priority_level), 'medium') as priority_level,
+                    pa.status,
+                    pa.qr_code_token,
+                    CONCAT(p.first_name, ' ', p.last_name) as patient_name,
+                    p.phone,
+                    p.email,
+                    p.gender,
+                    b.ward_name,
+                    b.bed_number,
+                    b.bed_type,
+                    CONCAT(d.first_name, ' ', d.last_name) as doctor_name
+                  FROM patient_admissions pa
+                  JOIN users p ON pa.patient_id = p.user_id
+                  LEFT JOIN beds b ON pa.bed_id = b.bed_id
+                  LEFT JOIN users d ON pa.assigned_doctor_id = d.user_id
+                  LEFT JOIN appointments a ON pa.patient_id = a.patient_id AND a.status != 'cancelled'
+                  WHERE pa.status = 'active' AND pa.discharge_date IS NULL
+                  GROUP BY pa.admission_id, pa.patient_id, pa.admission_date, pa.admission_reason, 
+                           pa.status, pa.qr_code_token, p.first_name, p.last_name, p.phone, 
+                           p.email, p.gender, b.ward_name, b.bed_number, b.bed_type, 
+                           d.first_name, d.last_name
+                  ORDER BY 
+                    CASE COALESCE(MAX(a.priority_level), 'medium')
+                        WHEN 'high' THEN 1
+                        WHEN 'medium' THEN 2
+                        WHEN 'low' THEN 3
+                    END,
+                    pa.admission_date DESC";
 $patientsResult = $conn->query($patientsQuery);
 ?>
 
@@ -366,19 +394,20 @@ $patientsResult = $conn->query($patientsQuery);
             gap: 6px;
         }
 
-        .status-badge-modern.stable {
+        .status-badge-modern.low {
             background: #d1fae5;
             color: #065f46;
         }
 
-        .status-badge-modern.moderate {
+        .status-badge-modern.medium {
             background: #fed7aa;
             color: #92400e;
         }
 
-        .status-badge-modern.critical {
+        .status-badge-modern.high {
             background: #fee2e2;
             color: #991b1b;
+            animation: pulse 2s infinite;
         }
 
         .patient-details-modern {
@@ -523,6 +552,17 @@ $patientsResult = $conn->query($patientsQuery);
             border-color: #00adb5;
             color: #00adb5;
             background: #f0fdfa;
+        }
+
+        .btn-action-info {
+            background: white;
+            border-color: #bfdbfe;
+            color: #2563eb;
+        }
+
+        .btn-action-info:hover {
+            background: #dbeafe;
+            border-color: #2563eb;
         }
 
         .btn-action-danger {
@@ -914,9 +954,9 @@ $patientsResult = $conn->query($patientsQuery);
                 <?php if ($patientsResult && $patientsResult->num_rows > 0): ?>
                     <div class="patients-grid-modern">
                         <?php while ($patient = $patientsResult->fetch_assoc()): ?>
-                            <div class="patient-card-modern <?php echo $patient['status'] === 'critical' ? 'critical-border' : ''; ?>" 
+                            <div class="patient-card-modern <?php echo $patient['priority_level'] === 'high' ? 'critical-border' : ''; ?>" 
                                  data-name="<?php echo strtolower(htmlspecialchars($patient['patient_name'])); ?>"
-                                 data-disease="<?php echo strtolower(htmlspecialchars($patient['disease'])); ?>"
+                                 data-disease="<?php echo strtolower(htmlspecialchars($patient['diagnosis'] ?? '')); ?>"
                                  data-id="<?php echo $patient['patient_id']; ?>">
                                 
                                 <div class="patient-header-modern">
@@ -924,10 +964,10 @@ $patientsResult = $conn->query($patientsQuery);
                                         <div class="patient-name-modern"><?php echo htmlspecialchars($patient['patient_name']); ?></div>
                                         <div class="patient-id-modern">Patient ID: #<?php echo $patient['patient_id']; ?></div>
                                     </div>
-                                    <span class="status-badge-modern <?php echo $patient['status']; ?>">
+                                    <span class="status-badge-modern <?php echo $patient['priority_level']; ?>">
                                         <?php 
-                                        $statusIcons = ['stable' => 'fa-check-circle', 'moderate' => 'fa-exclamation-circle', 'critical' => 'fa-exclamation-triangle'];
-                                        echo '<i class="fas ' . $statusIcons[$patient['status']] . '"></i> ' . ucfirst($patient['status']); 
+                                        $statusIcons = ['low' => 'fa-check-circle', 'medium' => 'fa-info-circle', 'high' => 'fa-exclamation-circle'];
+                                        echo '<i class="fas ' . ($statusIcons[$patient['priority_level']] ?? 'fa-circle') . '"></i> ' . ucfirst($patient['priority_level']); 
                                         ?>
                                     </span>
                                 </div>
@@ -938,8 +978,8 @@ $patientsResult = $conn->query($patientsQuery);
                                             <i class="fas fa-notes-medical"></i>
                                         </div>
                                         <div class="detail-content">
-                                            <div class="detail-label-modern">Disease</div>
-                                            <div class="detail-value-modern"><?php echo htmlspecialchars($patient['disease']); ?></div>
+                                            <div class="detail-label-modern">Diagnosis</div>
+                                            <div class="detail-value-modern"><?php echo htmlspecialchars($patient['diagnosis'] ?? 'Not specified'); ?></div>
                                         </div>
                                     </div>
 
@@ -955,11 +995,11 @@ $patientsResult = $conn->query($patientsQuery);
 
                                     <div class="detail-row">
                                         <div class="detail-icon blood">
-                                            <i class="fas fa-tint"></i>
+                                            <i class="fas fa-user-md"></i>
                                         </div>
                                         <div class="detail-content">
-                                            <div class="detail-label-modern">Blood Group</div>
-                                            <div class="detail-value-modern"><?php echo htmlspecialchars($patient['blood_group'] ?? 'N/A'); ?></div>
+                                            <div class="detail-label-modern">Doctor</div>
+                                            <div class="detail-value-modern"><?php echo htmlspecialchars($patient['doctor_name'] ?? 'Not assigned'); ?></div>
                                         </div>
                                     </div>
 
@@ -974,11 +1014,11 @@ $patientsResult = $conn->query($patientsQuery);
                                     </div>
                                 </div>
 
-                                <div class="bed-info-modern <?php echo !$patient['bed_id'] ? 'no-bed' : ''; ?>">
-                                    <i class="fas fa-<?php echo $patient['bed_id'] ? 'bed' : 'exclamation-circle'; ?>"></i>
+                                <div class="bed-info-modern <?php echo !$patient['bed_number'] ? 'no-bed' : ''; ?>">
+                                    <i class="fas fa-<?php echo $patient['bed_number'] ? 'bed' : 'exclamation-circle'; ?>"></i>
                                     <span class="bed-info-text">
                                         <?php 
-                                        if ($patient['bed_id']) {
+                                        if ($patient['bed_number']) {
                                             echo htmlspecialchars($patient['ward_name'] . ' - Bed ' . $patient['bed_number']);
                                         } else {
                                             echo 'No Bed Assigned Yet';
@@ -988,17 +1028,21 @@ $patientsResult = $conn->query($patientsQuery);
                                 </div>
 
                                 <div class="patient-actions-modern">
-                                    <?php if (!$patient['bed_id']): ?>
-                                        <button class="btn-action btn-action-primary" onclick="openAssignBedModal(<?php echo $patient['patient_id']; ?>, '<?php echo htmlspecialchars($patient['patient_name']); ?>')">
+                                    <?php if (!$patient['bed_number']): ?>
+                                        <button class="btn-action btn-action-primary" onclick="openAssignBedModal(<?php echo $patient['admission_id']; ?>, '<?php echo htmlspecialchars($patient['patient_name']); ?>')">
                                             <i class="fas fa-bed"></i>
                                             <span>Assign Bed</span>
                                         </button>
                                     <?php else: ?>
-                                        <button class="btn-action btn-action-secondary" onclick="openAssignBedModal(<?php echo $patient['patient_id']; ?>, '<?php echo htmlspecialchars($patient['patient_name']); ?>')">
+                                        <button class="btn-action btn-action-secondary" onclick="openAssignBedModal(<?php echo $patient['admission_id']; ?>, '<?php echo htmlspecialchars($patient['patient_name']); ?>')">
                                             <i class="fas fa-exchange-alt"></i>
                                             <span>Change Bed</span>
                                         </button>
                                     <?php endif; ?>
+                                    <button class="btn-action btn-action-info" onclick="window.location.href='../qr-print.php?admission_id=<?php echo $patient['admission_id']; ?>'">
+                                        <i class="fas fa-qrcode"></i>
+                                        <span>QR Code</span>
+                                    </button>
                                     <button class="btn-action btn-action-danger" onclick="openDischargeModal(<?php echo $patient['patient_id']; ?>, '<?php echo htmlspecialchars($patient['patient_name']); ?>')">
                                         <i class="fas fa-sign-out-alt"></i>
                                         <span>Discharge</span>
@@ -1088,11 +1132,11 @@ $patientsResult = $conn->query($patientsQuery);
     <script>
         // Load available beds
         function loadAvailableBeds() {
-            fetch('../php/get_available_beds.php')
+            fetch('../php/get_available_beds.php?detailed=true')
                 .then(response => response.json())
                 .then(data => {
                     const select = document.getElementById('bedSelect');
-                    if (data.success && data.beds.length > 0) {
+                    if (data.success && data.beds && data.beds.length > 0) {
                         select.innerHTML = '<option value="">Select a bed...</option>';
                         data.beds.forEach(bed => {
                             select.innerHTML += `<option value="${bed.bed_id}">${bed.ward_name} - Bed ${bed.bed_number} (${bed.bed_type})</option>`;
@@ -1138,6 +1182,9 @@ $patientsResult = $conn->query($patientsQuery);
         document.getElementById('assignBedForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const formData = new FormData(this);
+            const submitBtn = this.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Assigning...';
             
             fetch('../php/assign_bed.php', {
                 method: 'POST',
@@ -1146,15 +1193,21 @@ $patientsResult = $conn->query($patientsQuery);
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('Bed assigned successfully!');
+                    alert('✅ Bed assigned successfully!');
+                    closeModal('assignBedModal');
+                    // Refresh the page to show updated data
                     location.reload();
                 } else {
-                    alert('Error: ' + data.message);
+                    alert('❌ Error: ' + data.message);
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Assign Bed';
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('An error occurred while assigning the bed.');
+                alert('❌ An error occurred while assigning the bed.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Assign Bed';
             });
         });
 
@@ -1204,6 +1257,47 @@ $patientsResult = $conn->query($patientsQuery);
         function viewPatientDetails(patientId) {
             alert('Patient details view coming soon! Patient ID: ' + patientId);
         }
+
+        // Auto-refresh dashboard every 30 seconds to show newly admitted patients
+        let autoRefreshInterval;
+        let countdown = 30;
+        
+        function updateRefreshCountdown() {
+            const indicator = document.querySelector('.live-indicator span:last-child');
+            if (indicator && countdown > 0) {
+                indicator.textContent = `Live Updates (${countdown}s)`;
+                countdown--;
+            }
+        }
+        
+        function startAutoRefresh() {
+            // Update countdown every second
+            setInterval(updateRefreshCountdown, 1000);
+            
+            // Refresh page every 30 seconds
+            autoRefreshInterval = setInterval(() => {
+                console.log('Auto-refreshing staff dashboard...');
+                location.reload();
+            }, 30000); // 30 seconds
+        }
+
+        // Start auto-refresh when page loads
+        window.addEventListener('load', () => {
+            console.log('Staff Dashboard loaded - Auto-refresh enabled (30s interval)');
+            startAutoRefresh();
+        });
+
+        // Stop refresh when user is interacting with modals
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('show', () => {
+                clearInterval(autoRefreshInterval);
+                console.log('Auto-refresh paused - modal open');
+            });
+            modal.addEventListener('hide', () => {
+                startAutoRefresh();
+                console.log('Auto-refresh resumed');
+            });
+        });
     </script>
 </body>
 </html>

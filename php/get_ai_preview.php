@@ -2,12 +2,12 @@
 /**
  * AI Preview Endpoint
  * Provides real-time AI analysis of symptoms during appointment booking
- * Returns lightweight urgency assessment for immediate user feedback
+ * Uses Google Gemini API for accurate medical assessment
  */
 
 header('Content-Type: application/json');
 require_once 'db.php';
-require_once 'symptom_analyzer.php';
+require_once 'ai_prioritizer.php';
 
 // Enable error reporting for debugging (disable in production)
 error_reporting(E_ALL);
@@ -19,90 +19,94 @@ try {
     }
 
     $symptoms = isset($_POST['symptoms']) ? trim($_POST['symptoms']) : '';
+    $age = isset($_POST['age']) ? intval($_POST['age']) : null;
+    $conditions = isset($_POST['existing_conditions']) ? trim($_POST['existing_conditions']) : null;
     
     if (empty($symptoms)) {
         echo json_encode(['success' => false, 'message' => 'No symptoms provided']);
         exit;
     }
 
-    // Use lightweight keyword-based analysis for instant feedback
-    // This is faster than calling Gemini API and provides immediate UX
-    $analyzer = new SymptomAnalyzer($conn);
-    $analysis = $analyzer->analyzeSymptoms($symptoms, 0, ''); // age and conditions not needed for preview
+    // Use Gemini AI for accurate medical analysis
+    $aiPrioritizer = new AIPrioritizer();
+    $analysis = $aiPrioritizer->analyzeSymptomsWithAI($symptoms, $age, $conditions);
     
-    // Map priority levels
+    // Map priority levels to standard format
     $priorityMap = [
-        'critical' => 'critical',
+        'critical' => 'high',
         'high' => 'high',
         'medium' => 'medium',
-        'low' => 'low',
-        'routine' => 'low'
+        'low' => 'low'
     ];
     
-    $priority = isset($analysis['priority']) ? strtolower($analysis['priority']) : 'medium';
+    $priority = isset($analysis['priority_level']) ? strtolower($analysis['priority_level']) : 'medium';
     $mappedPriority = isset($priorityMap[$priority]) ? $priorityMap[$priority] : 'medium';
     
-    // Determine time sensitivity
-    $timeSensitivity = 'routine';
-    if ($mappedPriority === 'critical') {
-        $timeSensitivity = 'immediate';
-    } elseif ($mappedPriority === 'high') {
-        $timeSensitivity = 'urgent';
-    } elseif ($mappedPriority === 'medium') {
-        $timeSensitivity = 'routine';
-    }
-    
     // Get urgency reason
-    $urgencyReason = isset($analysis['reason']) ? $analysis['reason'] : 'Based on your symptoms, we recommend medical consultation.';
+    $urgencyReason = isset($analysis['urgency_reason']) ? $analysis['urgency_reason'] : 'Medical consultation recommended based on your symptoms.';
     
-    // Get recommended specialist and map to available doctors
-    $specialization = isset($analysis['specialization']) ? strtolower($analysis['specialization']) : '';
+    // Get recommended specialist and fetch matching doctor from database
+    $specialization = isset($analysis['recommended_specialist']) ? $analysis['recommended_specialist'] : 'General Medicine';
     $recommendedDoctor = '';
     
-    // Map specializations to available doctors
-    $doctorMap = [
-        'cardiology' => 'Dr. Ramesh Patel - Cardiology',
-        'cardiac' => 'Dr. Ramesh Patel - Cardiology',
-        'heart' => 'Dr. Ramesh Patel - Cardiology',
-        'pediatrics' => 'Dr. Mehul Poonawala - Pediatrics',
-        'pediatric' => 'Dr. Mehul Poonawala - Pediatrics',
-        'child' => 'Dr. Mehul Poonawala - Pediatrics',
-        'general' => 'Dr. Harsh Shah - General Medicine',
-        'medicine' => 'Dr. Harsh Shah - General Medicine'
-    ];
+    // Fetch doctor from database based on specialization
+    $doctorQuery = "SELECT CONCAT(first_name, ' ', last_name, ' - ', specialization) as doctor_name 
+                    FROM users 
+                    WHERE role = 'doctor' 
+                    AND status = 'active' 
+                    AND specialization LIKE ?
+                    LIMIT 1";
     
-    // Check for keyword matches in specialization
-    foreach ($doctorMap as $keyword => $doctor) {
-        if (strpos($specialization, $keyword) !== false) {
-            $recommendedDoctor = $doctor;
-            break;
+    $stmt = $conn->prepare($doctorQuery);
+    $searchTerm = "%{$specialization}%";
+    $stmt->bind_param("s", $searchTerm);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows > 0) {
+        $doctor = $result->fetch_assoc();
+        $recommendedDoctor = $doctor['doctor_name'];
+    } else {
+        // Fallback to any available doctor
+        $fallbackQuery = "SELECT CONCAT(first_name, ' ', last_name, ' - ', specialization) as doctor_name 
+                          FROM users 
+                          WHERE role = 'doctor' 
+                          AND status = 'active' 
+                          LIMIT 1";
+        $fallbackResult = $conn->query($fallbackQuery);
+        if ($fallbackResult && $fallbackResult->num_rows > 0) {
+            $doctor = $fallbackResult->fetch_assoc();
+            $recommendedDoctor = $doctor['doctor_name'];
         }
     }
     
-    // If no specific match, recommend based on priority
-    if (empty($recommendedDoctor)) {
-        if ($mappedPriority === 'critical' || $mappedPriority === 'high') {
-            $recommendedDoctor = 'Dr. Harsh Shah - General Medicine (Emergency care)';
-        } else {
-            $recommendedDoctor = 'Any Available Doctor';
-        }
-    }
+    $stmt->close();
     
-    $recommendedSpecialist = !empty($specialization) 
-        ? ucfirst($specialization) . ' specialist'
-        : 'General Medicine';
+    // Get time sensitivity from analysis
+    $timeSensitivity = isset($analysis['time_sensitivity']) ? $analysis['time_sensitivity'] : 'routine';
+    
+    // Get priority score
+    $priorityScore = isset($analysis['priority_score']) ? $analysis['priority_score'] : 50;
+    
+    // Get suspected conditions
+    $suspectedConditions = isset($analysis['suspected_conditions']) ? $analysis['suspected_conditions'] : [];
+    
+    // Get warning signs
+    $warningSigns = isset($analysis['warning_signs']) ? $analysis['warning_signs'] : [];
     
     // Prepare response
     $response = [
         'success' => true,
         'priority_level' => $mappedPriority,
-        'priority_score' => isset($analysis['score']) ? $analysis['score'] : 50,
+        'priority_score' => $priorityScore,
         'time_sensitivity' => $timeSensitivity,
         'urgency_reason' => $urgencyReason,
-        'recommended_specialist' => $recommendedSpecialist,
+        'recommended_specialist' => $specialization,
         'recommended_doctor' => $recommendedDoctor,
-        'specialization' => $specialization,
-        'analysis_method' => 'keyword-based' // Let frontend know this is preview, not full AI
+        'suspected_conditions' => $suspectedConditions,
+        'warning_signs' => $warningSigns,
+        'analysis_method' => 'gemini-ai',
+        'ai_analyzed' => isset($analysis['ai_analyzed']) ? $analysis['ai_analyzed'] : true
     ];
     
     echo json_encode($response);
@@ -111,7 +115,7 @@ try {
     error_log('AI Preview Error: ' . $e->getMessage());
     echo json_encode([
         'success' => false,
-        'message' => 'Analysis temporarily unavailable',
+        'message' => 'Analysis temporarily unavailable. Please try again.',
         'error' => $e->getMessage()
     ]);
 }
