@@ -11,6 +11,7 @@
     href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css"
     rel="stylesheet"/>
     <link rel="icon" href="images/hosp_favicon.png" type="image/png">
+    <link rel="stylesheet" href="css/chatbot.css">
 </head>
 <body>
    <div class="main">
@@ -102,6 +103,60 @@
      <div style="width: 100%">
      <iframe width="100%" height="450" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=zydus%20hospital%20,dahod+(zydus)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"><a href="https://www.gps.ie/">gps vehicle tracker</a></iframe></div><br>
 
+    <!-- Chatbot Widget -->
+    <div class="chatbot-widget" id="chatbotWidget">
+        <div class="chatbot-header">
+            <div class="chatbot-title">
+                <div class="chatbot-logo">
+                    <img src="images/logo.png" alt="HospiLink">
+                </div>
+                <div>
+                    <div style="font-size: 18px; font-weight: 700;">HospiLink Assistant</div>
+                    <div style="font-size: 11px; opacity: 0.9; font-weight: 400;">Health Advisor</div>
+                </div>
+            </div>
+            <button class="chatbot-close" onclick="toggleChatbot()">
+                <i class="ri-close-line"></i>
+            </button>
+        </div>
+        <div class="chatbot-messages" id="chatbotMessages">
+            <div class="chatbot-message bot-message">
+                <div class="message-content">
+                    <span class="welcome-badge">🏥 Welcome to HospiLink</span>
+                    <p><strong>Hello! 👋</strong></p>
+                    <p>I'm your <strong>AI Health Assistant</strong>, powered by advanced medical knowledge.</p>
+                    <p><strong>I can help you with:</strong></p>
+                    <ul>
+                        <li>🔍 <strong>Symptom Analysis</strong> - Detailed health assessment</li>
+                        <li>💊 <strong>Disease Information</strong> - Causes, treatments & prevention</li>
+                        <li>🩺 <strong>Medical Guidance</strong> - When to see a doctor</li>
+                        <li>🏥 <strong>Health Tips</strong> - Wellness & preventive care</li>
+                    </ul>
+                    <small>💬 Ask me anything about your health concerns!</small>
+                </div>
+            </div>
+        </div>
+        <div class="chatbot-input-area">
+            <input 
+                type="text" 
+                id="chatbotInput" 
+                placeholder="Type your health question here..." 
+                onkeypress="handleChatbotKeypress(event)"
+            >
+            <button onclick="sendChatbotMessage()" class="send-btn">
+                <i class="ri-send-plane-fill"></i>
+            </button>
+        </div>
+        <div class="powered-by">
+            Powered by <i class="ri-sparkling-fill"></i> Google Gemini AI
+        </div>
+    </div>
+
+    <!-- Floating Chatbot Button -->
+    <button class="chatbot-fab" id="chatbotFab" onclick="toggleChatbot()" title="Chat with Health Assistant">
+        <i class="ri-message-3-fill"></i>
+    </button>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-container">
@@ -134,5 +189,6 @@
         </div>
     </footer>
 
+    <script src="js/chatbot.js"></script>
 </body>
 </html>
