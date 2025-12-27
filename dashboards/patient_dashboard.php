@@ -223,6 +223,14 @@ $history = $histStmt->get_result();
                                 <button class="action-btn primary" onclick="viewDetails(<?php echo $apt['appointment_id']; ?>)">
                                     <i class="fas fa-eye"></i> View
                                 </button>
+                                <?php if ($apt['status'] !== 'cancelled' && $apt['status'] !== 'completed'): ?>
+                                <button class="action-btn warning" onclick="rescheduleAppointment(<?php echo $apt['appointment_id']; ?>, '<?php echo $apt['appointment_date']; ?>', '<?php echo $apt['appointment_time']; ?>')">
+                                    <i class="fas fa-calendar-alt"></i> Reschedule
+                                </button>
+                                <button class="action-btn danger" onclick="cancelAppointment(<?php echo $apt['appointment_id']; ?>)">
+                                    <i class="fas fa-times-circle"></i> Cancel
+                                </button>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
@@ -239,10 +247,367 @@ $history = $histStmt->get_result();
         </main>
     </div>
 
+    <!-- Reschedule Modal -->
+    <div id="rescheduleModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-calendar-alt"></i> Reschedule Appointment</h2>
+                <button class="close-modal" onclick="closeRescheduleModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="rescheduleForm">
+                    <input type="hidden" id="reschedule_appointment_id" name="appointment_id">
+                    
+                    <div class="form-group">
+                        <label for="new_date"><i class="fas fa-calendar"></i> New Date</label>
+                        <input type="date" id="new_date" name="new_date" required min="<?php echo date('Y-m-d'); ?>">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="new_time"><i class="fas fa-clock"></i> New Time</label>
+                        <input type="time" id="new_time" name="new_time" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="reschedule_reason"><i class="fas fa-comment"></i> Reason for Rescheduling</label>
+                        <textarea id="reschedule_reason" name="reason" rows="3" placeholder="Please provide a reason..."></textarea>
+                    </div>
+                    
+                    <div class="modal-actions">
+                        <button type="button" class="action-btn secondary" onclick="closeRescheduleModal()">Cancel</button>
+                        <button type="submit" class="action-btn primary">
+                            <i class="fas fa-check"></i> Confirm Reschedule
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cancel Confirmation Modal -->
+    <div id="cancelModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-exclamation-triangle"></i> Cancel Appointment</h2>
+                <button class="close-modal" onclick="closeCancelModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 20px; font-size: 16px;">Are you sure you want to cancel this appointment? This action cannot be undone.</p>
+                <form id="cancelForm">
+                    <input type="hidden" id="cancel_appointment_id" name="appointment_id">
+                    
+                    <div class="form-group">
+                        <label for="cancel_reason"><i class="fas fa-comment"></i> Reason for Cancellation</label>
+                        <textarea id="cancel_reason" name="reason" rows="3" placeholder="Please provide a reason (optional)..."></textarea>
+                    </div>
+                    
+                    <div class="modal-actions">
+                        <button type="button" class="action-btn secondary" onclick="closeCancelModal()">No, Keep It</button>
+                        <button type="submit" class="action-btn danger">
+                            <i class="fas fa-times-circle"></i> Yes, Cancel Appointment
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            animation: fadeIn 0.3s;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s;
+        }
+        
+        .modal-header {
+            padding: 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 32px;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            transition: transform 0.3s;
+        }
+        
+        .close-modal:hover {
+            transform: rotate(90deg);
+        }
+        
+        .modal-body {
+            padding: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .form-group label i {
+            margin-right: 8px;
+            color: #667eea;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 25px;
+        }
+        
+        .action-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        
+        .action-btn.primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .action-btn.primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .action-btn.secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .action-btn.secondary:hover {
+            background: #5a6268;
+        }
+        
+        .action-btn.danger {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .action-btn.danger:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+        }
+        
+        .action-btn.warning {
+            background: #ffc107;
+            color: #333;
+        }
+        
+        .action-btn.warning:hover {
+            background: #e0a800;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 193, 7, 0.4);
+        }
+        
+        .appointment-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .appointment-actions .action-btn {
+            padding: 8px 12px;
+            font-size: 13px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+
     <script>
         function viewDetails(appointmentId) {
             alert('Viewing details for appointment #' + appointmentId);
             // Implement modal or redirect to details page
+        }
+        
+        // Reschedule Appointment
+        function rescheduleAppointment(appointmentId, currentDate, currentTime) {
+            document.getElementById('reschedule_appointment_id').value = appointmentId;
+            document.getElementById('new_date').value = currentDate;
+            document.getElementById('new_time').value = currentTime.substring(0, 5); // HH:MM format
+            document.getElementById('rescheduleModal').style.display = 'flex';
+        }
+        
+        function closeRescheduleModal() {
+            document.getElementById('rescheduleModal').style.display = 'none';
+            document.getElementById('rescheduleForm').reset();
+        }
+        
+        // Cancel Appointment
+        function cancelAppointment(appointmentId) {
+            document.getElementById('cancel_appointment_id').value = appointmentId;
+            document.getElementById('cancelModal').style.display = 'flex';
+        }
+        
+        function closeCancelModal() {
+            document.getElementById('cancelModal').style.display = 'none';
+            document.getElementById('cancelForm').reset();
+        }
+        
+        // Handle Reschedule Form Submission
+        document.getElementById('rescheduleForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = {
+                appointment_id: formData.get('appointment_id'),
+                new_date: formData.get('new_date'),
+                new_time: formData.get('new_time'),
+                reason: formData.get('reason')
+            };
+            
+            try {
+                const response = await fetch('../php/reschedule_appointment.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('✅ Appointment rescheduled successfully!');
+                    closeRescheduleModal();
+                    location.reload();
+                } else {
+                    alert('❌ Error: ' + (result.message || 'Failed to reschedule appointment'));
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('❌ An error occurred. Please try again.');
+            }
+        });
+        
+        // Handle Cancel Form Submission
+        document.getElementById('cancelForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = {
+                appointment_id: formData.get('appointment_id'),
+                reason: formData.get('reason')
+            };
+            
+            try {
+                const response = await fetch('../php/cancel_appointment.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('✅ Appointment cancelled successfully!');
+                    closeCancelModal();
+                    location.reload();
+                } else {
+                    alert('❌ Error: ' + (result.message || 'Failed to cancel appointment'));
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('❌ An error occurred. Please try again.');
+            }
+        });
+        
+        // Close modals on outside click
+        window.onclick = function(event) {
+            const rescheduleModal = document.getElementById('rescheduleModal');
+            const cancelModal = document.getElementById('cancelModal');
+            
+            if (event.target === rescheduleModal) {
+                closeRescheduleModal();
+            }
+            if (event.target === cancelModal) {
+                closeCancelModal();
+            }
         }
 
         // Smooth navigation

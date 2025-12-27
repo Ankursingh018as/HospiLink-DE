@@ -86,9 +86,9 @@
                                     <i class="ri-mail-fill"></i> Email Address *
                                 </label>
                                 <input type="email" id="email" name="email" placeholder="your.email@example.com" required>
-                                <div class="email-verification-badge" style="display: none; margin-top: 8px; padding: 8px 12px; background: #e8f5e9; border-left: 3px solid #4caf50; border-radius: 4px; font-size: 0.85rem; color: #2e7d32;">
+                                <!-- <div class="email-verification-badge" style="display: none; margin-top: 8px; padding: 8px 12px; background: #e8f5e9; border-left: 3px solid #4caf50; border-radius: 4px; font-size: 0.85rem; color: #2e7d32;">
                                     <i class="ri-shield-check-fill"></i> Email will be verified after submission
-                                </div>
+                                </div> -->
                             </div>
                             <div class="form-group">
                                 <label for="phone">
@@ -137,17 +137,7 @@
                                     <i class="ri-stethoscope-fill"></i> Describe Your Symptoms *
                                 </label>
                                 
-                                <!-- Quick Symptom Chips -->
-                                <div class="symptom-chips" style="margin-bottom: 12px; display: flex; flex-wrap: wrap; gap: 8px;">
-                                    <button type="button" class="symptom-chip" onclick="addSymptom('Fever and high temperature')">🤒 Fever</button>
-                                    <button type="button" class="symptom-chip" onclick="addSymptom('Chest pain and discomfort')">💔 Chest Pain</button>
-                                    <button type="button" class="symptom-chip" onclick="addSymptom('Persistent cough')">😷 Cough</button>
-                                    <button type="button" class="symptom-chip" onclick="addSymptom('Severe headache')">🤕 Headache</button>
-                                    <button type="button" class="symptom-chip" onclick="addSymptom('Physical injury or trauma')">🩹 Injury</button>
-                                    <button type="button" class="symptom-chip" onclick="addSymptom('Follow-up consultation')">📋 Follow-up</button>
-                                </div>
-                                
-                                <textarea id="symptoms" name="symptoms" placeholder="Please describe your symptoms in detail (e.g., chest pain, high fever, cough, etc.). This helps our AI system prioritize your appointment based on urgency." rows="5" required></textarea>
+                                <textarea id="symptoms" name="symptoms" placeholder="Please describe your symptoms in detail. Our AI will analyze and prioritize your appointment based on urgency." rows="5" required></textarea>
                                 
                                 <!-- AI Urgency Feedback -->
                                 <div id="aiUrgencyFeedback" style="display: none; margin-top: 12px; padding: 16px; border-radius: 10px; background: linear-gradient(135deg, #f0fafb 0%, #e6f7f8 100%); border-left: 4px solid #00adb5; box-shadow: 0 2px 8px rgba(0, 173, 181, 0.1);">
@@ -369,21 +359,6 @@
             
             document.getElementById('prefillNotification').style.display = 'none';
             document.getElementById('name').focus();
-        }
-
-        function addSymptom(symptomText) {
-            const symptomsField = document.getElementById('symptoms');
-            const currentValue = symptomsField.value.trim();
-            
-            if (currentValue) {
-                symptomsField.value = currentValue + ', ' + symptomText;
-            } else {
-                symptomsField.value = symptomText;
-            }
-            
-            symptomsField.focus();
-            // Trigger AI analysis
-            analyzeSymptoms();
         }
 
         function setupSymptomAnalysis() {
@@ -643,22 +618,6 @@
             @keyframes spin {
                 from { transform: rotate(0deg); }
                 to { transform: rotate(360deg); }
-            }
-            .symptom-chip {
-                padding: 8px 16px;
-                border: 1px solid #00adb5;
-                background: white;
-                color: #00adb5;
-                border-radius: 20px;
-                font-size: 0.85rem;
-                cursor: pointer;
-                transition: all 0.3s ease;
-            }
-            .symptom-chip:hover {
-                background: #00adb5;
-                color: white;
-                transform: translateY(-2px);
-                box-shadow: 0 4px 8px rgba(0, 173, 181, 0.3);
             }
         `;
         document.head.appendChild(style);

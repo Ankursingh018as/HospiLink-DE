@@ -421,6 +421,10 @@ $bedStats = $statsResult ? $statsResult->fetch_assoc() : ['total_beds' => 0, 'av
                     } else {
                         alert('Error: ' + data.message);
                     }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to update bed status');
                 });
             }
         }
@@ -428,6 +432,26 @@ $bedStats = $statsResult ? $statsResult->fetch_assoc() : ['total_beds' => 0, 'av
         function viewPatient(patientId) {
             window.location.href = 'staff_dashboard.php';
         }
+        
+        // Real-time auto-refresh every 30 seconds
+        let refreshTimer;
+        function startAutoRefresh() {
+            refreshTimer = setInterval(() => {
+                console.log('Auto-refreshing bed data...');
+                location.reload();
+            }, 30000); // 30 seconds
+        }
+        
+        // Start auto-refresh on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            startAutoRefresh();
+            console.log('Bed management: Auto-refresh enabled (30s interval)');
+        });
+        
+        // Clean up on page unload
+        window.addEventListener('beforeunload', () => {
+            if (refreshTimer) clearInterval(refreshTimer);
+        });
     </script>
 </body>
 </html>

@@ -3,13 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beds Availability</title>
+    <title>Real-time Beds Availability</title>
     <link rel="stylesheet" href="css/typography.css">
     <link rel="stylesheet" href="css/style.css?v=2">
     <link rel="stylesheet" href="css/beds_new.css?v=3">
-    <link
-    href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css"
-    rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet"/>
     <link rel="icon" href="images/hosp_favicon.png" type="image/png">
 </head>
 <body>
@@ -82,17 +80,17 @@
                     <i class="ri-hospital-line stat-icon"></i>
                 </div>
                 <div class="stat-content">
-                    <h2>Total Wards</h2>
-                    <h3 class="stat-number" id="totalWards">--</h3>
-                    <span class="stat-label">Specialized units</span>
+                    <h2>Maintenance</h2>
+                    <h3 class="stat-number" id="maintenanceBeds">--</h3>
+                    <span class="stat-label">Under repair</span>
                 </div>
            </div>
        </div>
 
        <div class="ward-section">
             <div class="section-header">
-                <h2><i class="ri-building-line"></i> Ward-wise Breakdown</h2>
-                <p>Detailed availability across specialized units (Real-time)</p>
+                <h2><i class="ri-building-line"></i> Ward-wise Real-time Breakdown</h2>
+                <p>Detailed availability across specialized units</p>
             </div>
             <div class="ward-grid" id="wardGrid">
                 <!-- Dynamic ward cards will be loaded here -->
@@ -145,24 +143,24 @@
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
-        .ward-grid .ward-card {
+        .ward-card {
             background: white;
             border-radius: 10px;
             padding: 25px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             transition: transform 0.3s;
         }
-        .ward-grid .ward-card:hover {
+        .ward-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 4px 20px rgba(0,0,0,0.15);
         }
-        .ward-card .ward-header {
+        .ward-header {
             display: flex;
             align-items: center;
             gap: 15px;
             margin-bottom: 20px;
         }
-        .ward-card .ward-icon {
+        .ward-icon {
             background: #00adb5;
             color: white;
             width: 50px;
@@ -173,30 +171,30 @@
             justify-content: center;
             font-size: 24px;
         }
-        .ward-card .ward-header h3 {
+        .ward-header h3 {
             font-size: 20px;
             color: #333;
         }
-        .ward-card .ward-stats {
+        .ward-stats {
             display: flex;
             justify-content: space-between;
             gap: 10px;
         }
-        .ward-card .ward-stat {
+        .ward-stat {
             flex: 1;
             text-align: center;
             padding: 15px;
             border-radius: 8px;
             background: #f8f9fa;
         }
-        .ward-card .ward-stat.available { background: #d4edda; color: #155724; }
-        .ward-card .ward-stat.occupied { background: #f8d7da; color: #721c24; }
-        .ward-card .ward-stat .number {
+        .ward-stat.available { background: #d4edda; color: #155724; }
+        .ward-stat.occupied { background: #f8d7da; color: #721c24; }
+        .ward-stat .number {
             font-size: 28px;
             font-weight: bold;
             display: block;
         }
-        .ward-card .ward-stat .label {
+        .ward-stat .label {
             font-size: 12px;
             text-transform: uppercase;
             margin-top: 5px;
@@ -242,7 +240,7 @@
             document.getElementById('availableBeds').textContent = stats.available || 0;
             document.getElementById('totalBeds').textContent = stats.total || 0;
             document.getElementById('occupiedBeds').textContent = stats.occupied || 0;
-            document.getElementById('totalWards').textContent = stats.wards || 0;
+            document.getElementById('maintenanceBeds').textContent = stats.maintenance || 0;
         }
         
         // Update ward breakdown
@@ -259,11 +257,8 @@
                 return;
             }
             
-            // Update total wards count
-            document.getElementById('totalWards').textContent = wards.length;
-            
             wardGrid.innerHTML = wards.map(ward => `
-                <div class="ward-card">
+                <div class="ward-card ward-${ward.name.toLowerCase().replace(/\s+/g, '-')}">
                     <div class="ward-header">
                         <div class="ward-icon">
                             <i class="ri-hospital-line"></i>
@@ -282,7 +277,6 @@
                     </div>
                     <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e0e0e0; text-align: center; color: #666; font-size: 14px;">
                         Total Beds: <strong>${ward.total || 0}</strong>
-                        ${ward.maintenance > 0 ? ` | Maintenance: <strong>${ward.maintenance}</strong>` : ''}
                     </div>
                 </div>
             `).join('');

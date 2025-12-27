@@ -103,6 +103,9 @@ class AIPrioritizer {
             ]
         ]);
         
+        error_log("Gemini API URL: " . $this->apiEndpoint);
+        error_log("API Key length: " . strlen($this->apiKey));
+        
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, true);
@@ -116,7 +119,7 @@ class AIPrioritizer {
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         
         if (curl_errno($ch)) {
-            error_log("Gemini API Error: " . curl_error($ch));
+            error_log("Gemini API cURL Error: " . curl_error($ch));
             curl_close($ch);
             return false;
         }
@@ -124,10 +127,12 @@ class AIPrioritizer {
         curl_close($ch);
         
         if ($httpCode !== 200) {
-            error_log("Gemini API HTTP Error: $httpCode - $response");
+            error_log("Gemini API HTTP Error: $httpCode");
+            error_log("Response: $response");
             return false;
         }
         
+        error_log("Gemini API Success! Response length: " . strlen($response));
         return $response;
     }
     
@@ -191,91 +196,64 @@ class AIPrioritizer {
     }
     
     /**
-     * Fallback analysis using keyword matching
+     * Fallback analysis - only used if AI fails
+     * Returns generic medium priority
      */
     private function fallbackAnalysis($symptoms) {
-        $symptoms = strtolower($symptoms);
+        error_log("AI Prioritizer: Falling back to default analysis");
         
-        // Critical keywords
-        $criticalKeywords = [
-            'heart attack', 'stroke', 'unconscious', 'severe bleeding', 'not breathing',
-            'seizure', 'chest pain radiating', 'difficulty breathing', 'severe head injury',
-            'suicide', 'overdose', 'severe allergic reaction', 'anaphylaxis'
+        return [
+            'priority_score' => 50,
+            'priority_level' => 'medium',
+            'urgency_reason' => 'Unable to analyze symptoms with AI. Manual review required.',
+            'suspected_conditions' => ['Requires medical evaluation'],
+            'recommended_specialist' => 'General Physician',
+            'warning_signs' => ['Contact healthcare provider for evaluation'],
+            'time_sensitivity' => 'routine',
+            'ai_analyzed' => false,
+            'fallback_used' => true,
+            'analysis_timestamp' => date('Y-m-d H:i:s')
         ];
-        
-        // High priority keywords
-        $highKeywords = [
-            'chest pain', 'severe pain', 'high fever', 'vomiting blood', 'severe headache',
-            'broken bone', 'deep cut', 'severe burn', 'poisoning', 'severe abdominal pain'
-        ];
-        
-        // Medium priority keywords
-        $mediumKeywords = [
-            'fever', 'vomiting', 'diarrhea', 'rash', 'cough', 'headache', 'sprain',
-            'minor cut', 'infection', 'earache', 'sore throat'
-        ];
-        
-        foreach ($criticalKeywords as $keyword) {
-            if (stripos($symptoms, $keyword) !== false) {
-                return [
-                    'priority_score' => 95,
-                    'priority_level' => 'critical',
-                    'urgency_reason' => 'Critical symptoms detected requiring immediate attention',
-                    'suspected_conditions' => ['Emergency condition'],
-                    'recommended_specialist' => 'Emergency Medicine',
-                    'warning_signs' => ['Seek immediate emergency care'],
-                    'time_sensitivity' => 'immediate',
-                    'ai_analyzed' => false
-                ];
-            }
-        }
-        
-        foreach ($highKeywords as $keyword) {
-            if (stripos($symptoms, $keyword) !== false) {
-                return [
-                    'priority_score' => 75,
-                    'priority_level' => 'high',
-                    'urgency_reason' => 'Urgent symptoms requiring prompt medical attention',
-                    'suspected_conditions' => ['Acute condition'],
-                    'recommended_specialist' => 'General Physician',
-                    'warning_signs' => ['Monitor symptoms closely'],
-                    'time_sensitivity' => 'urgent',
-                    'ai_analyzed' => false
-                ];
-            }
-        }
-        
-        foreach ($mediumKeywords as $keyword) {
-            if (stripos($symptoms, $keyword) !== false) {
-                return [
-                    'priority_score' => 50,
-                    'priority_level' => 'medium',
-                    'urgency_reason' => 'Moderate symptoms requiring medical evaluation',
-                    'suspected_conditions' => ['Common condition'],
-                    'recommended_specialist' => 'General Physician',
-                    'warning_signs' => ['Schedule appointment within 24-48 hours'],
-                    'time_sensitivity' => 'routine',
-                    'ai_analyzed' => false
-                ];
-            }
-        }
-        
-        return $this->getDefaultResponse();
     }
     
     /**
-     * Default response for unknown symptoms
+     * Get Gemini API Key from environment
+     */
+    private static function getGeminiApiKey() {
+        // Try to get from environment variable first
+        $apiKey = getenv('GEMINI_API_KEY');
+        
+        if (!$apiKey) {
+            // Fallback to .env file
+            $envFile = dirname(__DIR__) . '/.env';
+            if (file_exists($envFile)) {
+                $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+                foreach ($lines as $line) {
+                    if (strpos($line, 'GEMINI_API_KEY=') === 0) {
+                        $apiKey = trim(substr($line, 15));
+                        break;
+                    }
+                }
+            }
+        }
+        
+        return $apiKey;
+    }
+    
+    /**
+     * Default response for unknown symptoms or AI failure
      */
     private function getDefaultResponse() {
         return [
-            'priority_score' => 30,
-            'priority_level' => 'low',
-            'urgency_reason' => 'Routine medical evaluation recommended',
-            'suspected_conditions' => ['General assessment needed'],
+            'priority_score' => 40,
+            'priority_level' => 'medium',
+            'urgency_reason' => 'Standard medical evaluation recommended',
+            'suspected_conditions' => ['Requires assessment'],
             'recommended_specialist' => 'General Physician',
-            'warning_signs' => ['Schedule routine appointment'],
+            'warning_signs' => ['Consult with healthcare provider'],
             'time_sensitivity' => 'routine',
-            'ai_analyzed' => false
+            'ai_analyzed' => false,
+            'analysis_timestamp' => date('Y-m-d H:i:s')
         ];
     }
     

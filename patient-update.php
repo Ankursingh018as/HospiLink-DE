@@ -3,8 +3,8 @@ session_start();
 require_once 'php/db.php';
 require_once 'php/patient_qr_helper.php';
 
-// Check if user is logged in and authorized
-if (!isset($_SESSION['logged_in']) || !in_array($_SESSION['role'], ['doctor', 'nurse', 'admin'])) {
+// Check if user is logged in and authorized (doctor, staff, nurse, or admin)
+if (!isset($_SESSION['logged_in']) || !in_array($_SESSION['user_role'], ['doctor', 'staff', 'nurse', 'admin'])) {
     header("Location: sign_new.html?redirect=" . urlencode($_SERVER['REQUEST_URI']));
     exit();
 }
@@ -432,7 +432,7 @@ $staff_list = $staff_result->fetch_all(MYSQLI_ASSOC);
                     
                     <div class="button-group">
                         <button type="submit" class="btn"><i class="fas fa-check"></i> Add Medicine</button>
-                        <a href="patient-status?token=<?php echo urlencode($token); ?>" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back</a>
+                        <a href="patient-status.php?token=<?php echo urlencode($token); ?>" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back</a>
                     </div>
                 </form>
 
@@ -480,7 +480,7 @@ $staff_list = $staff_result->fetch_all(MYSQLI_ASSOC);
                     
                     <div class="button-group">
                         <button type="submit" class="btn"><i class="fas fa-check"></i> Add IV/Drip</button>
-                        <a href="patient-status?token=<?php echo urlencode($token); ?>" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back</a>
+                        <a href="patient-status.php?token=<?php echo urlencode($token); ?>" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back</a>
                     </div>
                 </form>
 
@@ -527,7 +527,7 @@ $staff_list = $staff_result->fetch_all(MYSQLI_ASSOC);
                     
                     <div class="button-group">
                         <button type="submit" class="btn"><i class="fas fa-check"></i> Order Test</button>
-                        <a href="patient-status?token=<?php echo urlencode($token); ?>" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back</a>
+                        <a href="patient-status.php?token=<?php echo urlencode($token); ?>" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back</a>
                     </div>
                 </form>
 
@@ -599,7 +599,7 @@ $staff_list = $staff_result->fetch_all(MYSQLI_ASSOC);
                     
                     <div class="button-group">
                         <button type="submit" class="btn"><i class="fas fa-check"></i> Add Note</button>
-                        <a href="patient-status?token=<?php echo urlencode($token); ?>" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back</a>
+                        <a href="patient-status.php?token=<?php echo urlencode($token); ?>" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back</a>
                     </div>
                 </form>
 
@@ -656,7 +656,7 @@ $staff_list = $staff_result->fetch_all(MYSQLI_ASSOC);
                     
                     <div class="button-group">
                         <button type="submit" class="btn"><i class="fas fa-check"></i> Schedule Task</button>
-                        <a href="patient-status?token=<?php echo urlencode($token); ?>" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back</a>
+                        <a href="patient-status.php?token=<?php echo urlencode($token); ?>" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back</a>
                     </div>
                 </form>
             <?php endif; ?>

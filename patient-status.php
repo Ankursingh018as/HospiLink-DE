@@ -17,10 +17,12 @@ if (!$admission) {
     die("Error: Invalid or expired QR code");
 }
 
-// Check if user is logged in (for logging purposes)
+// Check if user is logged in and their role
 $logged_in_user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+$user_role = isset($_SESSION['user_role']) ? $_SESSION['user_role'] : null;
+$is_staff_or_doctor = in_array($user_role, ['doctor', 'staff', 'nurse', 'admin']);
 
-// Log the scan (use NULL for user_id if not logged in - for public/bedside access)
+// Log the scan
 PatientQRHelper::logScan($conn, $admission['admission_id'], $logged_in_user_id, 'view');
 
 $admission_id = $admission['admission_id'];
@@ -616,25 +618,38 @@ $conn->close();
         </div>
 
         <!-- Action Buttons -->
+        <?php if ($is_staff_or_doctor): ?>
         <div class="card">
+            <h2 style="color: #00adb5; margin-bottom: 20px;">
+                <i class="fas fa-user-md"></i> Medical Actions
+                <span style="font-size: 14px; color: #666; font-weight: normal;">(Staff/Doctor Only)</span>
+            </h2>
             <div class="action-buttons">
-                <a href="patient-update?token=<?php echo urlencode($token); ?>&action=medicine" class="btn btn-primary">
+                <a href="patient-update.php?token=<?php echo urlencode($token); ?>&action=medicine" class="btn btn-primary">
                     <i class="fas fa-pills"></i> Add Medicine
                 </a>
-                <a href="patient-update?token=<?php echo urlencode($token); ?>&action=iv" class="btn btn-primary">
+                <a href="patient-update.php?token=<?php echo urlencode($token); ?>&action=iv" class="btn btn-primary">
                     <i class="fas fa-syringe"></i> Add IV/Drip
                 </a>
-                <a href="patient-update?token=<?php echo urlencode($token); ?>&action=test" class="btn btn-primary">
+                <a href="patient-update.php?token=<?php echo urlencode($token); ?>&action=test" class="btn btn-primary">
                     <i class="fas fa-file-medical"></i> Order Test
                 </a>
-                <a href="patient-update?token=<?php echo urlencode($token); ?>&action=note" class="btn btn-primary">
+                <a href="patient-update.php?token=<?php echo urlencode($token); ?>&action=note" class="btn btn-primary">
                     <i class="fas fa-notes-medical"></i> Add Note
                 </a>
-                <a href="patient-update?token=<?php echo urlencode($token); ?>&action=task" class="btn btn-primary">
-                    <i class="fas fa-tasks"></i> Schedule Task
+                <a href="patient-update.php?token=<?php echo urlencode($token); ?>&action=vitals" class="btn btn-primary">
+                    <i class="fas fa-heartbeat"></i> Record Vitals
                 </a>
             </div>
         </div>
+        <?php else: ?>
+        <div class="card" style="background: #fff3cd; border-left: 4px solid #ffc107;">
+            <p style="margin: 0; color: #856404;">
+                <i class="fas fa-lock"></i> <strong>Medical actions are restricted.</strong> 
+                Please login as doctor or staff to add medicines, drips, and other medical details.
+            </p>
+        </div>
+        <?php endif; ?>
 
         <div class="last-updated">
             <i class="fas fa-info-circle"></i> Last updated: <?php echo date('M d, Y h:i:s A'); ?>
