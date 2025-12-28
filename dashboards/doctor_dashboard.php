@@ -17,12 +17,12 @@ $docStmt->bind_param("i", $user_id);
 $docStmt->execute();
 $doctorInfo = $docStmt->get_result()->fetch_assoc();
 
-// Get today's appointments sorted by priority (only assigned to this doctor)
+// Get appointments sorted by priority (assigned to this doctor OR unassigned)
 $today = date('Y-m-d');
 $appointmentsQuery = "SELECT a.*, u.first_name, u.last_name, u.phone as patient_phone
                       FROM appointments a
                       JOIN users u ON a.patient_id = u.user_id
-                      WHERE a.doctor_id = ?
+                      WHERE a.doctor_id = ? OR a.doctor_id IS NULL
                       ORDER BY 
                         CASE a.priority_level
                             WHEN 'high' THEN 1
@@ -36,7 +36,7 @@ $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $appointments = $stmt->get_result();
 
-// Get today's stats (only this doctor's appointments)
+// Get today's stats (this doctor's appointments + unassigned)
 $todayStatsQuery = "SELECT 
                         COUNT(*) as total_today,
                         COALESCE(SUM(CASE WHEN priority_level = 'high' THEN 1 ELSE 0 END), 0) as high_count,
@@ -44,7 +44,7 @@ $todayStatsQuery = "SELECT
                         COALESCE(SUM(CASE WHEN priority_level = 'low' THEN 1 ELSE 0 END), 0) as low_count,
                         COALESCE(SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END), 0) as pending_count
                     FROM appointments 
-                    WHERE doctor_id = ? 
+                    WHERE (doctor_id = ? OR doctor_id IS NULL)
                     AND appointment_date = ?";
 $statsStmt = $conn->prepare($todayStatsQuery);
 $statsStmt->bind_param("is", $user_id, $today);
