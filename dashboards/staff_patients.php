@@ -10,17 +10,25 @@ include '../php/db.php';
 $user_id = $_SESSION['user_id'];
 $user_name = $_SESSION['user_name'];
 
-// Get all admitted patients (including discharged for history)
-$patientsQuery = "SELECT ap.*, 
+// Get all admitted patients with real data from patient_admissions + users tables
+$patientsQuery = "SELECT pa.*, 
+                  u.first_name, u.last_name, u.phone, u.email,
                   b.ward_name, b.bed_number, b.bed_type,
-                  u.first_name, u.last_name 
-                  FROM admitted_patients ap 
-                  LEFT JOIN beds b ON ap.bed_id = b.bed_id
-                  LEFT JOIN users u ON ap.assigned_staff_id = u.user_id
+                  CONCAT(u.first_name, ' ', u.last_name) as patient_name,
+                  pa.admission_reason as disease
+                  FROM patient_admissions pa 
+                  JOIN users u ON pa.patient_id = u.user_id
+                  LEFT JOIN beds b ON pa.bed_id = b.bed_id
                   ORDER BY 
-                    CASE WHEN ap.discharge_date IS NULL THEN 0 ELSE 1 END,
-                    ap.priority DESC,
-                    ap.admission_date DESC";
+                    CASE WHEN pa.discharge_date IS NULL THEN 0 ELSE 1 END,
+                    CASE pa.status
+                        WHEN 'critical' THEN 1
+                        WHEN 'moderate' THEN 2
+                        WHEN 'stable' THEN 3
+                        WHEN 'active' THEN 4
+                        ELSE 5
+                    END,
+                    pa.admission_date DESC";
 $patientsResult = $conn->query($patientsQuery);
 ?>
 
