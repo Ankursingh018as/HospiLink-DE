@@ -1299,5 +1299,10 @@ $patientsResult = $conn->query($patientsQuery);
             });
         });
     </script>
+
+    <!-- HospiLink Notification System -->
+    <script>window.HOSPILINK_USER_ROLE = 'staff';</script>
+    <script src="../js/notifications.js"></script>
+    <script src="../js/notificationPanel.js"></script>
 </body>
 </html>

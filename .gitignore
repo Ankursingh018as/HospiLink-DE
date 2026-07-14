@@ -189,6 +189,18 @@ temp/
 !images/**
 !css/images/**
 
+# HospiLink Mail Queue (Temporary Payload JSONs)
+php/mails/
+
+# Development Test & Setup Scripts
+setup_notifications.php
+test_smtp_live.php
+query.php
+clean_db.php
+update_emails.php
+update_passwords.php
+
+
 
 
 
