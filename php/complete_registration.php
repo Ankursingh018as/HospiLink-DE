@@ -62,7 +62,7 @@ try {
     }
     
     // Validate role
-    $allowedRoles = ['patient', 'doctor', 'admin'];
+    $allowedRoles = ['patient', 'doctor', 'admin', 'staff', 'nurse'];
     if (!in_array($role, $allowedRoles)) {
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Invalid role']);
@@ -100,6 +100,18 @@ try {
         
         $stmt = $conn->prepare("INSERT INTO users (first_name, last_name, email, password, role, phone, specialization, department, license_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt->bind_param("sssssssss", $firstName, $lastName, $email, $hashedPassword, $role, $phone, $specialization, $department, $license_number);
+    } elseif ($role === 'staff' || $role === 'nurse') {
+        $department = mysqli_real_escape_string($conn, trim($input['department'] ?? 'General Ward'));
+        $staff_id = mysqli_real_escape_string($conn, trim($input['staff_id'] ?? ''));
+        
+        if (empty($staff_id)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Missing staff-specific fields']);
+            exit();
+        }
+        
+        $stmt = $conn->prepare("INSERT INTO users (first_name, last_name, email, password, role, phone, department, staff_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssssssss", $firstName, $lastName, $email, $hashedPassword, $role, $phone, $department, $staff_id);
     } else {
         $stmt = $conn->prepare("INSERT INTO users (first_name, last_name, email, password, role, phone) VALUES (?, ?, ?, ?, ?, ?)");
         $stmt->bind_param("ssssss", $firstName, $lastName, $email, $hashedPassword, $role, $phone);
