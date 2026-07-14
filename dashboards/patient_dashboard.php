@@ -181,7 +181,16 @@ $history = $histStmt->get_result();
                     if ($appointments->num_rows > 0):
                         while($apt = $appointments->fetch_assoc()): 
                     ?>
-                    <div class="appointment-card-enhanced" data-status="<?php echo $apt['status']; ?>">
+                    <div class="appointment-card-enhanced" 
+                         data-status="<?php echo $apt['status']; ?>"
+                         data-apt-id="<?php echo $apt['appointment_id']; ?>"
+                         data-date="<?php echo date('d M Y', strtotime($apt['appointment_date'])); ?>"
+                         data-time="<?php echo date('h:i A', strtotime($apt['appointment_time'])); ?>"
+                         data-priority="<?php echo strtoupper($apt['priority_level']); ?>"
+                         data-doctor="<?php echo htmlspecialchars($apt['doctor_name'] ?: 'Not Assigned'); ?>"
+                         data-specialty="<?php echo htmlspecialchars($apt['specialization'] ?: 'General'); ?>"
+                         data-symptoms="<?php echo htmlspecialchars($apt['symptoms']); ?>"
+                         data-notes="<?php echo htmlspecialchars($apt['notes'] ?? 'No additional notes'); ?>">
                         <div class="appointment-header">
                             <div class="appointment-id">#<?php echo $apt['appointment_id']; ?></div>
                             <div class="priority-badge-enhanced <?php echo $apt['priority_level']; ?>">
@@ -312,6 +321,81 @@ $history = $histStmt->get_result();
         </div>
     </div>
 
+    <!-- View Details Modal -->
+    <div id="viewDetailsModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-file-medical-alt"></i> Appointment Details</h2>
+                <button class="close-modal" onclick="closeViewDetailsModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="detail-section">
+                    <div class="detail-header">
+                        <h3><i class="fas fa-info-circle"></i> Basic Information</h3>
+                    </div>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="fas fa-hashtag"></i> Appointment ID</span>
+                            <span class="detail-value" id="detail_apt_id">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="fas fa-calendar"></i> Date</span>
+                            <span class="detail-value" id="detail_date">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="fas fa-clock"></i> Time</span>
+                            <span class="detail-value" id="detail_time">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="fas fa-flag"></i> Priority</span>
+                            <span class="detail-value" id="detail_priority">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="fas fa-clipboard-check"></i> Status</span>
+                            <span class="detail-value" id="detail_status">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <div class="detail-header">
+                        <h3><i class="fas fa-user-md"></i> Doctor Information</h3>
+                    </div>
+                    <div class="detail-grid">
+                        <div class="detail-item full-width">
+                            <span class="detail-label"><i class="fas fa-stethoscope"></i> Doctor Name</span>
+                            <span class="detail-value" id="detail_doctor">-</span>
+                        </div>
+                        <div class="detail-item full-width">
+                            <span class="detail-label"><i class="fas fa-briefcase-medical"></i> Specialization</span>
+                            <span class="detail-value" id="detail_specialty">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <div class="detail-header">
+                        <h3><i class="fas fa-notes-medical"></i> Medical Details</h3>
+                    </div>
+                    <div class="detail-item full-width">
+                        <span class="detail-label"><i class="fas fa-thermometer"></i> Symptoms</span>
+                        <p class="detail-text" id="detail_symptoms">-</p>
+                    </div>
+                    <div class="detail-item full-width">
+                        <span class="detail-label"><i class="fas fa-comment-medical"></i> Additional Notes</span>
+                        <p class="detail-text" id="detail_notes">-</p>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="action-btn secondary" onclick="closeViewDetailsModal()">
+                        <i class="fas fa-times"></i> Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <style>
         .modal {
             position: fixed;
@@ -340,7 +424,7 @@ $history = $histStmt->get_result();
         
         .modal-header {
             padding: 25px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #00adb5 0%, #0e545f 100%);
             color: white;
             border-radius: 15px 15px 0 0;
             display: flex;
@@ -388,7 +472,7 @@ $history = $histStmt->get_result();
         
         .form-group label i {
             margin-right: 8px;
-            color: #667eea;
+            color: #00adb5;
         }
         
         .form-group input,
@@ -404,7 +488,7 @@ $history = $histStmt->get_result();
         .form-group input:focus,
         .form-group textarea:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #00adb5;
         }
         
         .modal-actions {
@@ -428,14 +512,14 @@ $history = $histStmt->get_result();
         }
         
         .action-btn.primary {
-            background: #667eea;
+            background: linear-gradient(135deg, #00adb5, #0e545f);
             color: white;
         }
         
         .action-btn.primary:hover {
-            background: #5568d3;
+            background: linear-gradient(135deg, #00c9d1, #00adb5);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 5px 15px rgba(0, 173, 181, 0.4);
         }
         
         .action-btn.secondary {
@@ -475,6 +559,95 @@ $history = $histStmt->get_result();
             flex-wrap: wrap;
         }
         
+        /* View Details Modal Styles */
+        .detail-section {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #00adb5;
+        }
+        
+        .detail-header {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .detail-header h3 {
+            margin: 0;
+            color: #00adb5;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .detail-header h3 i {
+            margin-right: 10px;
+        }
+        
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .detail-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .detail-item.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .detail-label {
+            display: block;
+            font-weight: 600;
+            color: #555;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+        
+        .detail-label i {
+            color: #00adb5;
+            margin-right: 6px;
+        }
+        
+        .detail-value {
+            display: block;
+            color: #222;
+            font-size: 15px;
+            font-weight: 500;
+        }
+        
+        .detail-text {
+            margin: 0;
+            padding: 12px;
+            background: white;
+            border-radius: 6px;
+            color: #333;
+            line-height: 1.6;
+            border: 1px solid #e0e0e0;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
         .appointment-actions .action-btn {
             padding: 8px 12px;
             font-size: 13px;
@@ -499,8 +672,64 @@ $history = $histStmt->get_result();
 
     <script>
         function viewDetails(appointmentId) {
-            alert('Viewing details for appointment #' + appointmentId);
-            // Implement modal or redirect to details page
+            // Find the appointment card with this ID
+            const appointmentCard = document.querySelector(`[data-apt-id="${appointmentId}"]`);
+            
+            if (!appointmentCard) {
+                alert('Appointment details not found');
+                return;
+            }
+            
+            // Populate modal with appointment data
+            document.getElementById('detail_apt_id').textContent = '#' + appointmentCard.dataset.aptId;
+            document.getElementById('detail_date').textContent = appointmentCard.dataset.date;
+            document.getElementById('detail_time').textContent = appointmentCard.dataset.time;
+            document.getElementById('detail_priority').textContent = appointmentCard.dataset.priority;
+            document.getElementById('detail_status').textContent = appointmentCard.dataset.status.charAt(0).toUpperCase() + appointmentCard.dataset.status.slice(1);
+            document.getElementById('detail_doctor').textContent = appointmentCard.dataset.doctor;
+            document.getElementById('detail_specialty').textContent = appointmentCard.dataset.specialty;
+            document.getElementById('detail_symptoms').textContent = appointmentCard.dataset.symptoms;
+            document.getElementById('detail_notes').textContent = appointmentCard.dataset.notes;
+            
+            // Style the priority and status with appropriate colors
+            const priorityElement = document.getElementById('detail_priority');
+            const statusElement = document.getElementById('detail_status');
+            
+            // Add color coding for priority
+            const priority = appointmentCard.dataset.priority.toLowerCase();
+            if (priority === 'high' || priority === 'critical') {
+                priorityElement.style.color = '#dc3545';
+                priorityElement.style.fontWeight = 'bold';
+            } else if (priority === 'medium') {
+                priorityElement.style.color = '#ffc107';
+                priorityElement.style.fontWeight = 'bold';
+            } else {
+                priorityElement.style.color = '#28a745';
+                priorityElement.style.fontWeight = 'bold';
+            }
+            
+            // Add color coding for status
+            const status = appointmentCard.dataset.status.toLowerCase();
+            if (status === 'completed') {
+                statusElement.style.color = '#28a745';
+                statusElement.style.fontWeight = 'bold';
+            } else if (status === 'cancelled') {
+                statusElement.style.color = '#dc3545';
+                statusElement.style.fontWeight = 'bold';
+            } else if (status === 'pending') {
+                statusElement.style.color = '#ffc107';
+                statusElement.style.fontWeight = 'bold';
+            } else {
+                statusElement.style.color = '#00adb5';
+                statusElement.style.fontWeight = 'bold';
+            }
+            
+            // Show modal
+            document.getElementById('viewDetailsModal').style.display = 'flex';
+        }
+        
+        function closeViewDetailsModal() {
+            document.getElementById('viewDetailsModal').style.display = 'none';
         }
         
         // Reschedule Appointment

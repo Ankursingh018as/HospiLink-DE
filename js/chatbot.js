@@ -124,7 +124,7 @@ function appendMessage(text, sender, isEmergency = false, isError = false) {
     // Add emergency alert if needed
     if (isEmergency) {
         html += `<div class="emergency-alert">
-                    <p><i class="ri-alert-fill"></i> 🚨 This sounds urgent. Please seek immediate medical help or visit our emergency department!</p>
+                    <p><i class="ri-alert-fill"></i>This sounds urgent. Please seek immediate medical help or visit our emergency department!</p>
                 </div>`;
     }
     
