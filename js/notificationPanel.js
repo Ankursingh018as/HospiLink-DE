@@ -18,29 +18,29 @@ class NotificationPanel {
     const configs = {
       staff: {
         label: 'Nurse Notifications',
-        color: '#f093fb',
-        gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+        color: '#00adb5',
+        gradient: 'linear-gradient(135deg, #0e545f 0%, #00adb5 100%)',
         types: ['drip_reminder', 'medicine_reminder', 'system'],
         welcomeMsg: 'Stay updated on IV drips & medicine schedules'
       },
       doctor: {
         label: 'Clinical Alerts',
-        color: '#43e97b',
-        gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+        color: '#00adb5',
+        gradient: 'linear-gradient(135deg, #0e545f 0%, #00adb5 100%)',
         types: ['routine_check', 'followup_doctor', 'appointment_alert', 'system'],
         welcomeMsg: 'Patient check alerts and follow-up reminders'
       },
       patient: {
         label: 'Your Notifications',
-        color: '#4facfe',
-        gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+        color: '#00adb5',
+        gradient: 'linear-gradient(135deg, #0e545f 0%, #00adb5 100%)',
         types: ['medicine_reminder', 'followup_patient', 'appointment_reminder', 'system'],
         welcomeMsg: 'Medicine reminders and appointment updates'
       },
       admin: {
         label: 'System Notifications',
-        color: '#667eea',
-        gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        color: '#00adb5',
+        gradient: 'linear-gradient(135deg, #0e545f 0%, #00adb5 100%)',
         types: ['daily_digest', 'system'],
         welcomeMsg: 'System alerts and daily digests'
       }
@@ -57,25 +57,25 @@ class NotificationPanel {
       /* ── HospiLink Notification Panel ── */
       #hl-bell-btn {
         position: fixed;
-        top: 18px;
-        right: 24px;
+        bottom: 30px;
+        right: 110px;
         width: 48px;
         height: 48px;
         border-radius: 50%;
-        background: ${this.roleConfig.gradient};
+        background: linear-gradient(135deg, #0e545f 0%, #00adb5 100%);
         border: none;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        box-shadow: 0 4px 20px rgba(0, 173, 181, 0.3);
         z-index: 9000;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
         text-decoration: none;
       }
       #hl-bell-btn:hover {
         transform: scale(1.1);
-        box-shadow: 0 6px 28px rgba(0,0,0,0.3);
+        box-shadow: 0 6px 28px rgba(0, 173, 181, 0.45);
       }
       #hl-bell-btn svg { color: white; }
       #hl-bell-badge {
@@ -108,7 +108,7 @@ class NotificationPanel {
       #hl-notif-overlay {
         position: fixed;
         inset: 0;
-        background: rgba(0,0,0,0.3);
+        background: rgba(14, 84, 95, 0.3);
         z-index: 8998;
         opacity: 0;
         pointer-events: none;
@@ -126,21 +126,22 @@ class NotificationPanel {
         right: -420px;
         width: 400px;
         height: 100vh;
-        background: #0f1117;
+        background: #ffffff;
         z-index: 8999;
         display: flex;
         flex-direction: column;
         transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: -8px 0 40px rgba(0,0,0,0.4);
+        box-shadow: -8px 0 40px rgba(14, 84, 95, 0.15);
         font-family: 'Segoe UI', system-ui, sans-serif;
       }
       #hl-notification-panel.open { right: 0; }
 
       /* ── Panel Header ── */
       .hl-panel-header {
-        background: ${this.roleConfig.gradient};
+        background: linear-gradient(135deg, #0e545f 0%, #00adb5 100%);
         padding: 20px 20px 16px;
         flex-shrink: 0;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
       }
       .hl-panel-header-top {
         display: flex;
@@ -199,8 +200,8 @@ class NotificationPanel {
       /* ── Filter Tabs ── */
       .hl-filter-tabs {
         display: flex;
-        background: #1a1d27;
-        border-bottom: 1px solid #2d3148;
+        background: #f8fafc;
+        border-bottom: 1px solid #e2e8f0;
         flex-shrink: 0;
         overflow-x: auto;
         scrollbar-width: none;
@@ -211,7 +212,7 @@ class NotificationPanel {
         padding: 10px 16px;
         font-size: 12px;
         font-weight: 600;
-        color: #718096;
+        color: #64748b;
         cursor: pointer;
         border-bottom: 2px solid transparent;
         transition: all 0.2s;
@@ -220,10 +221,10 @@ class NotificationPanel {
         letter-spacing: 0.5px;
       }
       .hl-filter-tab.active {
-        color: white;
-        border-bottom-color: ${this.roleConfig.color};
+        color: #00adb5;
+        border-bottom-color: #00adb5;
       }
-      .hl-filter-tab:hover:not(.active) { color: #a0aec0; }
+      .hl-filter-tab:hover:not(.active) { color: #475569; }
 
       /* ── Notification List ── */
       .hl-notif-list {
@@ -231,11 +232,12 @@ class NotificationPanel {
         overflow-y: auto;
         padding: 8px 0;
         scrollbar-width: thin;
-        scrollbar-color: #2d3148 transparent;
+        scrollbar-color: #cbd5e1 transparent;
+        background: #ffffff;
       }
       .hl-notif-list::-webkit-scrollbar { width: 4px; }
       .hl-notif-list::-webkit-scrollbar-track { background: transparent; }
-      .hl-notif-list::-webkit-scrollbar-thumb { background: #2d3148; border-radius: 4px; }
+      .hl-notif-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
 
       /* ── Notification Item ── */
       .hl-notif-item {
@@ -244,26 +246,27 @@ class NotificationPanel {
         padding: 14px 16px;
         cursor: pointer;
         transition: background 0.15s;
-        border-bottom: 1px solid #1a1d27;
+        border-bottom: 1px solid #f1f5f9;
         position: relative;
         animation: hl-slide-in 0.3s ease;
+        background: #ffffff;
       }
       @keyframes hl-slide-in {
         from { opacity: 0; transform: translateX(20px); }
         to { opacity: 1; transform: translateX(0); }
       }
-      .hl-notif-item:hover { background: #1a1d27; }
-      .hl-notif-item.unread { background: rgba(99,102,241,0.08); }
+      .hl-notif-item:hover { background: #f8fafc; }
+      .hl-notif-item.unread { background: rgba(0, 173, 181, 0.05); }
       .hl-notif-item.unread::before {
         content: '';
         position: absolute;
         left: 0;
         top: 50%;
         transform: translateY(-50%);
-        width: 3px;
+        width: 4px;
         height: 60%;
-        border-radius: 0 3px 3px 0;
-        background: ${this.roleConfig.color};
+        border-radius: 0 4px 4px 0;
+        background: #00adb5;
       }
       .hl-notif-icon {
         font-size: 26px;
@@ -274,13 +277,14 @@ class NotificationPanel {
         align-items: center;
         justify-content: center;
         border-radius: 12px;
-        background: #1a1d27;
+        background: rgba(0, 173, 181, 0.1);
+        color: #00adb5;
       }
       .hl-notif-body { flex: 1; min-width: 0; }
       .hl-notif-title {
         font-size: 13px;
         font-weight: 600;
-        color: #e2e8f0;
+        color: #0e545f;
         line-height: 1.4;
         margin-bottom: 4px;
         white-space: nowrap;
@@ -289,7 +293,7 @@ class NotificationPanel {
       }
       .hl-notif-msg {
         font-size: 12px;
-        color: #718096;
+        color: #475569;
         line-height: 1.5;
         display: -webkit-box;
         -webkit-line-clamp: 2;
@@ -304,7 +308,7 @@ class NotificationPanel {
       }
       .hl-notif-time {
         font-size: 11px;
-        color: #4a5568;
+        color: #94a3b8;
       }
       .hl-priority-dot {
         width: 6px;
@@ -323,9 +327,9 @@ class NotificationPanel {
       }
       .hl-notif-item:hover .hl-notif-actions { opacity: 1; }
       .hl-notif-action {
-        background: #2d3148;
+        background: #f1f5f9;
         border: none;
-        color: #a0aec0;
+        color: #64748b;
         width: 26px;
         height: 26px;
         border-radius: 6px;
@@ -336,8 +340,8 @@ class NotificationPanel {
         justify-content: center;
         transition: all 0.15s;
       }
-      .hl-notif-action:hover { background: #3d4268; color: white; }
-      .hl-notif-action.delete:hover { background: #c53030; color: white; }
+      .hl-notif-action:hover { background: #e2e8f0; color: #0e545f; }
+      .hl-notif-action.delete:hover { background: #fee2e2; color: #ef4444; }
 
       /* ── Empty State ── */
       .hl-empty {
@@ -346,13 +350,13 @@ class NotificationPanel {
         align-items: center;
         justify-content: center;
         height: 280px;
-        color: #4a5568;
+        color: #94a3b8;
         text-align: center;
         padding: 24px;
       }
       .hl-empty-icon { font-size: 52px; margin-bottom: 16px; opacity: 0.6; }
-      .hl-empty-title { font-size: 15px; font-weight: 600; color: #718096; margin-bottom: 6px; }
-      .hl-empty-sub { font-size: 13px; color: #4a5568; }
+      .hl-empty-title { font-size: 15px; font-weight: 600; color: #475569; margin-bottom: 6px; }
+      .hl-empty-sub { font-size: 13px; color: #64748b; }
 
       /* ── Loading ── */
       .hl-loading {
@@ -360,7 +364,7 @@ class NotificationPanel {
         align-items: center;
         justify-content: center;
         padding: 40px;
-        color: #4a5568;
+        color: #64748b;
         font-size: 13px;
         gap: 10px;
       }
@@ -368,8 +372,8 @@ class NotificationPanel {
       .hl-spinner {
         width: 18px;
         height: 18px;
-        border: 2px solid #2d3148;
-        border-top-color: ${this.roleConfig.color};
+        border: 2px solid #e2e8f0;
+        border-top-color: #00adb5;
         border-radius: 50%;
         animation: hl-spin 0.8s linear infinite;
       }
@@ -377,16 +381,16 @@ class NotificationPanel {
       /* ── Panel Footer ── */
       .hl-panel-footer {
         padding: 12px 16px;
-        border-top: 1px solid #1a1d27;
+        border-top: 1px solid #e2e8f0;
         flex-shrink: 0;
-        background: #0a0c14;
+        background: #f8fafc;
       }
       .hl-push-toggle {
         display: flex;
         align-items: center;
         justify-content: space-between;
         font-size: 12px;
-        color: #718096;
+        color: #64748b;
       }
       .hl-push-status {
         display: flex;
@@ -400,15 +404,15 @@ class NotificationPanel {
         background: #38a169;
         animation: hl-pulse 2s infinite;
       }
-      .hl-push-dot.off { background: #4a5568; animation: none; }
+      .hl-push-dot.off { background: #94a3b8; animation: none; }
       @keyframes hl-pulse {
         0%, 100% { opacity: 1; }
         50% { opacity: 0.4; }
       }
       .hl-enable-push-btn {
         background: none;
-        border: 1px solid #3d4268;
-        color: ${this.roleConfig.color};
+        border: 1px solid #cbd5e1;
+        color: #00adb5;
         padding: 4px 12px;
         border-radius: 12px;
         font-size: 11px;
@@ -417,9 +421,9 @@ class NotificationPanel {
         transition: all 0.2s;
       }
       .hl-enable-push-btn:hover {
-        background: ${this.roleConfig.color};
+        background: #00adb5;
         color: white;
-        border-color: ${this.roleConfig.color};
+        border-color: #00adb5;
       }
 
       /* ── Toast ── */
@@ -435,15 +439,15 @@ class NotificationPanel {
         pointer-events: none;
       }
       .hl-toast {
-        background: #1a1d27;
-        border: 1px solid #2d3148;
-        border-left: 4px solid ${this.roleConfig.color};
-        color: #e2e8f0;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-left: 4px solid #00adb5;
+        color: #0f172a;
         padding: 12px 20px;
         border-radius: 10px;
         font-size: 13px;
         font-weight: 500;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
         min-width: 280px;
         max-width: 380px;
         animation: hl-toast-in 0.3s ease;
@@ -465,7 +469,7 @@ class NotificationPanel {
 
       @media (max-width: 480px) {
         #hl-notification-panel { width: 100%; right: -100%; }
-        #hl-bell-btn { top: 12px; right: 12px; }
+        #hl-bell-btn { bottom: 20px; right: 95px; }
       }
     `;
     document.head.appendChild(style);
@@ -719,6 +723,11 @@ class NotificationPanel {
     if (panel) panel.classList.add('open');
     if (overlay) overlay.classList.add('active');
     this.isOpen = true;
+    
+    // Hide the bell button when panel is open
+    const bellBtn = document.getElementById('hl-bell-btn');
+    if (bellBtn) bellBtn.style.display = 'none';
+    
     this.nc.fetchNotifications().then(() => this.renderList());
     document.addEventListener('keydown', this.handleKeydown);
   }
@@ -729,6 +738,11 @@ class NotificationPanel {
     if (panel) panel.classList.remove('open');
     if (overlay) overlay.classList.remove('active');
     this.isOpen = false;
+    
+    // Show the bell button when panel is closed
+    const bellBtn = document.getElementById('hl-bell-btn');
+    if (bellBtn) bellBtn.style.display = 'flex';
+    
     document.removeEventListener('keydown', this.handleKeydown);
   }
 
