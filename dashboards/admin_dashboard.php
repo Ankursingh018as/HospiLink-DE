@@ -466,6 +466,10 @@ $activityLogs = $conn->query($activityQuery);
             .catch(() => content.innerHTML = '<div style="color:#c62828;">Error running AI</div>');
         }
     </script>
+    <!-- HospiLink Notification System -->
+    <script>window.HOSPILINK_USER_ROLE = 'admin';</script>
+    <script src="../js/notifications.js"></script>
+    <script src="../js/notificationPanel.js"></script>
 </body>
 </html>
 
