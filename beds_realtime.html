@@ -161,15 +161,30 @@
             margin-bottom: 20px;
         }
         .ward-icon {
-            background: #00adb5;
-            color: white;
-            width: 50px;
-            height: 50px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white !important;
+            width: 55px;
+            height: 55px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: 28px;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            min-width: 55px;
+            min-height: 55px;
+        }
+        .ward-icon i {
+            color: white !important;
+            font-size: 28px !important;
+            line-height: 1;
+            display: block;
+        }
+        .ward-card:hover .ward-icon {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.5);
         }
         .ward-header h3 {
             font-size: 20px;
@@ -243,6 +258,20 @@
             document.getElementById('maintenanceBeds').textContent = stats.maintenance || 0;
         }
         
+        // Get ward-specific icon
+        function getWardIcon(wardName) {
+            const name = wardName.toLowerCase();
+            if (name.includes('emergency')) return 'ri-alarm-warning-line';
+            if (name.includes('icu')) return 'ri-heart-pulse-line';
+            if (name.includes('general')) return 'ri-hospital-bed-line';
+            if (name.includes('private')) return 'ri-door-lock-line';
+            if (name.includes('surgery') || name.includes('operation')) return 'ri-scissors-cut-line';
+            if (name.includes('pediatric') || name.includes('children')) return 'ri-capsule-line';
+            if (name.includes('maternity') || name.includes('labor')) return 'ri-nurse-line';
+            if (name.includes('cardio')) return 'ri-heart-line';
+            return 'ri-hospital-line';
+        }
+        
         // Update ward breakdown
         function updateWardBreakdown(wards) {
             const wardGrid = document.getElementById('wardGrid');
@@ -261,7 +290,7 @@
                 <div class="ward-card ward-${ward.name.toLowerCase().replace(/\s+/g, '-')}">
                     <div class="ward-header">
                         <div class="ward-icon">
-                            <i class="ri-hospital-line"></i>
+                            <i class="ri-hotel-bed-fill" style="color: white; font-size: 28px;"></i>
                         </div>
                         <h3>${ward.name}</h3>
                     </div>
