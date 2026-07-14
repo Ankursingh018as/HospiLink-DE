@@ -901,6 +901,11 @@ $allTimeStats['pending_total'] = intval($allTimeStats['pending_total'] ?? 0);
             <div id="aiModalContent">Loading...</div>
         </div>
     </div>
+    </div>
+    <!-- HospiLink Notification System -->
+    <script>window.HOSPILINK_USER_ROLE = 'doctor';</script>
+    <script src="../js/notifications.js"></script>
+    <script src="../js/notificationPanel.js"></script>
 </body>
 </html>
 

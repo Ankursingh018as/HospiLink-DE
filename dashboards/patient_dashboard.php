@@ -660,6 +660,11 @@ $history = $histStmt->get_result();
         // Check for updates every 10 seconds
         setInterval(checkForUpdates, 10000);
     </script>
+
+    <!-- HospiLink Notification System -->
+    <script>window.HOSPILINK_USER_ROLE = 'patient';</script>
+    <script src="../js/notifications.js"></script>
+    <script src="../js/notificationPanel.js"></script>
 </body>
 </html>
 

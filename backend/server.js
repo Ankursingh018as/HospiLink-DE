@@ -17,6 +17,10 @@ const bedRoutes = require('./routes/beds');
 const chatbotRoutes = require('./routes/chatbot');
 const qrRoutes = require('./routes/qr');
 const adminRoutes = require('./routes/admin');
+const notificationRoutes = require('./routes/notifications');
+
+// Import scheduler
+const { initScheduler } = require('./utils/schedulerService');
 
 // Initialize Express app
 const app = express();
@@ -67,6 +71,7 @@ app.use('/api/beds', bedRoutes);
 app.use('/api/chatbot', chatbotRoutes);
 app.use('/api/qr', qrRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -101,6 +106,12 @@ app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📡 API available at http://localhost:${PORT}/api`);
   console.log(`🏥 HospiLink Backend - MERN Stack`);
+
+  // Initialize notification scheduler after DB connects
+  mongoose.connection.once('open', () => {
+    initScheduler();
+    console.log('🔔 Notification Scheduler: Active');
+  });
 });
 
 // Handle unhandled promise rejections
