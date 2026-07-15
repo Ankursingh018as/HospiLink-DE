@@ -12,6 +12,9 @@ if (!isset($_SESSION['logged_in']) || !in_array($_SESSION['user_role'], ['doctor
 
 $token = isset($_GET['token']) ? $_GET['token'] : '';
 $action = isset($_GET['action']) ? $_GET['action'] : 'medicine';
+if ($action === 'vitals') {
+    $action = 'note';
+}
 
 if (empty($token)) {
     die("Error: No QR code token provided");
@@ -236,19 +239,21 @@ $staff_list = $staff_result->fetch_all(MYSQLI_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Patient - <?php echo htmlspecialchars($admission['first_name'] . ' ' . $admission['last_name']); ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="icon" href="images/hosp_favicon.png" type="image/png">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
             min-height: 100vh;
-            padding: 15px;
+            padding: 30px 15px;
+            color: #334155;
         }
 
         .container {
@@ -258,58 +263,97 @@ $staff_list = $staff_result->fetch_all(MYSQLI_ASSOC);
 
         .header {
             background: white;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 25px rgba(14, 84, 95, 0.04);
         }
 
         .header h1 {
-            color: #333;
-            font-size: 20px;
-            margin-bottom: 10px;
+            color: #0e545f;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header h1 i {
+            color: #00adb5;
         }
 
         .header p {
-            color: #666;
+            color: #64748b;
             font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .header p i {
+            color: #00adb5;
         }
 
         .tabs {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 12px;
+            margin-bottom: 24px;
             flex-wrap: wrap;
         }
 
         .tab {
             background: white;
             padding: 12px 20px;
-            border-radius: 10px;
+            border-radius: 12px;
             cursor: pointer;
             font-size: 14px;
+            font-weight: 600;
             display: flex;
             align-items: center;
             gap: 8px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: all 0.3s;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 15px rgba(14, 84, 95, 0.04);
+            transition: all 0.3s ease;
+            color: #64748b;
         }
 
         .tab:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 6px 20px rgba(14, 84, 95, 0.08);
+            color: #0e545f;
+            border-color: #cbd5e1;
         }
 
         .tab.active {
-            background: #00adb5;
+            background: linear-gradient(135deg, #00adb5, #0e8389);
             color: white;
+            border-color: #00adb5;
+            box-shadow: 0 4px 15px rgba(0, 173, 181, 0.25);
         }
 
         .form-container {
             background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border-radius: 16px;
+            padding: 36px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 25px rgba(14, 84, 95, 0.04);
+        }
+
+        .form-container h2 {
+            color: #0e545f;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-container h2 i {
+            color: #00adb5;
         }
 
         .form-group {
@@ -318,7 +362,7 @@ $staff_list = $staff_result->fetch_all(MYSQLI_ASSOC);
 
         .form-group label {
             display: block;
-            color: #333;
+            color: #475569;
             font-weight: 600;
             margin-bottom: 8px;
             font-size: 14px;
@@ -328,11 +372,13 @@ $staff_list = $staff_result->fetch_all(MYSQLI_ASSOC);
         .form-group select,
         .form-group textarea {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
             font-size: 14px;
-            transition: border-color 0.3s;
+            transition: all 0.3s;
+            font-family: inherit;
+            color: #334155;
         }
 
         .form-group input:focus,
@@ -340,6 +386,7 @@ $staff_list = $staff_result->fetch_all(MYSQLI_ASSOC);
         .form-group textarea:focus {
             outline: none;
             border-color: #00adb5;
+            box-shadow: 0 0 0 4px rgba(0, 173, 181, 0.1);
         }
 
         .form-group textarea {
@@ -350,58 +397,67 @@ $staff_list = $staff_result->fetch_all(MYSQLI_ASSOC);
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            gap: 20px;
         }
 
         .btn {
-            background: #00adb5;
+            background: linear-gradient(135deg, #00adb5, #0e8389);
             color: white;
             border: none;
             padding: 14px 28px;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 15px;
+            font-weight: 600;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0, 173, 181, 0.2);
+            transition: all 0.3s ease;
         }
 
         .btn:hover {
-            background: #0e545f;
             transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0, 173, 181, 0.3);
         }
 
         .btn-secondary {
-            background: #6c757d;
+            background: #64748b;
+            box-shadow: 0 4px 12px rgba(100, 116, 139, 0.2);
         }
 
         .btn-secondary:hover {
-            background: #5a6268;
+            background: #475569;
+            box-shadow: 0 6px 18px rgba(100, 116, 139, 0.3);
         }
 
         .button-group {
             display: flex;
-            gap: 10px;
-            margin-top: 25px;
+            gap: 12px;
+            margin-top: 28px;
         }
 
         .alert {
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 600;
         }
 
         .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+            background: rgba(76, 175, 80, 0.1);
+            color: #388e3c;
+            border: 1px solid rgba(76, 175, 80, 0.2);
         }
 
         .alert-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+            background: rgba(244, 67, 54, 0.1);
+            color: #d32f2f;
+            border: 1px solid rgba(244, 67, 54, 0.2);
         }
 
         @media (max-width: 768px) {
@@ -411,6 +467,7 @@ $staff_list = $staff_result->fetch_all(MYSQLI_ASSOC);
 
             .tabs {
                 overflow-x: auto;
+                padding-bottom: 4px;
             }
         }
     </style>
@@ -455,7 +512,7 @@ $staff_list = $staff_result->fetch_all(MYSQLI_ASSOC);
 
         <div class="form-container">
             <?php if ($action == 'medicine'): ?>
-                <h2 style="margin-bottom: 20px; color: #333;"><i class="fas fa-pills"></i> Add Medicine</h2>
+                <h2 style="margin-bottom: 20px;"><i class="fas fa-pills"></i> Add Medicine</h2>
                 <form method="POST">
                     <input type="hidden" name="action_type" value="medicine">
                     
@@ -505,7 +562,7 @@ $staff_list = $staff_result->fetch_all(MYSQLI_ASSOC);
                 </form>
 
             <?php elseif ($action == 'iv'): ?>
-                <h2 style="margin-bottom: 20px; color: #333;"><i class="fas fa-syringe"></i> Add IV/Drip</h2>
+                <h2 style="margin-bottom: 20px;"><i class="fas fa-syringe"></i> Add IV/Drip</h2>
                 <form method="POST">
                     <input type="hidden" name="action_type" value="iv">
                     
@@ -553,7 +610,7 @@ $staff_list = $staff_result->fetch_all(MYSQLI_ASSOC);
                 </form>
 
             <?php elseif ($action == 'test'): ?>
-                <h2 style="margin-bottom: 20px; color: #333;"><i class="fas fa-file-medical"></i> Order Test</h2>
+                <h2 style="margin-bottom: 20px;"><i class="fas fa-file-medical"></i> Order Test</h2>
                 <form method="POST">
                     <input type="hidden" name="action_type" value="test">
                     
@@ -600,7 +657,7 @@ $staff_list = $staff_result->fetch_all(MYSQLI_ASSOC);
                 </form>
 
             <?php elseif ($action == 'note'): ?>
-                <h2 style="margin-bottom: 20px; color: #333;"><i class="fas fa-notes-medical"></i> Add Doctor Note</h2>
+                <h2 style="margin-bottom: 20px;"><i class="fas fa-notes-medical"></i> Add Doctor Note</h2>
                 <form method="POST">
                     <input type="hidden" name="action_type" value="note">
                     
@@ -672,7 +729,7 @@ $staff_list = $staff_result->fetch_all(MYSQLI_ASSOC);
                 </form>
 
             <?php elseif ($action == 'task'): ?>
-                <h2 style="margin-bottom: 20px; color: #333;"><i class="fas fa-tasks"></i> Schedule Task</h2>
+                <h2 style="margin-bottom: 20px;"><i class="fas fa-tasks"></i> Schedule Task</h2>
                 <form method="POST">
                     <input type="hidden" name="action_type" value="task">
                     

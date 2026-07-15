@@ -1037,6 +1037,28 @@ $allBedsResult = $conn->query($allBedsQuery);
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3);
         }
+
+        /* Status badge overrides for admissions */
+        .status-badge-modern.active {
+            background: rgba(46, 204, 113, 0.1);
+            color: #2ecc71;
+        }
+        .status-badge-modern.stable {
+            background: rgba(46, 204, 113, 0.1);
+            color: #2ecc71;
+        }
+        .status-badge-modern.moderate {
+            background: rgba(241, 196, 15, 0.1);
+            color: #f1c40f;
+        }
+        .status-badge-modern.critical {
+            background: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+        }
+        .status-badge-modern.discharged {
+            background: rgba(108, 117, 125, 0.1);
+            color: #6c757d;
+        }
     </style>
 </head>
 <body>
@@ -1373,7 +1395,7 @@ $allBedsResult = $conn->query($allBedsQuery);
                                     <td style="padding:15px; border-bottom:1px solid #f3f4f6;"><?php echo htmlspecialchars($p['phone'] ?: 'N/A'); ?></td>
                                     <td style="padding:15px; border-bottom:1px solid #f3f4f6; text-align:center;">
                                         <div style="display:flex; justify-content:center; gap:8px;">
-                                            <button class="btn-small" onclick="alert('Patient ID: #<?php echo $p['patient_id']; ?>\nName: <?php echo htmlspecialchars($p['patient_name']); ?>\nDiagnosis: <?php echo htmlspecialchars($p['disease']); ?>\nAge/Gender: <?php echo $p['age'] . '/' . $p['gender']; ?>')"><i class="fas fa-eye"></i> View</button>
+                                            <button class="btn-small" onclick="<?php if(!empty($p['qr_code_token'])): ?>window.location.href='../patient-status.php?token=<?php echo urlencode($p['qr_code_token']); ?>'<?php else: ?>alert('Patient ID: #<?php echo $p['patient_id']; ?>\nName: <?php echo htmlspecialchars($p['patient_name']); ?>\nDiagnosis: <?php echo htmlspecialchars($p['disease']); ?>\nAge/Gender: <?php echo $p['age'] . '/' . $p['gender']; ?>\n\nNo QR bedside monitoring code token has been generated for this admission.')<?php endif; ?>"><i class="fas fa-eye"></i> View</button>
                                             <?php if (!$isDischarged): ?>
                                                 <button class="btn-small danger" onclick="openDischargeModal(<?php echo $p['patient_id']; ?>, '<?php echo htmlspecialchars($p['patient_name']); ?>')"><i class="fas fa-sign-out-alt"></i> Discharge</button>
                                             <?php endif; ?>

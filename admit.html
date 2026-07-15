@@ -356,7 +356,7 @@
             }
         }
 
-        // Close modal when clicking X button
+        // Close modal when clicking X button and handle prefill
         document.addEventListener('DOMContentLoaded', function() {
             const closeBtn = document.querySelector('.close');
             if (closeBtn) {
@@ -369,6 +369,79 @@
                 if (event.target == modal) {
                     modal.style.display = 'none';
                 }
+            }
+
+            // Prefill Admit Date with today's date
+            const admitDateInput = document.getElementById('admit-date');
+            if (admitDateInput) {
+                admitDateInput.value = new Date().toISOString().split('T')[0];
+            }
+
+            // Fetch and pre-fill details from appointment if params exist
+            const urlParams = new URLSearchParams(window.location.search);
+            const appointmentId = urlParams.get('appointment_id');
+            
+            if (appointmentId) {
+                fetch(`php/get_appointment_for_admission.php?appointment_id=${appointmentId}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to fetch prefill details');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            if (data.full_name) {
+                                document.getElementById('patient-name').value = data.full_name;
+                            }
+                            if (data.email) {
+                                document.getElementById('email').value = data.email;
+                            }
+                            if (data.phone) {
+                                document.getElementById('phno').value = data.phone;
+                            }
+                            
+                            // Handle Gender Dropdown (Male/Female/Others)
+                            if (data.gender) {
+                                const genderSelect = document.getElementById('gender');
+                                const dbGender = data.gender.trim().toLowerCase();
+                                for (let i = 0; i < genderSelect.options.length; i++) {
+                                    const optVal = genderSelect.options[i].value.toLowerCase();
+                                    if (optVal === dbGender) {
+                                        genderSelect.selectedIndex = i;
+                                        break;
+                                    }
+                                }
+                            }
+                            
+                            if (data.address) {
+                                document.getElementById('address').value = data.address;
+                            }
+                            
+                            if (data.admission_reason) {
+                                document.getElementById('disease').value = data.admission_reason;
+                            }
+                            
+                            // Estimate DOB from age if dob is required and age is available
+                            if (data.age && !document.getElementById('dob').value) {
+                                const birthYear = new Date().getFullYear() - parseInt(data.age);
+                                document.getElementById('dob').value = `${birthYear}-01-01`;
+                            }
+                            
+                            // Append hidden input for appointment_id to associate the admission
+                            const form = document.querySelector('form');
+                            if (form) {
+                                const hiddenAptInput = document.createElement('input');
+                                hiddenAptInput.type = 'hidden';
+                                hiddenAptInput.name = 'appointment_id';
+                                hiddenAptInput.value = appointmentId;
+                                form.appendChild(hiddenAptInput);
+                            }
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Error fetching prefill data:', err);
+                    });
             }
         });
     </script>

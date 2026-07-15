@@ -50,6 +50,14 @@ class NotificationPanel {
 
   // ─── Inject CSS ──────────────────────────────────────────────────
   injectStyles() {
+    // Dynamically load RemixIcon stylesheet if not present in head
+    if (!document.querySelector('link[href*="remixicon"]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = 'https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css';
+      document.head.appendChild(link);
+    }
+
     if (document.getElementById('hl-notif-styles')) return;
     const style = document.createElement('style');
     style.id = 'hl-notif-styles';
@@ -483,10 +491,7 @@ class NotificationPanel {
     bell.setAttribute('aria-label', 'Notifications');
     bell.setAttribute('title', 'Notifications');
     bell.innerHTML = `
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-      </svg>
+      <i class="ri-notification-3-line" style="font-size: 22px; color: white;"></i>
       <span id="hl-bell-badge" class="hidden">0</span>
     `;
     bell.addEventListener('click', () => this.toggle());
@@ -621,8 +626,8 @@ class NotificationPanel {
            aria-label="${notif.title}">
         <div class="hl-notif-icon">${this.nc.getTypeIcon(notif.type)}</div>
         <div class="hl-notif-body">
-          <div class="hl-notif-title">${this.escapeHtml(notif.title)}</div>
-          <div class="hl-notif-msg">${this.escapeHtml(notif.message)}</div>
+          <div class="hl-notif-title">${this.escapeHtml(this.cleanEmojis(notif.title))}</div>
+          <div class="hl-notif-msg">${this.escapeHtml(this.cleanEmojis(notif.message))}</div>
           <div class="hl-notif-meta">
             <div class="hl-priority-dot" style="background:${this.nc.getPriorityColor(notif.priority)}"></div>
             <span class="hl-notif-time">${this.nc.formatTimeAgo(notif.createdAt || notif.created_at)}</span>
@@ -786,6 +791,15 @@ class NotificationPanel {
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;');
+  }
+
+  // ─── Clean Emojis ────────────────────────────────────────────────
+  cleanEmojis(str = '') {
+    if (!str) return '';
+    // Strip emojis using Unicode property escape
+    let cleaned = String(str).replace(/\p{Extended_Pictographic}/gu, '');
+    // Clean up duplicate spaces and trim
+    return cleaned.replace(/\s+/g, ' ').trim();
   }
 
   // ─── Mount ───────────────────────────────────────────────────────

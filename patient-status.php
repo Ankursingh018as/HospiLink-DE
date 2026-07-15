@@ -114,256 +114,312 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patient Status - <?php echo htmlspecialchars($admission['first_name'] . ' ' . $admission['last_name']); ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="icon" href="images/hosp_favicon.png" type="image/png">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
             min-height: 100vh;
-            padding: 15px;
+            padding: 30px 15px;
+            color: #334155;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1100px;
             margin: 0 auto;
         }
 
         .header {
             background: white;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 28px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 25px rgba(14, 84, 95, 0.04);
         }
 
         .patient-info {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 24px;
             flex-wrap: wrap;
         }
 
         .patient-avatar {
-            width: 80px;
-            height: 80px;
+            width: 76px;
+            height: 76px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #00adb5 0%, #0e545f 100%);
+            background: linear-gradient(135deg, #0e545f 0%, #00adb5 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 32px;
+            font-size: 28px;
             color: white;
-            font-weight: bold;
+            font-weight: 700;
+            box-shadow: 0 4px 14px rgba(0, 173, 181, 0.2);
         }
 
         .patient-details h1 {
-            color: #333;
-            font-size: 24px;
-            margin-bottom: 5px;
+            color: #0e545f;
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-transform: capitalize;
         }
 
         .patient-meta {
-            color: #666;
+            color: #64748b;
             font-size: 14px;
+            font-weight: 500;
             display: flex;
-            gap: 20px;
+            gap: 24px;
             flex-wrap: wrap;
         }
 
         .patient-meta span {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
+        }
+
+        .patient-meta span i {
+            color: #00adb5;
         }
 
         .refresh-btn {
             margin-left: auto;
-            background: #00adb5;
+            background: linear-gradient(135deg, #00adb5, #0e8389);
             color: white;
             border: none;
             padding: 12px 24px;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 14px;
+            font-weight: 600;
             display: flex;
             align-items: center;
             gap: 8px;
+            box-shadow: 0 4px 12px rgba(0, 173, 181, 0.2);
+            transition: all 0.3s ease;
         }
 
         .refresh-btn:hover {
-            background: #0e545f;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0, 173, 181, 0.3);
         }
 
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 20px;
-            margin-bottom: 20px;
+            gap: 28px;
+            margin-bottom: 28px;
         }
 
         .card {
             background: white;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border-radius: 16px;
+            padding: 28px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 25px rgba(14, 84, 95, 0.04);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(14, 84, 95, 0.08);
         }
 
         .card-header {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #f0f0f0;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #f1f5f9;
         }
 
         .card-header i {
-            font-size: 24px;
+            font-size: 22px;
             color: #00adb5;
         }
 
         .card-header h2 {
             font-size: 18px;
-            color: #333;
+            font-weight: 700;
+            color: #0e545f;
             flex: 1;
         }
 
         .card-header .badge {
-            background: #00adb5;
-            color: white;
+            background: rgba(0, 173, 181, 0.1);
+            color: #00adb5;
             padding: 4px 12px;
-            border-radius: 12px;
+            border-radius: 20px;
             font-size: 12px;
-            font-weight: bold;
+            font-weight: 700;
         }
 
         .medicine-item, .iv-item, .report-item, .note-item, .task-item {
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            margin-bottom: 12px;
+            padding: 16px;
+            background: #f8fafc;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            border: 1px solid #e2e8f0;
             border-left: 4px solid #00adb5;
+            transition: all 0.2s ease;
+        }
+
+        .medicine-item:hover, .iv-item:hover, .report-item:hover, .note-item:hover, .task-item:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
         }
 
         .medicine-item h3, .iv-item h3, .report-item h3 {
-            color: #333;
+            color: #0e545f;
             font-size: 16px;
+            font-weight: 600;
             margin-bottom: 8px;
+            text-transform: capitalize;
         }
 
         .medicine-item p, .iv-item p, .report-item p, .note-item p, .task-item p {
-            color: #666;
+            color: #475569;
             font-size: 14px;
-            margin: 4px 0;
+            margin: 6px 0;
+            line-height: 1.5;
         }
 
         .medicine-item strong, .iv-item strong, .report-item strong, .task-item strong {
-            color: #00adb5;
+            color: #0e545f;
+            font-weight: 600;
         }
 
         .status-badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 20px;
             font-size: 11px;
-            font-weight: bold;
+            font-weight: 700;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 8px;
         }
 
-        .status-active { background: #d4edda; color: #155724; }
-        .status-running { background: #d1ecf1; color: #0c5460; }
-        .status-completed { background: #d4edda; color: #155724; }
-        .status-pending { background: #fff3cd; color: #856404; }
-        .status-ordered { background: #cce5ff; color: #004085; }
-        .status-urgent { background: #f8d7da; color: #721c24; }
+        .status-active { background: rgba(76, 175, 80, 0.1); color: #388e3c; }
+        .status-running { background: rgba(3, 169, 244, 0.1); color: #0288d1; }
+        .status-completed { background: rgba(76, 175, 80, 0.1); color: #388e3c; }
+        .status-pending { background: rgba(255, 193, 7, 0.1); color: #ffa000; }
+        .status-ordered { background: rgba(33, 150, 243, 0.1); color: #1976d2; }
+        .status-urgent { background: rgba(244, 67, 54, 0.1); color: #d32f2f; margin-left: 6px; }
 
-        .priority-critical { border-left-color: #dc3545; }
-        .priority-high { border-left-color: #fd7e14; }
-        .priority-medium { border-left-color: #ffc107; }
-        .priority-low { border-left-color: #28a745; }
+        .priority-critical { border-left-color: #ef4444; }
+        .priority-high { border-left-color: #f97316; }
+        .priority-medium { border-left-color: #eab308; }
+        .priority-low { border-left-color: #22c55e; }
 
         .empty-state {
             text-align: center;
             padding: 40px 20px;
-            color: #999;
+            color: #94a3b8;
         }
 
         .empty-state i {
-            font-size: 48px;
-            margin-bottom: 15px;
-            opacity: 0.3;
+            font-size: 44px;
+            margin-bottom: 12px;
+            opacity: 0.4;
+            color: #00adb5;
         }
 
         .vitals-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 10px;
-            margin-top: 15px;
+            gap: 12px;
+            margin-top: 16px;
         }
 
         .vital-box {
-            background: white;
-            padding: 10px;
-            border-radius: 8px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 12px;
+            border-radius: 10px;
             text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .vital-box:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
         }
 
         .vital-label {
             font-size: 11px;
-            color: #999;
+            color: #64748b;
+            font-weight: 600;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .vital-value {
-            font-size: 20px;
-            font-weight: bold;
+            font-size: 22px;
+            font-weight: 700;
             color: #00adb5;
-            margin-top: 5px;
+            margin-top: 6px;
         }
 
         .action-buttons {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             margin-top: 20px;
             flex-wrap: wrap;
         }
 
         .btn {
-            padding: 10px 20px;
-            border-radius: 8px;
+            padding: 12px 24px;
+            border-radius: 10px;
             border: none;
             cursor: pointer;
             font-size: 14px;
+            font-weight: 600;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
         }
 
         .btn-primary {
-            background: #00adb5;
+            background: linear-gradient(135deg, #00adb5, #0e8389);
             color: white;
+            box-shadow: 0 4px 12px rgba(0, 173, 181, 0.2);
         }
 
         .btn-primary:hover {
-            background: #0e545f;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0, 173, 181, 0.3);
         }
 
         @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
             .grid {
                 grid-template-columns: 1fr;
+                gap: 20px;
             }
 
             .patient-info {
                 flex-direction: column;
                 align-items: flex-start;
+                gap: 16px;
             }
 
             .refresh-btn {
@@ -375,17 +431,20 @@ $conn->close();
 
         .last-updated {
             text-align: center;
-            color: rgba(255,255,255,0.9);
+            color: #64748b;
             font-size: 14px;
-            margin-top: 20px;
+            font-weight: 500;
+            margin-top: 28px;
             padding: 10px;
         }
 
         .time-badge {
-            background: rgba(255,255,255,0.2);
-            padding: 4px 10px;
-            border-radius: 12px;
+            background: rgba(0, 173, 181, 0.1);
+            color: #00adb5;
+            padding: 4px 12px;
+            border-radius: 20px;
             font-size: 12px;
+            font-weight: 600;
             margin-left: 10px;
         }
     </style>
