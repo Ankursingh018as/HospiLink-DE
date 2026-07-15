@@ -167,6 +167,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         $history_stmt->close();
         
+        // Update appointment status if admitted from appointment
+        $appointment_id = isset($_POST['appointment_id']) ? intval($_POST['appointment_id']) : 0;
+        if ($appointment_id > 0) {
+            $apt_update = $conn->prepare("UPDATE appointments SET status = 'completed' WHERE appointment_id = ?");
+            $apt_update->bind_param("i", $appointment_id);
+            $apt_update->execute();
+            $apt_update->close();
+            
+            // Also log this in activity logs
+            $logQuery = "INSERT INTO activity_logs (user_id, action, details) VALUES (?, ?, ?)";
+            $logStmt = $conn->prepare($logQuery);
+            $action = "Patient Admitted";
+            $details = "Completed Appointment #$appointment_id and admitted patient to hospital. Admission ID: #$admission_id";
+            $session_user = $_SESSION['user_id'] ?? $doctor_id;
+            if ($session_user) {
+                $logStmt->bind_param("iss", $session_user, $action, $details);
+                $logStmt->execute();
+            }
+            $logStmt->close();
+        }
+
         // Commit transaction
         $conn->commit();
         

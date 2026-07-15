@@ -326,10 +326,6 @@ $activityLogs = $allLogsStmt->get_result();
                     <i class="fas fa-calendar-alt"></i>
                     <span>Appointments Queue</span>
                 </a>
-                <a href="#activity-logs" class="nav-item" id="nav-activity-logs">
-                    <i class="fas fa-history"></i>
-                    <span>Activity Logs</span>
-                </a>
                 <a href="#profile" class="nav-item" id="nav-profile">
                     <i class="fas fa-user-edit"></i>
                     <span>Edit Profile</span>
@@ -346,9 +342,9 @@ $activityLogs = $allLogsStmt->get_result();
                     <i class="fas fa-user-plus"></i>
                     <span>Admit Patient</span>
                 </a>
-                <a href="#schedule" class="nav-item" id="nav-schedule">
-                    <i class="fas fa-clock"></i>
-                    <span>My Schedule</span>
+                <a href="#activity-logs" class="nav-item" id="nav-activity-logs">
+                    <i class="fas fa-history"></i>
+                    <span>Activity Logs</span>
                 </a>
                 <a href="../php/auth.php?logout=true" class="nav-item logout">
                     <i class="fas fa-sign-out-alt"></i>
@@ -691,60 +687,6 @@ $activityLogs = $allLogsStmt->get_result();
                         <p>No appointments scheduled. You're all caught up!</p>
                     </div>
                     <?php endif; ?>
-                </div>
-            </section>
-
-            <!-- Activity Logs Section -->
-            <section id="activity-logs" class="content-section">
-                <div class="section-header">
-                    <h2><i class="fas fa-history"></i> Recent Activity Logs</h2>
-                </div>
-                <p class="section-subtitle">Latest activities and updates</p>
-                
-                <div class="activity-logs-container">
-                    <?php 
-                    // Fetch recent activity logs (limit to 4)
-                    $logsQuery = "SELECT * FROM activity_logs WHERE user_id = ? ORDER BY created_at DESC LIMIT 4";
-                    $logsStmt = $conn->prepare($logsQuery);
-                    $logsStmt->bind_param("i", $user_id);
-                    $logsStmt->execute();
-                    $logs = $logsStmt->get_result();
-                    
-                    if ($logs->num_rows > 0):
-                        while($log = $logs->fetch_assoc()): 
-                            $actionIcon = [
-                                'User Login' => 'fa-sign-in-alt',
-                                'Appointment Confirmed' => 'fa-check-circle',
-                                'Appointment Created' => 'fa-plus-circle',
-                                'Notes Added' => 'fa-notes-medical',
-                                'Profile Updated' => 'fa-user-edit',
-                                'Appointment Booked' => 'fa-calendar-plus'
-                            ];
-                            $icon = $actionIcon[$log['action']] ?? 'fa-info-circle';
-                    ?>
-                    <div class="activity-log-item">
-                        <div class="log-icon">
-                            <i class="fas <?php echo $icon; ?>"></i>
-                        </div>
-                        <div class="log-content">
-                            <div class="log-action"><?php echo htmlspecialchars($log['action']); ?></div>
-                            <?php if(!empty($log['details'])): ?>
-                            <div class="log-details"><?php echo htmlspecialchars($log['details']); ?></div>
-                            <?php endif; ?>
-                            <div class="log-time">
-                                <i class="fas fa-clock"></i> <?php echo date('M d, Y - h:i A', strtotime($log['created_at'])); ?>
-                            </div>
-                        </div>
-                    </div>
-                    <?php 
-                        endwhile;
-                    else:
-                    ?>
-                    <div class="empty-state">
-                        <p>No recent activity logs found.</p>
-                    </div>
-                    <?php endif; ?>
-                </div>
                 <div id="aptShowMoreContainer" class="pagination-container" style="display: none;">
                     <button class="btn-small primary" onclick="showMoreAppointments()"><i class="fas fa-plus"></i> Show More</button>
                 </div>
@@ -859,20 +801,7 @@ $activityLogs = $allLogsStmt->get_result();
                 </div>
             </section>
 
-            <!-- Schedule Section -->
-            <section id="schedule" class="content-section">
-                <div class="section-header">
-                    <h2><i class="fas fa-calendar-alt"></i> My Schedule</h2>
-                </div>
-                <p class="section-subtitle">Manage your shifts and consultations</p>
-                <div style="background: white; border-radius: 12px; padding: 40px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-top: 20px;">
-                    <div style="width: 80px; height: 80px; background: rgba(0, 173, 181, 0.1); color: #00adb5; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; font-size: 32px;">
-                        <i class="fas fa-calendar-alt"></i>
-                    </div>
-                    <h3 style="color: #0e545f; margin-bottom: 10px;">Consultation Scheduler</h3>
-                    <p style="color: #666; max-width: 400px; margin: 0 auto; font-size: 14px; line-height: 1.6;">Your hospital shift calendar and interactive consultation booking scheduler are being prepared by the administration. Check back soon for updates!</p>
-                </div>
-            </section>
+
 
             <!-- Edit Profile Section -->
             <section id="profile" class="content-section">
@@ -978,8 +907,7 @@ $activityLogs = $allLogsStmt->get_result();
                 '#appointments': 'Appointments Queue',
                 '#activity-logs': 'My Activity Logs',
                 '#profile': 'Manage Profile',
-                '#patients': 'My Patients Directory',
-                '#schedule': 'My Schedule'
+                '#patients': 'My Patients Directory'
             };
             document.getElementById('header-title').textContent = titleMap[targetId] || 'Doctor Panel';
 

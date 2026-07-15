@@ -45,10 +45,6 @@ $logs = $logsStmt->get_result();
                     <i class="fas fa-calendar-alt"></i>
                     <span>Appointments Queue</span>
                 </a>
-                <a href="activity_logs.php" class="nav-item active">
-                    <i class="fas fa-history"></i>
-                    <span>Activity Logs</span>
-                </a>
                 <a href="doctor_profile.php" class="nav-item">
                     <i class="fas fa-user-edit"></i>
                     <span>Edit Profile</span>
@@ -57,9 +53,17 @@ $logs = $logsStmt->get_result();
                     <i class="fas fa-users"></i>
                     <span>My Patients</span>
                 </a>
-                <a href="doctor_dashboard.php#schedule" class="nav-item">
-                    <i class="fas fa-clock"></i>
-                    <span>My Schedule</span>
+                <a href="../scan.php" class="nav-item">
+                    <i class="fas fa-qrcode"></i>
+                    <span>Scan Patient QR</span>
+                </a>
+                <a href="../admit.html" class="nav-item">
+                    <i class="fas fa-user-plus"></i>
+                    <span>Admit Patient</span>
+                </a>
+                <a href="activity_logs.php" class="nav-item active">
+                    <i class="fas fa-history"></i>
+                    <span>Activity Logs</span>
                 </a>
                 <a href="../php/auth.php?logout=true" class="nav-item logout">
                     <i class="fas fa-sign-out-alt"></i>

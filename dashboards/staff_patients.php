@@ -43,6 +43,101 @@ $patientsResult = $conn->query($patientsQuery);
     <link rel="stylesheet" href="../css/doctor-dashboard-enhanced.css">
     <link rel="icon" href="../images/hosp_favicon.png" type="image/png">
     <style>
+        /* Modal Glassmorphic Overlays */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(14, 84, 95, 0.4);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+        .modal-box {
+            background: white;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            padding: 30px;
+            animation: modalSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+        @keyframes modalSlideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #f3f4f6;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .modal-header h3 {
+            font-size: 20px;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0;
+        }
+        .modal-header h3 i {
+            color: #00adb5;
+        }
+        .modal-close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #9ca3af;
+            transition: all 0.3s;
+        }
+        .modal-close-btn:hover {
+            color: #ef4444;
+            transform: rotate(90deg);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        .form-group label i {
+            color: #00adb5;
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #00adb5;
+            box-shadow: 0 0 0 4px rgba(0, 173, 181, 0.1);
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
         .filters-bar {
             background: white;
             padding: 20px;
@@ -102,6 +197,7 @@ $patientsResult = $conn->query($patientsQuery);
             display: inline-block;
         }
         .status-stable { background: #d4edda; color: #155724; }
+        .status-active { background: #d4edda; color: #155724; }
         .status-moderate { background: #fff3cd; color: #856404; }
         .status-critical { background: #f8d7da; color: #721c24; }
         .status-discharged { background: #e2e3e5; color: #383d41; }
@@ -325,11 +421,11 @@ $patientsResult = $conn->query($patientsQuery);
                                     <td><?php echo htmlspecialchars($patient['phone']); ?></td>
                                     <td>
                                         <div class="action-btns">
-                                            <button class="btn-sm btn-view" onclick="viewPatient(<?php echo $patient['patient_id']; ?>)">
+                                            <button class="btn-sm btn-view" onclick="viewPatient('<?php echo htmlspecialchars($patient['qr_code_token'] ?? ''); ?>')">
                                                 <i class="fas fa-eye"></i> View
                                             </button>
                                             <?php if (!$patient['discharge_date']): ?>
-                                                <button class="btn-sm btn-discharge" onclick="dischargePatient(<?php echo $patient['patient_id']; ?>, '<?php echo htmlspecialchars($patient['patient_name']); ?>')">
+                                                <button class="btn-sm btn-discharge" onclick="openDischargeModal(<?php echo $patient['patient_id']; ?>, '<?php echo htmlspecialchars($patient['patient_name']); ?>')">
                                                     <i class="fas fa-sign-out-alt"></i> Discharge
                                                 </button>
                                             <?php endif; ?>
@@ -391,17 +487,86 @@ $patientsResult = $conn->query($patientsQuery);
             });
         }
 
-        function viewPatient(patientId) {
-            // Redirect to patient details page (to be created)
-            alert('View patient details for ID: ' + patientId);
-        }
-
-        function dischargePatient(patientId, patientName) {
-            if (confirm('Are you sure you want to discharge ' + patientName + '?')) {
-                window.location.href = 'staff_dashboard.php'; // Will use discharge modal
+        function viewPatient(token) {
+            if (token && token.trim() !== '') {
+                window.location.href = '../patient-status.php?token=' + encodeURIComponent(token);
+            } else {
+                alert('No secure bedside QR token found for this patient.');
             }
         }
+
+        function openDischargeModal(patientId, patientName) {
+            document.getElementById('dischargePatientId').value = patientId;
+            document.getElementById('dischargePatientName').value = patientName;
+            document.getElementById('dischargeModal').style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Close modal on outside click
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal-overlay')) {
+                event.target.style.display = 'none';
+            }
+        }
+
+        document.getElementById('dischargeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const submitBtn = this.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Discharging...';
+            
+            fetch('../php/discharge_patient.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Patient discharged successfully!');
+                    location.reload();
+                } else {
+                    alert('Error: ' + data.message);
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-check"></i> Discharge Patient';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while discharging the patient.');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-check"></i> Discharge Patient';
+            });
+        });
     </script>
+
+    <!-- Discharge Modal -->
+    <div id="dischargeModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3><i class="fas fa-sign-out-alt" style="color:#ef4444;"></i> Discharge Patient</h3>
+                <button onclick="closeModal('dischargeModal')" class="modal-close-btn"><i class="fas fa-times"></i></button>
+            </div>
+            <form id="dischargeForm">
+                <input type="hidden" id="dischargePatientId" name="patient_id">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Patient Name</label>
+                    <input type="text" id="dischargePatientName" readonly class="readonly-input" style="background:#f3f4f6; cursor:not-allowed; opacity:0.8;">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-file-medical"></i> Discharge Summary</label>
+                    <textarea name="discharge_summary" rows="4" placeholder="Enter discharge summary and instructions..." required></textarea>
+                </div>
+                <div style="margin-top:20px; display:flex; justify-content:flex-end; gap:10px;">
+                    <button type="button" class="btn-sm btn-view" style="background:#6c757d;" onclick="closeModal('dischargeModal')">Cancel</button>
+                    <button type="submit" class="btn-sm btn-discharge"><i class="fas fa-check"></i> Discharge Patient</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
 </html>
 
