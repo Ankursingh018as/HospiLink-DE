@@ -31,12 +31,12 @@ foreach ($updates as $user) {
     
     if ($stmt->execute()) {
         if ($stmt->affected_rows > 0) {
-            echo "✅ Updated password for: " . $user['email'] . " → " . $user['password'] . "<br>";
+            echo "[SUCCESS] Updated password for: " . $user['email'] . " → " . $user['password'] . "<br>";
         } else {
-            echo "⚠️ No user found for: " . $user['email'] . "<br>";
+            echo "[WARNING] No user found for: " . $user['email'] . "<br>";
         }
     } else {
-        echo "❌ Failed to update: " . $user['email'] . "<br>";
+        echo "[ERROR] Failed to update: " . $user['email'] . "<br>";
     }
     $stmt->close();
 }
@@ -52,10 +52,10 @@ while ($row = $result->fetch_assoc()) {
     
     echo "Email: " . $row['email'] . "<br>";
     echo "Test Password: " . $testPassword . "<br>";
-    echo "Verification: " . ($verified ? "✅ SUCCESS" : "❌ FAILED") . "<br><br>";
+    echo "Verification: " . ($verified ? "[SUCCESS] SUCCESS" : "[ERROR] FAILED") . "<br><br>";
 }
 
-echo "<hr><h3>✅ Final Credentials:</h3>";
+echo "<hr><h3>[SUCCESS] Final Credentials:</h3>";
 echo "<pre style='background: #e8f5e9; padding: 15px; border-left: 4px solid #4caf50;'>";
 echo "Staff User 1:\n";
 echo "Email: nurse.sharma@hospilink.com\n";

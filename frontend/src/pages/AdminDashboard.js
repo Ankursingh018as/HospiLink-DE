@@ -92,7 +92,7 @@ const AdminDashboard = () => {
         <header className="dashboard-header">
         <div className="header-content">
           <div>
-            <h1>Admin Dashboard - {user?.firstName} 👑</h1>
+            <h1>Admin Dashboard - {user?.firstName} <i className="ri-vip-crown-fill" style={{ color: '#ffd700' }}></i></h1>
             <p>System management and monitoring</p>
           </div>
         </div>
@@ -101,12 +101,12 @@ const AdminDashboard = () => {
       {/* Alerts */}
       {success && (
         <div className="alert alert-success">
-          <span>✅</span> {success}
+          <i className="ri-checkbox-circle-line" style={{ marginRight: '8px' }}></i> {success}
         </div>
       )}
       {error && (
         <div className="alert alert-danger">
-          <span>⚠️</span> {error}
+          <i className="ri-alert-line" style={{ marginRight: '8px' }}></i> {error}
         </div>
       )}
 
@@ -116,19 +116,19 @@ const AdminDashboard = () => {
           className={`tab ${activeTab === 'overview' ? 'active' : ''}`}
           onClick={() => setActiveTab('overview')}
         >
-          📊 Overview
+          <i className="ri-dashboard-3-line" style={{ marginRight: '6px' }}></i> Overview
         </button>
         <button
           className={`tab ${activeTab === 'users' ? 'active' : ''}`}
           onClick={() => setActiveTab('users')}
         >
-          👥 Users
+          <i className="ri-group-line" style={{ marginRight: '6px' }}></i> Users
         </button>
         <button
           className={`tab ${activeTab === 'logs' ? 'active' : ''}`}
           onClick={() => setActiveTab('logs')}
         >
-          📝 Activity Logs
+          <i className="ri-file-list-3-line" style={{ marginRight: '6px' }}></i> Activity Logs
         </button>
       </div>
 
@@ -139,7 +139,7 @@ const AdminDashboard = () => {
           <div className="stats-grid large">
             <div className="stat-card">
               <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
-                👥
+                <i className="ri-group-line"></i>
               </div>
               <div className="stat-content">
                 <h3>{stats.totalUsers || 0}</h3>
@@ -152,7 +152,7 @@ const AdminDashboard = () => {
 
             <div className="stat-card">
               <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' }}>
-                📅
+                <i className="ri-calendar-line"></i>
               </div>
               <div className="stat-content">
                 <h3>{stats.totalAppointments || 0}</h3>
@@ -165,7 +165,7 @@ const AdminDashboard = () => {
 
             <div className="stat-card">
               <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' }}>
-                🛏️
+                <i className="ri-hotel-bed-line"></i>
               </div>
               <div className="stat-content">
                 <h3>{stats.totalBeds || 0}</h3>
@@ -178,7 +178,7 @@ const AdminDashboard = () => {
 
             <div className="stat-card">
               <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)' }}>
-                🏥
+                <i className="ri-hospital-line"></i>
               </div>
               <div className="stat-content">
                 <h3>{stats.totalAdmissions || 0}</h3>
@@ -193,10 +193,10 @@ const AdminDashboard = () => {
           {/* Charts Section */}
           <div className="charts-grid">
             <div className="chart-card">
-              <h3>📈 Appointments by Priority</h3>
+              <h3><i className="ri-line-chart-line" style={{ marginRight: '8px' }}></i> Appointments by Priority</h3>
               <div className="priority-bars">
                 <div className="priority-bar-item">
-                  <span className="priority-label">🔴 High Priority</span>
+                  <span className="priority-label"><i className="ri-checkbox-blank-circle-fill" style={{ color: '#ef4444', marginRight: '6px' }}></i> High Priority</span>
                   <div className="priority-bar">
                     <div 
                       className="priority-fill high"
@@ -206,7 +206,7 @@ const AdminDashboard = () => {
                   <span className="priority-count">{stats.appointmentsByPriority?.high || 0}</span>
                 </div>
                 <div className="priority-bar-item">
-                  <span className="priority-label">🟡 Medium Priority</span>
+                  <span className="priority-label"><i className="ri-checkbox-blank-circle-fill" style={{ color: '#f59e0b', marginRight: '6px' }}></i> Medium Priority</span>
                   <div className="priority-bar">
                     <div 
                       className="priority-fill medium"
@@ -216,7 +216,7 @@ const AdminDashboard = () => {
                   <span className="priority-count">{stats.appointmentsByPriority?.medium || 0}</span>
                 </div>
                 <div className="priority-bar-item">
-                  <span className="priority-label">🟢 Low Priority</span>
+                  <span className="priority-label"><i className="ri-checkbox-blank-circle-fill" style={{ color: '#10b981', marginRight: '6px' }}></i> Low Priority</span>
                   <div className="priority-bar">
                     <div 
                       className="priority-fill low"
@@ -229,31 +229,31 @@ const AdminDashboard = () => {
             </div>
 
             <div className="chart-card">
-              <h3>👥 Users by Role</h3>
+              <h3><i className="ri-group-line" style={{ marginRight: '8px' }}></i> Users by Role</h3>
               <div className="role-stats">
                 <div className="role-item">
-                  <span className="role-icon">👨‍⚕️</span>
+                  <span className="role-icon"><i className="ri-stethoscope-line"></i></span>
                   <div className="role-info">
                     <strong>Doctors</strong>
                     <span className="role-count">{stats.usersByRole?.doctor || 0}</span>
                   </div>
                 </div>
                 <div className="role-item">
-                  <span className="role-icon">🏥</span>
+                  <span className="role-icon"><i className="ri-nurse-line"></i></span>
                   <div className="role-info">
                     <strong>Staff</strong>
                     <span className="role-count">{stats.usersByRole?.staff || 0}</span>
                   </div>
                 </div>
                 <div className="role-item">
-                  <span className="role-icon">👥</span>
+                  <span className="role-icon"><i className="ri-user-line"></i></span>
                   <div className="role-info">
                     <strong>Patients</strong>
                     <span className="role-count">{stats.usersByRole?.patient || 0}</span>
                   </div>
                 </div>
                 <div className="role-item">
-                  <span className="role-icon">👑</span>
+                  <span className="role-icon"><i className="ri-vip-crown-fill" style={{ color: '#f59e0b' }}></i></span>
                   <div className="role-info">
                     <strong>Admins</strong>
                     <span className="role-count">{stats.usersByRole?.admin || 0}</span>
@@ -269,7 +269,7 @@ const AdminDashboard = () => {
       {activeTab === 'users' && (
         <div className="content-section">
           <div className="section-header">
-            <h2>👥 User Management ({users.length})</h2>
+            <h2><i className="ri-group-line" style={{ marginRight: '8px' }}></i> User Management ({users.length})</h2>
           </div>
 
           {loading ? (
@@ -313,7 +313,7 @@ const AdminDashboard = () => {
                           disabled={usr._id === user._id || loading}
                           title="Delete user"
                         >
-                          🗑️
+                          <i className="ri-delete-bin-line"></i>
                         </button>
                       </td>
                     </tr>
@@ -329,7 +329,7 @@ const AdminDashboard = () => {
       {activeTab === 'logs' && (
         <div className="content-section">
           <div className="section-header">
-            <h2>📝 Activity Logs ({logs.length})</h2>
+            <h2><i className="ri-file-list-3-line" style={{ marginRight: '8px' }}></i> Activity Logs ({logs.length})</h2>
           </div>
 
           {loading ? (
@@ -339,7 +339,7 @@ const AdminDashboard = () => {
             </div>
           ) : logs.length === 0 ? (
             <div className="empty-state">
-              <span className="empty-icon">📝</span>
+              <span className="empty-icon"><i className="ri-file-list-3-line"></i></span>
               <h3>No Activity Logs</h3>
               <p>System activity will appear here</p>
             </div>

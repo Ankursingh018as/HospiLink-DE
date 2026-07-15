@@ -216,17 +216,17 @@ class EmailService {
         
         // Priority badge colors
         $priorityColors = [
-            'HIGH' => '#dc3545',
-            'MEDIUM' => '#fd7e14',
-            'LOW' => '#28a745'
+            'HIGH' => '#ef4444',
+            'MEDIUM' => '#f59e0b',
+            'LOW' => '#10b981'
         ];
-        $priorityColor = $priorityColors[$priority] ?? '#6c757d';
+        $priorityColor = $priorityColors[$priority] ?? '#64748b';
         
         // Priority messages
         $priorityMessages = [
-            'HIGH' => '🚨 URGENT: Your appointment has been marked as high priority. Please proceed to the emergency department immediately or call emergency services if symptoms worsen!',
-            'MEDIUM' => '⚡ Your appointment has been scheduled with medium priority. Expected wait time is 3-5 days.',
-            'LOW' => '✓ Your appointment has been confirmed. Suitable for routine care and follow-ups.'
+            'HIGH' => 'URGENT: Your appointment has been marked as high priority. Please proceed to the emergency department immediately or call emergency services if symptoms worsen.',
+            'MEDIUM' => 'Your appointment has been scheduled with medium priority. Expected wait time is 3-5 days.',
+            'LOW' => 'Your appointment has been confirmed. Suitable for routine care and follow-ups.'
         ];
         $priorityMessage = $priorityMessages[$priority] ?? 'Your appointment has been scheduled.';
         
@@ -236,21 +236,21 @@ class EmailService {
             $aiAnalysisSection = <<<AIHTML
                             <!-- AI Analysis -->
                             <tr>
-                                <td style="padding: 0 30px 20px 30px;">
-                                    <div style="background: linear-gradient(135deg, #e7f3ff 0%, #f0f9ff 100%); padding: 20px; border-radius: 8px; border-left: 4px solid #00adb5;">
-                                        <h3 style="color: #0e545f; margin: 0 0 15px 0; font-size: 18px;">🤖 AI Medical Analysis</h3>
-                                        <p style="color: #333; margin: 10px 0;"><strong>Assessment:</strong> {$urgencyReason}</p>
+                                <td style="padding: 0 40px 24px 40px;">
+                                    <div style="background-color: #eff6ff; padding: 20px; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                                        <h3 style="color: #0f172a; margin: 0 0 12px 0; font-size: 16px; font-weight: 600;">AI Medical Analysis</h3>
+                                        <p style="color: #475569; margin: 8px 0; font-size: 14.5px;"><strong>Assessment:</strong> {$urgencyReason}</p>
 AIHTML;
             
             if (!empty($suspectedConditions)) {
                 $aiAnalysisSection .= <<<AIHTML
-                                        <p style="color: #333; margin: 10px 0;"><strong>Possible Conditions:</strong> {$suspectedConditions}</p>
+                                        <p style="color: #475569; margin: 8px 0; font-size: 14.5px;"><strong>Possible Conditions:</strong> {$suspectedConditions}</p>
 AIHTML;
             }
             
             if (!empty($recommendedSpecialist)) {
                 $aiAnalysisSection .= <<<AIHTML
-                                        <p style="color: #333; margin: 10px 0;"><strong>Recommended Specialist:</strong> {$recommendedSpecialist}</p>
+                                        <p style="color: #475569; margin: 8px 0; font-size: 14.5px;"><strong>Recommended Specialist:</strong> {$recommendedSpecialist}</p>
 AIHTML;
             }
             
@@ -269,113 +269,94 @@ AIHTML;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Appointment Confirmation</title>
 </head>
-<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4;">
-    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4; padding: 20px;">
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f8fafc; color: #334155;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8fafc; padding: 32px 0;">
         <tr>
             <td align="center">
-                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                <table width="580" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
                     
                     <!-- Header -->
                     <tr>
-                        <td style="background: linear-gradient(135deg, #0e545f 0%, #00adb5 100%); padding: 30px; text-align: center;">
-                            <h1 style="color: #ffffff; margin: 0; font-size: 28px;">HospiLink</h1>
-                            <p style="color: #ffffff; margin: 10px 0 0 0; font-size: 14px;">Your Healthcare Partner</p>
+                        <td style="padding: 32px 40px 20px 40px; border-bottom: 1px solid #f1f5f9;">
+                            <div style="font-size: 18px; font-weight: 700; color: #0d9488; letter-spacing: -0.5px;">HospiLink</div>
+                            <h1 style="color: #0f172a; margin: 12px 0 0 0; font-size: 20px; font-weight: 600; letter-spacing: -0.5px;">Appointment Confirmation</h1>
                         </td>
                     </tr>
                     
-                    <!-- Appointment Confirmed -->
+                    <!-- Body Content -->
                     <tr>
-                        <td style="padding: 30px; text-align: center;">
-                            <div style="display: inline-block; background-color: #28a745; color: white; padding: 10px 30px; border-radius: 50px; font-size: 16px; font-weight: bold;">
-                                ✓ APPOINTMENT CONFIRMED
-                            </div>
-                        </td>
-                    </tr>
-                    
-                    <!-- Appointment Details -->
-                    <tr>
-                        <td style="padding: 0 30px 30px 30px;">
-                            <h2 style="color: #333; margin-bottom: 20px;">Hello, {$name}!</h2>
-                            <p style="color: #666; font-size: 16px; line-height: 1.6;">
+                        <td style="padding: 32px 40px 20px 40px;">
+                            <h2 style="color: #0f172a; margin-top: 0; font-size: 18px; font-weight: 600;">Hello {$name},</h2>
+                            <p style="color: #475569; font-size: 15px; line-height: 1.6;">
                                 Your appointment has been successfully booked at HospiLink Hospital.
                             </p>
                             
-                            <!-- Priority Badge -->
-                            <div style="margin: 20px 0; padding: 15px; background-color: {$priorityColor}; color: white; border-radius: 8px; text-align: center;">
-                                <strong>Priority Level: {$priority}</strong>
-                            </div>
-                            
-                            <div style="margin: 20px 0; padding: 15px; background-color: #fff3cd; border-left: 4px solid {$priorityColor}; border-radius: 4px;">
-                                <p style="margin: 0; color: #856404; font-size: 14px;">{$priorityMessage}</p>
+                            <!-- Priority Alert -->
+                            <div style="margin: 24px 0; padding: 15px; background-color: #f8fafc; border-left: 4px solid {$priorityColor}; border-radius: 4px; font-size: 14.5px;">
+                                <p style="margin: 0; color: #1e293b;"><strong>Priority Level: {$priority}</strong></p>
+                                <p style="margin: 6px 0 0 0; color: #475569;">{$priorityMessage}</p>
                             </div>
                             
                             <!-- Details Box -->
-                            <table width="100%" cellpadding="10" style="margin: 20px 0; border: 2px solid #e0e0e0; border-radius: 8px;">
-                                <tr style="background-color: #f8f9fa;">
-                                    <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;">
-                                        <strong style="color: #0e545f;">📋 Appointment ID:</strong><br>
-                                        <span style="color: #333; font-size: 18px;">#{$appointment_id}</span>
-                                    </td>
+                            <table width="100%" cellpadding="0" cellspacing="0" style="margin: 24px 0; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14.5px; border-collapse: collapse; overflow: hidden;">
+                                <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                                    <td style="padding: 12px 16px; color: #64748b; font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; width: 40%;">Appointment ID</td>
+                                    <td style="padding: 12px 16px; color: #0f172a; font-weight: bold;">#{$appointment_id}</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e2e8f0;">
+                                    <td style="padding: 12px 16px; color: #64748b; font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px;">Date</td>
+                                    <td style="padding: 12px 16px; color: #0f172a;">{$date}</td>
+                                </tr>
+                                <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                                    <td style="padding: 12px 16px; color: #64748b; font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px;">Time</td>
+                                    <td style="padding: 12px 16px; color: #0f172a;">{$time}</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e2e8f0;">
+                                    <td style="padding: 12px 16px; color: #64748b; font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px;">Doctor</td>
+                                    <td style="padding: 12px 16px; color: #0f172a;">{$doctor}</td>
                                 </tr>
                                 <tr>
-                                    <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;">
-                                        <strong style="color: #0e545f;">📅 Date:</strong><br>
-                                        <span style="color: #333;">{$date}</span>
-                                    </td>
-                                </tr>
-                                <tr style="background-color: #f8f9fa;">
-                                    <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;">
-                                        <strong style="color: #0e545f;">🕐 Time:</strong><br>
-                                        <span style="color: #333;">{$time}</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;">
-                                        <strong style="color: #0e545f;">👨‍⚕️ Doctor:</strong><br>
-                                        <span style="color: #333;">{$doctor}</span>
-                                    </td>
-                                </tr>
-                                <tr style="background-color: #f8f9fa;">
-                                    <td style="padding: 15px;">
-                                        <strong style="color: #0e545f;">📧 Contact Email:</strong><br>
-                                        <span style="color: #333;">{$email}</span>
-                                    </td>
+                                    <td style="padding: 12px 16px; color: #64748b; font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px;">Contact Email</td>
+                                    <td style="padding: 12px 16px; color: #0f172a;">{$email}</td>
                                 </tr>
                             </table>
-                            
-                            <!-- AI Medical Analysis -->
-                            {$aiAnalysisSection}
-                            
+                        </td>
+                    </tr>
+                    
+                    <!-- AI Medical Analysis Section -->
+                    {$aiAnalysisSection}
+                    
+                    <!-- Symptoms & Important Info -->
+                    <tr>
+                        <td style="padding: 0 40px 32px 40px;">
                             <!-- Symptoms Summary -->
-                            <div style="margin: 20px 0; padding: 15px; background-color: #f0f8ff; border-radius: 8px;">
-                                <h4 style="color: #0e545f; margin-top: 0;">📝 Your Symptoms:</h4>
-                                <p style="color: #666; line-height: 1.6; margin: 10px 0 0 0;">{$symptoms}</p>
+                            <div style="margin: 0 0 24px 0; padding: 20px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
+                                <h4 style="color: #0f172a; margin-top: 0; margin-bottom: 8px; font-size: 15px; font-weight: 600;">Symptoms Description</h4>
+                                <p style="color: #475569; line-height: 1.6; margin: 0; font-size: 14.5px;">{$symptoms}</p>
                             </div>
                             
                             <!-- Important Information -->
-                            <div style="margin: 20px 0; padding: 15px; background-color: #e7f3ff; border-radius: 8px;">
-                                <h3 style="color: #0e545f; margin-top: 0;">📌 Important Information:</h3>
-                                <ul style="color: #666; line-height: 1.8; padding-left: 20px; margin-bottom: 0;">
+                            <div style="margin: 0 0 24px 0; padding: 20px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
+                                <h3 style="color: #0f172a; margin-top: 0; margin-bottom: 12px; font-size: 15px; font-weight: 600;">Important Information</h3>
+                                <ul style="color: #475569; line-height: 1.8; padding-left: 20px; margin: 0; font-size: 14px;">
                                     <li>Please arrive 15 minutes before your appointment time</li>
                                     <li>Bring a valid ID and any previous medical records</li>
                                     <li>If you need to reschedule, please contact us at least 24 hours in advance</li>
-                                    <li>Wear a mask and maintain social distancing</li>
                                     <li>Keep your Appointment ID (#<strong>{$appointment_id}</strong>) handy for reference</li>
                                 </ul>
                             </div>
                             
-                            <!-- Contact Information -->
-                            <div style="margin: 20px 0; padding: 15px; background-color: #f5f5f5; border-radius: 8px; text-align: center;">
-                                <h4 style="color: #0e545f; margin-top: 0;">📞 Need to reschedule or cancel?</h4>
-                                <p style="color: #666; margin: 10px 0;">
+                            <!-- Contact Details -->
+                            <div style="margin: 0 0 24px 0; padding: 20px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; text-align: center; font-size: 14.5px;">
+                                <h4 style="color: #0f172a; margin-top: 0; margin-bottom: 8px; font-weight: 600;">Need to reschedule or cancel?</h4>
+                                <p style="color: #475569; margin: 0; line-height: 1.5;">
                                     Contact us at: <strong>+91-9856594589</strong><br>
                                     Email: <strong>hospilink@gmail.com</strong>
                                 </p>
                             </div>
                             
-                            <!-- Contact Button -->
-                            <div style="text-align: center; margin: 30px 0;">
-                                <a href="http://localhost/HospiLink-DE/contact.html" style="display: inline-block; background-color: #00adb5; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                            <div style="text-align: center;">
+                                <a href="http://localhost/HospiLink-DE/contact.html" style="display: inline-block; background-color: #0d9488; color: white !important; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 15px;">
                                     Contact Us
                                 </a>
                             </div>
@@ -384,14 +365,10 @@ AIHTML;
                     
                     <!-- Footer -->
                     <tr>
-                        <td style="background-color: #0e545f; padding: 20px; text-align: center;">
-                            <p style="color: #ffffff; margin: 0; font-size: 14px;">
-                                <strong>HospiLink Hospital</strong><br>
-                                Dahod, Gujarat, India<br>
-                                Phone: +91-9856594589 | Email: hospilink@gmail.com
-                            </p>
-                            <p style="color: #aaa; margin: 10px 0 0 0; font-size: 12px;">
-                                © 2025 HospiLink. All Rights Reserved.
+                        <td style="background-color: #f8fafc; padding: 24px 40px; text-align: center; border-top: 1px solid #e2e8f0;">
+                            <p style="font-size: 12px; color: #64748b; line-height: 1.5; margin: 0;">
+                                © 2026 HospiLink. Automated notification. Please do not reply.<br>
+                                Dahod, Gujarat, India | hospilink@gmail.com
                             </p>
                         </td>
                     </tr>
@@ -420,23 +397,24 @@ HTML;
 <head>
     <meta charset="UTF-8">
 </head>
-<body style="font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4;">
-    <div style="background: white; padding: 30px; border-radius: 8px; max-width: 600px; margin: 0 auto;">
-        <h2 style="color: #00adb5; text-align: center;">✓ Gmail SMTP Configuration Successful!</h2>
-        <p style="color: #666; font-size: 16px; line-height: 1.6;">
-            If you're seeing this email, your HospiLink Gmail SMTP email service is working correctly.
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 32px 0; background-color: #f8fafc; color: #334155;">
+    <div style="background: white; padding: 40px; border: 1px solid #e2e8f0; border-radius: 12px; max-width: 580px; margin: 0 auto; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+        <div style="font-size: 18px; font-weight: 700; color: #0d9488; letter-spacing: -0.5px; margin-bottom: 20px;">HospiLink</div>
+        <h2 style="color: #0f172a; font-size: 20px; font-weight: 600; margin-top: 0;">Gmail SMTP Configuration Successful</h2>
+        <p style="color: #475569; font-size: 15px; line-height: 1.6;">
+            If you are seeing this email, your HospiLink Gmail SMTP email service has been configured and is working correctly.
         </p>
-        <div style="background-color: #e7f3ff; padding: 15px; border-radius: 5px; margin: 20px 0;">
-            <p style="color: #666; margin: 0;">
+        <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 8px; margin: 24px 0; font-size: 14.5px;">
+            <p style="color: #475569; margin: 0; line-height: 1.6;">
                 <strong>Configuration Details:</strong><br>
                 SMTP Host: smtp.gmail.com<br>
                 Port: 587 (TLS)<br>
                 Username: asrajput5656@gmail.com
             </p>
         </div>
-        <p style="color: #666;">You can now send appointment confirmations and notifications to your patients automatically.</p>
-        <hr style="border: none; border-top: 1px solid #e0e0e0;">
-        <p style="color: #999; font-size: 12px; text-align: center;">HospiLink Hospital Management System</p>
+        <p style="color: #475569; font-size: 15px; line-height: 1.6;">You can now send appointment confirmations and notifications to your patients automatically.</p>
+        <hr style="border: none; border-top: 1px solid #f1f5f9; margin: 24px 0;">
+        <p style="color: #64748b; font-size: 12px; text-align: center; margin: 0;">© 2026 HospiLink Hospital Management System</p>
     </div>
 </body>
 </html>
@@ -479,70 +457,55 @@ HTML;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Appointment Cancellation</title>
 </head>
-<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4;">
-    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4; padding: 20px;">
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f8fafc; color: #334155;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8fafc; padding: 32px 0;">
         <tr>
             <td align="center">
-                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                <table width="580" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
                     
                     <!-- Header -->
                     <tr>
-                        <td style="background: linear-gradient(135deg, #0e545f 0%, #00adb5 100%); padding: 30px; text-align: center;">
-                            <h1 style="color: #ffffff; margin: 0; font-size: 28px;">HospiLink</h1>
-                            <p style="color: #ffffff; margin: 10px 0 0 0; font-size: 14px;">Your Healthcare Partner</p>
-                        </td>
-                    </tr>
-                    
-                    <!-- Cancellation Notice -->
-                    <tr>
-                        <td style="padding: 30px; text-align: center;">
-                            <div style="display: inline-block; background-color: #dc3545; color: white; padding: 10px 30px; border-radius: 50px; font-size: 16px; font-weight: bold;">
-                                ✗ APPOINTMENT CANCELLED
-                            </div>
+                        <td style="padding: 32px 40px 20px 40px; border-bottom: 1px solid #f1f5f9;">
+                            <div style="font-size: 18px; font-weight: 700; color: #0d9488; letter-spacing: -0.5px;">HospiLink</div>
+                            <h1 style="color: #ef4444; margin: 12px 0 0 0; font-size: 20px; font-weight: 600; letter-spacing: -0.5px;">Appointment Cancelled</h1>
                         </td>
                     </tr>
                     
                     <!-- Message -->
                     <tr>
-                        <td style="padding: 0 30px 30px 30px;">
-                            <h2 style="color: #333; margin-bottom: 20px;">Hello, {$name}!</h2>
-                            <p style="color: #666; font-size: 16px; line-height: 1.6;">
+                        <td style="padding: 32px 40px 32px 40px;">
+                            <h2 style="color: #0f172a; margin-top: 0; font-size: 18px; font-weight: 600;">Hello {$name},</h2>
+                            <p style="color: #475569; font-size: 15px; line-height: 1.6;">
                                 Your appointment has been cancelled.
                             </p>
                             
                             <!-- Details -->
-                            <table width="100%" cellpadding="10" style="margin: 20px 0; border: 2px solid #e0e0e0; border-radius: 8px;">
-                                <tr style="background-color: #f8f9fa;">
-                                    <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;">
-                                        <strong style="color: #0e545f;">📋 Appointment ID:</strong><br>
-                                        <span style="color: #333; font-size: 18px;">#{$appointment_id}</span>
-                                    </td>
+                            <table width="100%" cellpadding="0" cellspacing="0" style="margin: 24px 0; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14.5px; border-collapse: collapse; overflow: hidden;">
+                                <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                                    <td style="padding: 12px 16px; color: #64748b; font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; width: 40%;">Appointment ID</td>
+                                    <td style="padding: 12px 16px; color: #0f172a; font-weight: bold;">#{$appointment_id}</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e2e8f0;">
+                                    <td style="padding: 12px 16px; color: #64748b; font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px;">Date</td>
+                                    <td style="padding: 12px 16px; color: #0f172a;">{$date}</td>
                                 </tr>
                                 <tr>
-                                    <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;">
-                                        <strong style="color: #0e545f;">📅 Date:</strong><br>
-                                        <span style="color: #333;">{$date}</span>
-                                    </td>
-                                </tr>
-                                <tr style="background-color: #f8f9fa;">
-                                    <td style="padding: 15px;">
-                                        <strong style="color: #0e545f;">🕐 Time:</strong><br>
-                                        <span style="color: #333;">{$time}</span>
-                                    </td>
+                                    <td style="padding: 12px 16px; color: #64748b; font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px;">Time</td>
+                                    <td style="padding: 12px 16px; color: #0f172a;">{$time}</td>
                                 </tr>
                             </table>
                             
                             <!-- Rescheduling Info -->
-                            <div style="margin: 20px 0; padding: 15px; background-color: #e7f3ff; border-radius: 8px;">
-                                <h3 style="color: #0e545f; margin-top: 0;">📅 Reschedule Your Appointment</h3>
-                                <p style="color: #666; line-height: 1.6;">
+                            <div style="margin: 24px 0; padding: 20px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14.5px;">
+                                <h3 style="color: #0f172a; margin-top: 0; margin-bottom: 8px; font-size: 15px; font-weight: 600;">Reschedule Your Appointment</h3>
+                                <p style="color: #475569; line-height: 1.6; margin: 0;">
                                     You can easily book a new appointment by visiting our website or calling us directly.
                                 </p>
                             </div>
                             
                             <!-- Contact -->
-                            <div style="text-align: center; margin: 30px 0;">
-                                <a href="http://localhost/HospiLink-DE/appointment.html" style="display: inline-block; background-color: #00adb5; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                            <div style="text-align: center;">
+                                <a href="http://localhost/HospiLink-DE/appointment.html" style="display: inline-block; background-color: #0d9488; color: white !important; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 15px;">
                                     Book New Appointment
                                 </a>
                             </div>
@@ -551,14 +514,10 @@ HTML;
                     
                     <!-- Footer -->
                     <tr>
-                        <td style="background-color: #0e545f; padding: 20px; text-align: center;">
-                            <p style="color: #ffffff; margin: 0; font-size: 14px;">
-                                <strong>HospiLink Hospital</strong><br>
-                                Dahod, Gujarat, India<br>
-                                Phone: +91-9856594589 | Email: hospilink@gmail.com
-                            </p>
-                            <p style="color: #aaa; margin: 10px 0 0 0; font-size: 12px;">
-                                © 2025 HospiLink. All Rights Reserved.
+                        <td style="background-color: #f8fafc; padding: 24px 40px; text-align: center; border-top: 1px solid #e2e8f0;">
+                            <p style="font-size: 12px; color: #64748b; line-height: 1.5; margin: 0;">
+                                © 2026 HospiLink. Automated notification. Please do not reply.<br>
+                                Dahod, Gujarat, India | hospilink@gmail.com
                             </p>
                         </td>
                     </tr>

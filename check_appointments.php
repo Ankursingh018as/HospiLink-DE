@@ -7,9 +7,9 @@ echo "<h2>Checking Appointments Data</h2>";
 // Check if appointments table exists
 $checkTable = $conn->query("SHOW TABLES LIKE 'appointments'");
 if ($checkTable->num_rows > 0) {
-    echo "<p style='color: green;'>✓ Appointments table exists</p>";
+    echo "<p style='color: green;'>SUCCESS Appointments table exists</p>";
 } else {
-    echo "<p style='color: red;'>✗ Appointments table does NOT exist</p>";
+    echo "<p style='color: red;'>ERROR Appointments table does NOT exist</p>";
     exit();
 }
 
@@ -35,7 +35,7 @@ if ($allAppts->num_rows > 0) {
     
     echo "<p><strong>Total appointments found: " . $allAppts->num_rows . "</strong></p>";
 } else {
-    echo "<p style='color: red;'>✗ No appointments found in database</p>";
+    echo "<p style='color: red;'>ERROR No appointments found in database</p>";
 }
 
 // Check doctors
@@ -54,7 +54,7 @@ if ($doctors->num_rows > 0) {
     }
     echo "</table>";
 } else {
-    echo "<p style='color: red;'>✗ No doctors found</p>";
+    echo "<p style='color: red;'>ERROR No doctors found</p>";
 }
 
 // Check current user session

@@ -181,9 +181,9 @@ exports.sendTestNotification = async (req, res) => {
         recipientRole: target.role,
         type: type || 'system',
         title: '🧪 Test Notification',
-        message: `This is a test notification for role: ${target.role}. System working correctly! ✅`,
+        message: `This is a test notification for role: ${target.role}. System working correctly! [SUCCESS]`,
         priority: 'low',
-        iconType: '🔔',
+        iconType: '[NOTIFICATION]',
         sentViaEmail: false,
         sentViaPush: false
       });

@@ -22,7 +22,7 @@ try {
     $icsContent = CalendarHelper::generateICS($testAppointment);
     
     if (!empty($icsContent)) {
-        echo "   ✓ ICS content generated successfully!\n";
+        echo "   SUCCESS ICS content generated successfully!\n";
         echo "   Length: " . strlen($icsContent) . " bytes\n";
         
         // Check for required components
@@ -42,7 +42,7 @@ try {
         
         echo "\n2. Verifying ICS components:\n";
         foreach ($checks as $component => $status) {
-            echo "   " . ($status ? "✓" : "✗") . " $component\n";
+            echo "   " . ($status ? "SUCCESS" : "ERROR") . " $component\n";
         }
         
         // Save to file for testing
@@ -62,11 +62,11 @@ try {
         echo str_repeat("=", 60) . "\n";
         
     } else {
-        echo "   ✗ Failed to generate ICS content\n";
+        echo "   ERROR Failed to generate ICS content\n";
     }
     
 } catch (Exception $e) {
-    echo "   ✗ Error: " . $e->getMessage() . "\n";
+    echo "   ERROR Error: " . $e->getMessage() . "\n";
 }
 
 echo "\n=== Test Complete ===\n";

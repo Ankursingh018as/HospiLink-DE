@@ -133,7 +133,7 @@ async function sendOTP() {
             ...registrationData
         };
         
-        console.log('🔍 OTP Request Debug:', {
+        console.log('[DEBUG] OTP Request Debug:', {
             url: apiUrl,
             fullUrl: new URL(apiUrl, window.location.href).href,
             method: 'POST',
@@ -148,14 +148,14 @@ async function sendOTP() {
             body: JSON.stringify(requestData)
         });
         
-        console.log('✅ Response received:', {
+        console.log('[SUCCESS] Response received:', {
             status: response.status,
             statusText: response.statusText,
             ok: response.ok,
             headers: Object.fromEntries(response.headers.entries())
         });
         
-        console.log('✅ Response received:', {
+        console.log('[SUCCESS] Response received:', {
             status: response.status,
             statusText: response.statusText,
             ok: response.ok,
@@ -164,7 +164,7 @@ async function sendOTP() {
         
         const result = await response.json();
         
-        console.log('📦 Parsed result:', result);
+        console.log('[DATA] Parsed result:', result);
         
         showLoading(false);
         
@@ -186,7 +186,7 @@ async function sendOTP() {
         }
     } catch (error) {
         showLoading(false);
-        console.error('❌ OTP Request Error:', {
+        console.error('[ERROR] OTP Request Error:', {
             message: error.message,
             name: error.name,
             stack: error.stack,
@@ -207,7 +207,7 @@ async function verifyOTP() {
         return;
     }
     
-    console.log('🔐 Verifying OTP:', {
+    console.log('[AUTH] Verifying OTP:', {
         email: currentEmail,
         otp: otp,
         length: otp.length
@@ -236,7 +236,7 @@ async function verifyOTP() {
         
         const result = await response.json();
         
-        console.log('✅ Verification result:', result);
+        console.log('[SUCCESS] Verification result:', result);
         
         if (result.success) {
             // Stop timer
@@ -257,7 +257,7 @@ async function verifyOTP() {
             document.getElementById('otp1').focus();
         }
     } catch (error) {
-        console.error('❌ OTP Verify Error:', error);
+        console.error('[ERROR] OTP Verify Error:', error);
         showMessage('error', 'Network error. Please try again.');
         disableOTPInputs(false);
         document.getElementById('verifyOtpBtn').disabled = false;
@@ -270,7 +270,7 @@ async function verifyOTP() {
  */
 async function completeRegistration(userData) {
     try {
-        console.log('🔄 Completing registration...', userData);
+        console.log('[PROCESS] Completing registration...', userData);
         
         const response = await fetch('php/complete_registration.php', {
             method: 'POST',
@@ -286,10 +286,10 @@ async function completeRegistration(userData) {
         
         const result = await response.json();
         
-        console.log('📦 Registration result:', result);
+        console.log('[DATA] Registration result:', result);
         
         if (result.success) {
-            console.log('✅ User registered successfully in database');
+            console.log('[SUCCESS] User registered successfully in database');
             
             // Close OTP modal immediately
             closeOTPModal();
@@ -299,7 +299,7 @@ async function completeRegistration(userData) {
                 showSuccessModal();
             }, 200);
         } else {
-            console.error('❌ Registration failed:', result.message);
+            console.error('[ERROR] Registration failed:', result.message);
             // Show error in OTP modal
             showMessage('error', result.message || 'Registration failed. Please try again.');
             disableOTPInputs(false);
@@ -307,7 +307,7 @@ async function completeRegistration(userData) {
             document.getElementById('verifyOtpBtn').innerHTML = '<i class="fas fa-check-circle"></i> Verify OTP';
         }
     } catch (error) {
-        console.error('❌ Registration Error:', error);
+        console.error('[ERROR] Registration Error:', error);
         showMessage('error', 'Registration failed. Please refresh and try again.');
         disableOTPInputs(false);
         document.getElementById('verifyOtpBtn').disabled = false;
@@ -441,7 +441,7 @@ function startTimer() {
     const timerElement = document.getElementById('timerText');
     const timerContainer = document.getElementById('otpTimer');
     
-    console.log('⏱️ Timer started with timeLeft:', timeLeft);
+    console.log('[TIMER] Timer started with timeLeft:', timeLeft);
     
     if (timerContainer) timerContainer.classList.remove('expired');
     

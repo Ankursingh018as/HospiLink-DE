@@ -506,13 +506,13 @@ class NotificationPanel {
     panel.innerHTML = `
       <div class="hl-panel-header">
         <div class="hl-panel-header-top">
-          <div class="hl-panel-title">🔔 ${this.roleConfig.label}</div>
-          <button class="hl-panel-close" id="hl-panel-close-btn" aria-label="Close">✕</button>
+          <div class="hl-panel-title"><i class="ri-notification-3-line"></i> ${this.roleConfig.label}</div>
+          <button class="hl-panel-close" id="hl-panel-close-btn" aria-label="Close"><i class="ri-close-line"></i></button>
         </div>
         <div class="hl-panel-subtitle">${this.roleConfig.welcomeMsg}</div>
         <div class="hl-panel-actions">
-          <button class="hl-panel-action-btn" id="hl-mark-all-read">✓ Mark All Read</button>
-          <button class="hl-panel-action-btn" id="hl-refresh-btn">↻ Refresh</button>
+          <button class="hl-panel-action-btn" id="hl-mark-all-read"><i class="ri-check-double-line"></i> Mark All Read</button>
+          <button class="hl-panel-action-btn" id="hl-refresh-btn"><i class="ri-refresh-line"></i> Refresh</button>
         </div>
       </div>
 
@@ -565,18 +565,29 @@ class NotificationPanel {
   }
 
   getTabLabel(type) {
-    const labels = {
-      drip_reminder: '💉 Drips',
-      medicine_reminder: '💊 Meds',
-      routine_check: '🩺 Checks',
-      followup_doctor: '📅 Follow-ups',
-      followup_patient: '📆 Follow-ups',
-      appointment_reminder: '📆 Appts',
-      appointment_alert: '📅 Appts',
-      daily_digest: '🏥 Digest',
-      system: '🔔 System'
+    const icons = {
+      drip_reminder: '<i class="ri-syringe-line"></i>',
+      medicine_reminder: '<i class="ri-capsule-line"></i>',
+      routine_check: '<i class="ri-stethoscope-line"></i>',
+      followup_doctor: '<i class="ri-calendar-line"></i>',
+      followup_patient: '<i class="ri-calendar-line"></i>',
+      appointment_reminder: '<i class="ri-calendar-event-line"></i>',
+      appointment_alert: '<i class="ri-calendar-event-line"></i>',
+      daily_digest: '<i class="ri-hospital-line"></i>',
+      system: '<i class="ri-notification-line"></i>'
     };
-    return labels[type] || type;
+    const labels = {
+      drip_reminder: 'Drips',
+      medicine_reminder: 'Meds',
+      routine_check: 'Checks',
+      followup_doctor: 'Follow-ups',
+      followup_patient: 'Follow-ups',
+      appointment_reminder: 'Appts',
+      appointment_alert: 'Appts',
+      daily_digest: 'Digest',
+      system: 'System'
+    };
+    return (icons[type] || '') + ' ' + (labels[type] || type);
   }
 
   // ─── Render List ─────────────────────────────────────────────────
@@ -596,7 +607,7 @@ class NotificationPanel {
     if (filtered.length === 0) {
       list.innerHTML = `
         <div class="hl-empty">
-          <div class="hl-empty-icon">🔕</div>
+          <div class="hl-empty-icon"><i class="ri-notification-off-line"></i></div>
           <div class="hl-empty-title">All caught up!</div>
           <div class="hl-empty-sub">No notifications to show.</div>
         </div>`;
@@ -618,8 +629,8 @@ class NotificationPanel {
           </div>
         </div>
         <div class="hl-notif-actions">
-          ${!notif.isRead ? `<button class="hl-notif-action read-btn" data-id="${notif._id}" title="Mark as read">✓</button>` : ''}
-          <button class="hl-notif-action delete delete-btn" data-id="${notif._id}" title="Delete">✕</button>
+          ${!notif.isRead ? `<button class="hl-notif-action read-btn" data-id="${notif._id}" title="Mark as read"><i class="ri-check-line"></i></button>` : ''}
+          <button class="hl-notif-action delete delete-btn" data-id="${notif._id}" title="Delete"><i class="ri-delete-bin-line"></i></button>
         </div>
       </div>
     `).join('');
@@ -687,7 +698,7 @@ class NotificationPanel {
     if (Notification.permission === 'granted') {
       if (dot) { dot.classList.remove('off'); }
       if (label) label.textContent = 'Push notifications active';
-      if (btn) btn.textContent = '✓ Enabled';
+      if (btn) btn.textContent = 'Enabled';
     } else if (Notification.permission === 'denied') {
       if (label) label.textContent = 'Push notifications blocked';
       if (btn) { btn.textContent = 'Unblocked in settings'; btn.disabled = true; }
@@ -698,7 +709,7 @@ class NotificationPanel {
   async onMarkAllRead() {
     await this.nc.markAllRead();
     this.renderList();
-    this.toast('✓ All notifications marked as read');
+    this.toast('All notifications marked as read');
   }
 
   async onRefresh() {
@@ -712,7 +723,7 @@ class NotificationPanel {
     const granted = await this.nc.requestPushPermission();
     if (granted) {
       this.updatePushStatus();
-      this.toast('🔔 Push notifications enabled!');
+      this.toast('Push notifications enabled!');
     }
   }
 

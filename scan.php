@@ -116,7 +116,7 @@ if (empty($token)) {
 </head>
 <body>
     <div class="container">
-        <h1>🏥 HospiLink Patient Status</h1>
+        <h1>[HOSPITAL] HospiLink Patient Status</h1>
         
         <div class="info">
             <p><strong>📱 For Medical Staff:</strong></p>

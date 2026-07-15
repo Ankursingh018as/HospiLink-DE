@@ -66,10 +66,10 @@ const DoctorDashboard = () => {
 
   const getPriorityIcon = (priority) => {
     switch (priority) {
-      case 'high': return '🔴';
-      case 'medium': return '🟡';
-      case 'low': return '🟢';
-      default: return '⚪';
+      case 'high': return <i className="ri-checkbox-blank-circle-fill" style={{ color: '#ef4444', marginRight: '6px' }}></i>;
+      case 'medium': return <i className="ri-checkbox-blank-circle-fill" style={{ color: '#f59e0b', marginRight: '6px' }}></i>;
+      case 'low': return <i className="ri-checkbox-blank-circle-fill" style={{ color: '#10b981', marginRight: '6px' }}></i>;
+      default: return <i className="ri-checkbox-blank-circle-line" style={{ color: '#94a3b8', marginRight: '6px' }}></i>;
     }
   };
 
@@ -140,7 +140,7 @@ const DoctorDashboard = () => {
         <header className="dashboard-header">
         <div className="header-content">
           <div>
-            <h1>Dr. {user?.firstName} {user?.lastName} 👨‍⚕️</h1>
+            <h1>Dr. {user?.firstName} {user?.lastName} <i className="ri-stethoscope-line"></i></h1>
             <p>Manage your appointments and patient care</p>
           </div>
           <div className="filter-buttons">
@@ -169,12 +169,12 @@ const DoctorDashboard = () => {
       {/* Alerts */}
       {success && (
         <div className="alert alert-success">
-          <span>✅</span> {success}
+          <i className="ri-checkbox-circle-line" style={{ marginRight: '8px' }}></i> {success}
         </div>
       )}
       {error && (
         <div className="alert alert-danger">
-          <span>⚠️</span> {error}
+          <i className="ri-alert-line" style={{ marginRight: '8px' }}></i> {error}
         </div>
       )}
 
@@ -182,7 +182,7 @@ const DoctorDashboard = () => {
       <div className="stats-grid">
         <div className="stat-card">
           <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
-            📅
+            <i className="ri-calendar-line"></i>
           </div>
           <div className="stat-content">
             <h3>{todayAppointments.length}</h3>
@@ -191,7 +191,7 @@ const DoctorDashboard = () => {
         </div>
         <div className="stat-card">
           <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' }}>
-            ⏰
+            <i className="ri-time-line"></i>
           </div>
           <div className="stat-content">
             <h3>{appointments.filter(a => a.status === 'pending' || a.status === 'confirmed').length}</h3>
@@ -200,7 +200,7 @@ const DoctorDashboard = () => {
         </div>
         <div className="stat-card">
           <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)' }}>
-            🔴
+            <i className="ri-alert-line" style={{ color: '#ef4444' }}></i>
           </div>
           <div className="stat-content">
             <h3>{appointments.filter(a => a.priorityLevel === 'high').length}</h3>
@@ -209,7 +209,7 @@ const DoctorDashboard = () => {
         </div>
         <div className="stat-card">
           <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #30cfd0 0%, #330867 100%)' }}>
-            🆕
+            <i className="ri-play-list-add-line"></i>
           </div>
           <div className="stat-content">
             <h3>{unclaimedAppointments.length}</h3>
@@ -222,7 +222,7 @@ const DoctorDashboard = () => {
       {unclaimedAppointments.length > 0 && (
         <div className="content-section" style={{ marginBottom: '30px' }}>
           <div className="section-header">
-            <h2>🆕 Unclaimed Appointments (Priority Queue)</h2>
+            <h2><i className="ri-play-list-add-line" style={{ marginRight: '8px' }}></i> Unclaimed Appointments (Priority Queue)</h2>
             <p className="section-subtitle">AI-prioritized appointments waiting for doctor assignment</p>
           </div>
 
@@ -241,7 +241,7 @@ const DoctorDashboard = () => {
 
                 <div className="unclaimed-content">
                   <div className="patient-info">
-                    <h3>👤 {appointment.patient?.firstName} {appointment.patient?.lastName}</h3>
+                    <h3><i className="ri-user-line" style={{ marginRight: '6px' }}></i> {appointment.patient?.firstName} {appointment.patient?.lastName}</h3>
                     <p className="patient-details">
                       {appointment.patient?.age && `${appointment.patient.age}y`}
                       {appointment.patient?.gender && ` • ${appointment.patient.gender}`}
@@ -250,16 +250,16 @@ const DoctorDashboard = () => {
 
                   <div className="appointment-details">
                     <div className="detail-row">
-                      <span className="detail-icon">📅</span>
+                      <span className="detail-icon"><i className="ri-calendar-line"></i></span>
                       <span>{formatDate(appointment.appointmentDate)}</span>
                     </div>
                     <div className="detail-row">
-                      <span className="detail-icon">💊</span>
+                      <span className="detail-icon"><i className="ri-capsule-line"></i></span>
                       <span className="symptoms">{appointment.symptoms}</span>
                     </div>
                     {appointment.notes && (
                       <div className="detail-row">
-                        <span className="detail-icon">📝</span>
+                        <span className="detail-icon"><i className="ri-file-list-3-line"></i></span>
                         <span>{appointment.notes}</span>
                       </div>
                     )}
@@ -270,7 +270,7 @@ const DoctorDashboard = () => {
                     onClick={() => handleClaimAppointment(appointment._id)}
                     disabled={loading}
                   >
-                    <span>✋</span> Claim Appointment
+                    <span><i className="ri-hand-line" style={{ marginRight: '6px' }}></i></span> Claim Appointment
                   </button>
                 </div>
               </div>
@@ -282,7 +282,7 @@ const DoctorDashboard = () => {
       {/* My Appointments Section */}
       <div className="content-section">
         <div className="section-header">
-          <h2>📋 My Appointments ({filteredAppointments.length})</h2>
+          <h2><i className="ri-file-list-3-line" style={{ marginRight: '8px' }}></i> My Appointments ({filteredAppointments.length})</h2>
           <p className="section-subtitle">Sorted by priority: High → Medium → Low</p>
         </div>
 
@@ -293,7 +293,7 @@ const DoctorDashboard = () => {
           </div>
         ) : filteredAppointments.length === 0 ? (
           <div className="empty-state">
-            <span className="empty-icon">📅</span>
+            <span className="empty-icon"><i className="ri-calendar-line"></i></span>
             <h3>No Appointments Found</h3>
             <p>
               {filter === 'today' && 'No appointments scheduled for today'}
@@ -313,7 +313,7 @@ const DoctorDashboard = () => {
                 </div>
 
                 <div className="appointment-patient">
-                  <h4>👤 {appointment.patient?.firstName} {appointment.patient?.lastName}</h4>
+                  <h4><i className="ri-user-line" style={{ marginRight: '6px' }}></i> {appointment.patient?.firstName} {appointment.patient?.lastName}</h4>
                   <p className="text-muted">
                     {appointment.patient?.email} • {appointment.patient?.phone}
                   </p>
@@ -321,11 +321,11 @@ const DoctorDashboard = () => {
 
                 <div className="appointment-datetime">
                   <div className="datetime-item">
-                    <span className="datetime-icon">📅</span>
+                    <span className="datetime-icon"><i className="ri-calendar-line"></i></span>
                     <span>{new Date(appointment.appointmentDate).toLocaleDateString()}</span>
                   </div>
                   <div className="datetime-item">
-                    <span className="datetime-icon">🕐</span>
+                    <span className="datetime-icon"><i className="ri-time-line"></i></span>
                     <span>{formatTime(appointment.appointmentDate)}</span>
                   </div>
                 </div>

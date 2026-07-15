@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
-  // 🔐 Common Auth Details (All Roles)
+  // [AUTH] Common Auth Details (All Roles)
   firstName: {
     type: String,
     required: true,
@@ -42,7 +42,7 @@ const userSchema = new mongoose.Schema({
     default: 'active'
   },
 
-  // 👤 Patient-Specific Profile
+  // [USER] Patient-Specific Profile
   patientProfile: {
     dateOfBirth: Date,
     gender: {
@@ -57,7 +57,7 @@ const userSchema = new mongoose.Schema({
     }
   },
 
-  // 🩺 Doctor-Specific Profile
+  // [CHECK] Doctor-Specific Profile
   doctorProfile: {
     specialization: String,
     department: String,
@@ -81,7 +81,7 @@ const userSchema = new mongoose.Schema({
     }
   },
 
-  // 🛠 Admin Controls
+  // [TOOLS] Admin Controls
   adminProfile: {
     permissions: [
       {

@@ -18,7 +18,7 @@ if ($structure) {
 // Check if old table exists
 $checkOld = $conn->query("SHOW TABLES LIKE 'admitted_patients'");
 if ($checkOld->num_rows > 0) {
-    echo "<p style='color: orange;'>⚠️ Old table 'admitted_patients' still exists!</p>";
+    echo "<p style='color: orange;'>[WARNING] Old table 'admitted_patients' still exists!</p>";
     $oldData = $conn->query("SELECT * FROM admitted_patients LIMIT 5");
     echo "<h3>Data in OLD table (admitted_patients):</h3>";
     if ($oldData->num_rows > 0) {
@@ -38,7 +38,7 @@ if ($checkOld->num_rows > 0) {
         echo "</table>";
     }
 } else {
-    echo "<p style='color: green;'>✓ Old table does not exist</p>";
+    echo "<p style='color: green;'>SUCCESS Old table does not exist</p>";
 }
 
 // Check new table data
@@ -62,6 +62,6 @@ if ($newData->num_rows > 0) {
     echo "</table>";
     echo "<p><strong>Total records: " . $newData->num_rows . "</strong></p>";
 } else {
-    echo "<p style='color: red;'>✗ No data found in patient_admissions</p>";
+    echo "<p style='color: red;'>ERROR No data found in patient_admissions</p>";
 }
 ?>

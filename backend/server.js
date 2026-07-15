@@ -55,9 +55,9 @@ mongoose.connect(process.env.MONGODB_URI, {
   serverSelectionTimeoutMS: 5000,
   socketTimeoutMS: 45000,
 })
-.then(() => console.log('✅ MongoDB Connected Successfully'))
+.then(() => console.log('[SUCCESS] MongoDB Connected Successfully'))
 .catch(err => {
-  console.error('❌ MongoDB Connection Error:', err.message);
+  console.error('[ERROR] MongoDB Connection Error:', err.message);
   // Don't exit, allow retry
 });
 
@@ -103,14 +103,14 @@ app.use((err, req, res, next) => {
 // Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`[LAUNCH] Server running on port ${PORT}`);
   console.log(`📡 API available at http://localhost:${PORT}/api`);
-  console.log(`🏥 HospiLink Backend - MERN Stack`);
+  console.log(`[HOSPITAL] HospiLink Backend - MERN Stack`);
 
   // Initialize notification scheduler after DB connects
   mongoose.connection.once('open', () => {
     initScheduler();
-    console.log('🔔 Notification Scheduler: Active');
+    console.log('[NOTIFICATION] Notification Scheduler: Active');
   });
 });
 

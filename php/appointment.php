@@ -144,12 +144,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $emailSent = EmailService::sendAppointmentConfirmation($emailData);
         
         // Prepare response message with AI insights
-        $message = "✅ Appointment booked successfully!\n\n";
-        $message .= "📋 Appointment ID: #" . $appointment_id . "\n";
-        $message .= "👤 Patient: " . $name . "\n";
-        $message .= "📅 Date: " . date('d M Y', strtotime($date)) . "\n";
-        $message .= "🕐 Time: " . date('h:i A', strtotime($time)) . "\n\n";
-        $message .= "🤖 AI Medical Analysis:\n";
+        $message = "[SUCCESS] Appointment booked successfully!\n\n";
+        $message .= "[INFO] Appointment ID: #" . $appointment_id . "\n";
+        $message .= "[USER] Patient: " . $name . "\n";
+        $message .= "[DATE] Date: " . date('d M Y', strtotime($date)) . "\n";
+        $message .= "[TIME] Time: " . date('h:i A', strtotime($time)) . "\n\n";
+        $message .= "[AI] AI Medical Analysis:\n";
         $message .= "Priority: " . strtoupper($priorityLevel) . " (Score: $priorityScore/100)\n";
         $message .= "Urgency: " . $analysisMessage . "\n";
         if ($suspectedConditions) {
@@ -161,15 +161,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($emailSent) {
             $message .= "📧 Confirmation email sent to: " . $email . "\n\n";
         } else {
-            $message .= "⚠️ Note: Email confirmation could not be sent.\n\n";
+            $message .= "[WARNING] Note: Email confirmation could not be sent.\n\n";
         }
         
         if ($timeSensitivity === 'immediate' || $priorityLevel === 'critical') {
-            $message .= "🚨 URGENT: Please proceed to the emergency department immediately or call emergency services if symptoms worsen!";
+            $message .= "[ALERT] URGENT: Please proceed to the emergency department immediately or call emergency services if symptoms worsen!";
         } elseif ($timeSensitivity === 'urgent' || $priorityLevel === 'high') {
-            $message .= "⚡ Your appointment has been marked as high priority. A doctor will contact you within 2-4 hours.";
+            $message .= "[FAST] Your appointment has been marked as high priority. A doctor will contact you within 2-4 hours.";
         } else {
-            $message .= "✓ Your appointment is confirmed. Please arrive 15 minutes early.";
+            $message .= "SUCCESS Your appointment is confirmed. Please arrive 15 minutes early.";
         }
         
         // Store appointment ID in session and redirect to success page

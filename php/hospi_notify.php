@@ -65,30 +65,28 @@ class HospiNotify {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>$title — HospiLink</title>
+  <title>{$title} — HospiLink</title>
 </head>
-<body style="margin:0;padding:0;background:#f0f4f8;font-family:'Segoe UI',Arial,sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f0f4f8;padding:24px 0;">
+<body style="margin:0;padding:0;background-color:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;-webkit-font-smoothing:antialiased;color:#334155;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f8fafc;padding:32px 0;">
     <tr><td align="center">
-      <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.10);">
+      <table width="580" cellpadding="0" cellspacing="0" style="background-color:#ffffff;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.05);">
         
         <!-- Header -->
-        <tr><td style="background:$headerGradient;padding:36px 40px;text-align:center;">
-          <div style="font-size:48px;margin-bottom:10px;">$emoji</div>
-          <h1 style="color:#fff;margin:0;font-size:24px;font-weight:700;letter-spacing:-0.5px;">$title</h1>
-          <p style="color:rgba(255,255,255,0.85);margin:6px 0 0;font-size:14px;">HospiLink Hospital Management System</p>
+        <tr><td style="padding:32px 40px 20px 40px;border-bottom:1px solid #f1f5f9;">
+          <div style="font-size:18px;font-weight:700;color:#0d9488;letter-spacing:-0.5px;">HospiLink</div>
+          <h1 style="color:#0f172a;margin:12px 0 0 0;font-size:20px;font-weight:600;letter-spacing:-0.5px;">{$title}</h1>
         </td></tr>
         
         <!-- Body -->
-        <tr><td style="padding:36px 40px;">
-          $bodyHtml
+        <tr><td style="padding:32px 40px;">
+          {$bodyHtml}
         </td></tr>
         
         <!-- Footer -->
-        <tr><td style="background:#f7fafc;padding:24px 40px;text-align:center;border-top:1px solid #e2e8f0;">
-          <p style="font-size:18px;font-weight:700;color:#4a5568;margin:0 0 8px;">🏥 HospiLink</p>
-          <p style="font-size:12px;color:#a0aec0;margin:0;line-height:1.6;">
-            © 2026 HospiLink. This is an automated notification.<br>
+        <tr><td style="background-color:#f8fafc;padding:24px 40px;text-align:center;border-top:1px solid #e2e8f0;">
+          <p style="font-size:12px;color:#64748b;margin:0;line-height:1.5;">
+            © 2026 HospiLink. Automated notification. Please do not reply.<br>
             Dahod, Gujarat, India | hospilink@gmail.com
           </p>
         </td></tr>
@@ -102,21 +100,21 @@ HTML;
     }
 
     private static function infoRow($label, $value) {
-        return "<tr><td style='padding:10px 0;border-bottom:1px solid #e2e8f0;'>
-            <span style='color:#718096;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;'>$label</span><br>
-            <span style='color:#2d3748;font-weight:600;font-size:15px;'>$value</span>
+        return "<tr><td style='padding:10px 0;border-bottom:1px solid #f1f5f9;'>
+            <span style='color:#64748b;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;'>$label</span><br>
+            <span style='color:#0f172a;font-weight:600;font-size:15px;'>$value</span>
         </td></tr>";
     }
 
     private static function infoCard($color, $rows) {
         $colors = [
-            'urgent' => ['#fff5f5', '#e53e3e'],
-            'high'   => ['#fffaf0', '#dd6b20'],
-            'medium' => ['#ebf8ff', '#3182ce'],
-            'low'    => ['#f0fff4', '#38a169'],
+            'urgent' => ['#fef2f2', '#ef4444'],
+            'high'   => ['#fff7ed', '#f59e0b'],
+            'medium' => ['#eff6ff', '#3b82f6'],
+            'low'    => ['#f0fdf4', '#10b981'],
         ];
         [$bg, $border] = $colors[$color] ?? $colors['medium'];
-        return "<table width='100%' cellpadding='0' cellspacing='0' style='background:$bg;border-left:4px solid $border;border-radius:8px;padding:16px 20px;margin:16px 0;'>$rows</table>";
+        return "<table width='100%' cellpadding='10' cellspacing='0' style='background-color:$bg;border-left:4px solid $border;border-radius:8px;margin:24px 0;'>$rows</table>";
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -169,13 +167,13 @@ HTML;
               . self::infoRow('Prescribed At', $now);
 
         $card = self::infoCard('medium', $rows);
-        $body = "<h2 style='color:#1a202c;margin-bottom:8px;'>💊 New Medicine Prescribed</h2>
-                 <p style='color:#4a5568;line-height:1.7;'>A new medicine has been added for patient <strong>$patientName</strong>. Please ensure it is administered on schedule.</p>
+        $body = "<h2 style='color:#0f172a;margin-top:0;font-size:18px;font-weight:600;'>New Medicine Prescribed</h2>
+                 <p style='color:#475569;line-height:1.6;'>A new medicine has been added for patient <strong>$patientName</strong>. Please ensure it is administered on schedule.</p>
                  $card
-                 <p style='color:#718096;font-size:13px;margin-top:16px;'>Please ensure the patient receives this medication on schedule and document administration in the patient chart.</p>";
+                 <p style='color:#64748b;font-size:13px;margin-top:16px;'>Please ensure the patient receives this medication on schedule and document administration in the patient chart.</p>";
 
-        $html    = self::baseTemplate('linear-gradient(135deg,#4facfe 0%,#00f2fe 100%)', '💊', 'Medicine Prescribed', $body);
-        $subject = "💊 New Medicine: $medicineName for $patientName — HospiLink";
+        $html    = self::baseTemplate('', '', 'Medicine Prescribed', $body);
+        $subject = "New Medicine: $medicineName for $patientName — HospiLink";
 
         // Notify prescribing doctor/nurse
         if ($row['prescriber_email']) {
@@ -249,13 +247,13 @@ HTML;
               . self::infoRow('Started By', $starterName);
 
         $card = self::infoCard($urgency, $rows);
-        $body = "<h2 style='color:#1a202c;margin-bottom:8px;'>💉 IV Drip Started</h2>
-                 <p style='color:#4a5568;line-height:1.7;'>An IV drip has been started for patient <strong>$patientName</strong>. Please monitor and be ready for drip completion.</p>
+        $body = "<h2 style='color:#0f172a;margin-top:0;font-size:18px;font-weight:600;'>IV Drip Started</h2>
+                 <p style='color:#475569;line-height:1.6;'>An IV drip has been started for patient <strong>$patientName</strong>. Please monitor and be ready for drip completion.</p>
                  $card
-                 <p style='color:#718096;font-size:13px;margin-top:16px;'>⚠️ Please check on the patient 30 minutes before expected completion time to prepare for the next step.</p>";
+                 <p style='color:#64748b;font-size:13px;margin-top:16px;'>Please check on the patient 30 minutes before expected completion time to prepare for the next step.</p>";
 
-        $html    = self::baseTemplate('linear-gradient(135deg,#f093fb 0%,#f5576c 100%)', '💉', 'IV Drip Started', $body);
-        $subject = "💉 IV Drip Started: $fluidType for $patientName — HospiLink";
+        $html    = self::baseTemplate('', '', 'IV Drip Started', $body);
+        $subject = "IV Drip Started: $fluidType for $patientName — HospiLink";
 
         // Notify the nurse who started it
         if ($row['starter_email']) {
@@ -330,13 +328,13 @@ HTML;
               . self::infoRow('Created By', $creatorName);
 
         $card = self::infoCard($urgency, $rows);
-        $body = "<h2 style='color:#1a202c;margin-bottom:8px;'>📋 New Task Scheduled</h2>
-                 <p style='color:#4a5568;line-height:1.7;'>A new task has been scheduled for patient <strong>$patientName</strong>. Please ensure it is completed on time.</p>
+        $body = "<h2 style='color:#0f172a;margin-top:0;font-size:18px;font-weight:600;'>New Task Scheduled</h2>
+                 <p style='color:#475569;line-height:1.6;'>A new task has been scheduled for patient <strong>$patientName</strong>. Please ensure it is completed on time.</p>
                  $card
-                 <p style='color:#718096;font-size:13px;margin-top:16px;'>Please complete this task by the scheduled time and update the patient chart accordingly.</p>";
+                 <p style='color:#64748b;font-size:13px;margin-top:16px;'>Please complete this task by the scheduled time and update the patient chart accordingly.</p>";
 
-        $html    = self::baseTemplate('linear-gradient(135deg,#43e97b 0%,#38f9d7 100%)', '📋', 'Task Scheduled', $body);
-        $subject = "📋 New Task: $taskType for $patientName at $scheduledAt — HospiLink";
+        $html    = self::baseTemplate('', '', 'Task Scheduled', $body);
+        $subject = "New Task: $taskType for $patientName at $scheduledAt — HospiLink";
 
         // Notify creator
         if ($row['creator_email']) {
@@ -408,12 +406,12 @@ HTML;
               . self::infoRow('Time', date('d M Y, h:i A'));
 
         $card = self::infoCard('medium', $rows);
-        $body = "<h2 style='color:#1a202c;margin-bottom:8px;'>🩺 Doctor Note Added</h2>
-                 <p style='color:#4a5568;line-height:1.7;'>Dr. <strong>$doctorName</strong> has added a <strong>$noteType</strong> note for patient <strong>$patientName</strong>.</p>
+        $body = "<h2 style='color:#0f172a;margin-top:0;font-size:18px;font-weight:600;'>Doctor Note Added</h2>
+                 <p style='color:#475569;line-height:1.6;'>Dr. <strong>$doctorName</strong> has added a <strong>$noteType</strong> note for patient <strong>$patientName</strong>.</p>
                  $card";
 
-        $html    = self::baseTemplate('linear-gradient(135deg,#667eea 0%,#764ba2 100%)', '🩺', 'Doctor Note Added', $body);
-        $subject = "🩺 Doctor Note: $noteType for $patientName — HospiLink";
+        $html    = self::baseTemplate('', '', 'Doctor Note Added', $body);
+        $subject = "Doctor Note: $noteType for $patientName — HospiLink";
 
         // Notify doctor (confirmation)
         if ($row['doctor_email']) {

@@ -91,12 +91,12 @@
         <h1>🔑 Update Gemini API Key</h1>
         
         <div class="error-box">
-            <strong>⚠️ Current API Key Issue:</strong>
+            <strong>[WARNING] Current API Key Issue:</strong>
             <p>Your API key was reported as leaked and has been disabled by Google.</p>
         </div>
         
         <div class="info-box">
-            <strong>📋 Steps to Get New API Key:</strong>
+            <strong>[INFO] Steps to Get New API Key:</strong>
             <ol>
                 <li>Go to <a href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio</a></li>
                 <li>Click "Create API Key"</li>
@@ -111,7 +111,7 @@
             $newKey = trim($_POST['api_key']);
             
             if (empty($newKey)) {
-                echo '<div class="error-box">❌ API key cannot be empty!</div>';
+                echo '<div class="error-box">[ERROR] API key cannot be empty!</div>';
             } else {
                 $envFile = __DIR__ . '/.env';
                 
@@ -125,15 +125,15 @@
                     
                     if (file_put_contents($envFile, $newContent)) {
                         echo '<div class="success-box">
-                            <strong>✅ API Key Updated Successfully!</strong>
+                            <strong>[SUCCESS] API Key Updated Successfully!</strong>
                             <p>The new key has been saved to .env file.</p>
                             <p><a href="test_ai_debug.php">Test AI Prioritizer Now</a></p>
                         </div>';
                     } else {
-                        echo '<div class="error-box">❌ Failed to write to .env file. Check permissions.</div>';
+                        echo '<div class="error-box">[ERROR] Failed to write to .env file. Check permissions.</div>';
                     }
                 } else {
-                    echo '<div class="error-box">❌ .env file not found!</div>';
+                    echo '<div class="error-box">[ERROR] .env file not found!</div>';
                 }
             }
         }
@@ -149,11 +149,11 @@
                    pattern="AIza[A-Za-z0-9_-]+"
                    title="API key must start with 'AIza'">
             
-            <button type="submit">🔄 Update API Key</button>
+            <button type="submit">[PROCESS] Update API Key</button>
         </form>
 
         <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #eee;">
-            <strong>⚠️ Security Tips:</strong>
+            <strong>[WARNING] Security Tips:</strong>
             <ul style="margin-left: 20px; margin-top: 10px; line-height: 1.8;">
                 <li>Never commit <code>.env</code> file to Git</li>
                 <li>Don't share API keys publicly</li>

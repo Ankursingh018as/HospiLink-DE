@@ -139,20 +139,20 @@ class HospiLinkNotifications {
   // ── Icon by type ─────────────────────────────────────────────
   getTypeIcon(type) {
     const icons = {
-      drip:       '💉',
-      iv:         '💉',
-      medicine:   '💊',
-      task:       '📋',
-      note:       '🩺',
-      followup:   '📅',
-      appointment:'📆',
-      digest:     '🏥',
-      system:     '🔔',
+      drip:       '<i class="ri-syringe-line"></i>',
+      iv:         '<i class="ri-syringe-line"></i>',
+      medicine:   '<i class="ri-capsule-line"></i>',
+      task:       '<i class="ri-file-list-3-line"></i>',
+      note:       '<i class="ri-stethoscope-line"></i>',
+      followup:   '<i class="ri-calendar-line"></i>',
+      appointment:'<i class="ri-calendar-event-line"></i>',
+      digest:     '<i class="ri-hospital-line"></i>',
+      system:     '<i class="ri-notification-line"></i>',
     };
     for (const [key, icon] of Object.entries(icons)) {
       if (String(type).includes(key)) return icon;
     }
-    return '🔔';
+    return '<i class="ri-notification-line"></i>';
   }
 
   // ── Priority colour ──────────────────────────────────────────

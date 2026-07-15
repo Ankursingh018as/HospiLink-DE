@@ -43,7 +43,7 @@ $admission_reason = 'Test admission for QR system verification';
 $token = PatientQRHelper::createAdmission($conn, $patient_id, null, null, $admission_reason);
 
 if ($token) {
-    echo "   ✓ Admission created successfully!\n";
+    echo "   SUCCESS Admission created successfully!\n";
     echo "   QR Token: $token\n";
     
     // Test retrieval
@@ -51,7 +51,7 @@ if ($token) {
     $admission = PatientQRHelper::getAdmissionFromToken($conn, $token);
     
     if ($admission) {
-        echo "   ✓ Admission retrieved successfully!\n";
+        echo "   SUCCESS Admission retrieved successfully!\n";
         echo "   Patient Name: " . $admission['patient_name'] . "\n";
         echo "   Gender: " . $admission['gender'] . "\n";
         echo "   Age: " . $admission['age'] . "\n";
@@ -63,13 +63,13 @@ if ($token) {
         
         echo "\n4. Testing patient-status.php access...\n";
         echo "   URL: http://localhost/HospiLink-DE/patient-status.php?token=$token\n";
-        echo "   ✓ This URL should now work without SQL errors!\n";
+        echo "   SUCCESS This URL should now work without SQL errors!\n";
         
     } else {
-        echo "   ✗ Failed to retrieve admission\n";
+        echo "   ERROR Failed to retrieve admission\n";
     }
 } else {
-    echo "   ✗ Failed to create admission\n";
+    echo "   ERROR Failed to create admission\n";
 }
 
 echo "\n=== Test Complete ===\n";
