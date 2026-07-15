@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             PatientQRHelper::logScan($conn, $admission_id, $_SESSION['user_id'], 'add_medicine');
             $message = "Medicine added successfully!";
             
-            // 🔔 Fire email notifications immediately
+            // Fire email notifications immediately
             HospiNotify::onMedicineAdded($admission_id, [
                 'medicine_name' => $_POST['medicine_name'],
                 'dosage'        => $_POST['dosage'],
@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 'start_date'    => $_POST['start_date'],
                 'instructions'  => $_POST['instructions']
             ], $_SESSION['user_id'], $conn);
-            HospiNotify::logNotification($conn, 'medicine', '💊 Medicine Added: ' . $_POST['medicine_name'],
+            HospiNotify::logNotification($conn, 'medicine', 'Medicine Added: ' . $_POST['medicine_name'],
                 'Patient: ' . $admission_id . ' | Dosage: ' . $_POST['dosage'] . ' | Freq: ' . $_POST['frequency'], 'staff', $admission_id);
             
         } elseif ($action_type == 'iv') {
@@ -107,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             PatientQRHelper::logScan($conn, $admission_id, $_SESSION['user_id'], 'add_iv');
             $message = "IV/Drip added successfully!";
             
-            // 🔔 Fire email notifications immediately
+            // Fire email notifications immediately
             HospiNotify::onDripAdded($admission_id, [
                 'fluid_type'      => $_POST['fluid_type'],
                 'volume_ml'       => $_POST['volume_ml'],
@@ -117,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 'site_location'   => $_POST['site_location'],
                 'notes'           => $_POST['notes']
             ], $_SESSION['user_id'], $conn);
-            HospiNotify::logNotification($conn, 'drip', '💉 IV Drip Started: ' . $_POST['fluid_type'],
+            HospiNotify::logNotification($conn, 'drip', 'IV Drip Started: ' . $_POST['fluid_type'],
                 'Patient: ' . $admission_id . ' | Volume: ' . $_POST['volume_ml'] . 'mL', 'staff', $admission_id);
             
         } elseif ($action_type == 'test') {
@@ -167,7 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             PatientQRHelper::logScan($conn, $admission_id, $_SESSION['user_id'], 'add_note');
             $message = "Doctor note added successfully!";
             
-            // 🔔 Fire email notifications immediately
+            // Fire email notifications immediately
             HospiNotify::onNoteAdded($admission_id, [
                 'note_type'              => $_POST['note_type'],
                 'vitals_bp'              => $_POST['vitals_bp'],
@@ -178,7 +178,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 'diagnosis'              => $_POST['diagnosis'],
                 'treatment_plan'         => $_POST['treatment_plan']
             ], $_SESSION['user_id'], $conn);
-            HospiNotify::logNotification($conn, 'note', '🩺 Doctor Note: ' . $_POST['note_type'],
+            HospiNotify::logNotification($conn, 'note', 'Doctor Note: ' . $_POST['note_type'],
                 'Patient: ' . $admission_id, 'doctor', $admission_id);
             
         } elseif ($action_type == 'task') {
@@ -205,7 +205,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             PatientQRHelper::logScan($conn, $admission_id, $_SESSION['user_id'], 'schedule_task');
             $message = "Task scheduled successfully!";
             
-            // 🔔 Fire email notifications immediately
+            // Fire email notifications immediately
             HospiNotify::onTaskScheduled($admission_id, [
                 'task_type'        => $_POST['task_type'],
                 'task_description' => $_POST['task_description'],
@@ -213,7 +213,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 'assigned_to'      => $_POST['assigned_to'],
                 'priority'         => $_POST['priority']
             ], $_SESSION['user_id'], $conn);
-            HospiNotify::logNotification($conn, 'task', '📋 Task: ' . $_POST['task_type'],
+            HospiNotify::logNotification($conn, 'task', 'Task: ' . $_POST['task_type'],
                 'Scheduled: ' . $_POST['scheduled_time'] . ' | Priority: ' . $_POST['priority'], 'staff', $admission_id);
         }
         

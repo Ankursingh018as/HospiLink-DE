@@ -25,23 +25,23 @@ echo "<!DOCTYPE html>
     </style>
 </head>
 <body>
-    <h1>🏥 HospiLink QR Patient Management - Database Installation</h1>";
+    <h1>[HOSPITAL] HospiLink QR Patient Management - Database Installation</h1>";
 
 // Read SQL file
 $sqlFile = __DIR__ . '/database/qr_patient_management.sql';
 
 if (!file_exists($sqlFile)) {
-    echo "<div class='error'>❌ Error: SQL file not found at: $sqlFile</div>";
+    echo "<div class='error'>[ERROR] Error: SQL file not found at: $sqlFile</div>";
     echo "</body></html>";
     exit;
 }
 
-echo "<div class='info'>📂 Reading SQL file: database/qr_patient_management.sql</div>";
+echo "<div class='info'>[FILE] Reading SQL file: database/qr_patient_management.sql</div>";
 
 $sql = file_get_contents($sqlFile);
 
 if ($sql === false) {
-    echo "<div class='error'>❌ Error: Could not read SQL file</div>";
+    echo "<div class='error'>[ERROR] Error: Could not read SQL file</div>";
     echo "</body></html>";
     exit;
 }
@@ -56,7 +56,7 @@ $statements = array_filter(
     function($stmt) { return !empty($stmt); }
 );
 
-echo "<div class='info'>📊 Found " . count($statements) . " SQL statements to execute</div>";
+echo "<div class='info'>[STATS] Found " . count($statements) . " SQL statements to execute</div>";
 
 // Execute each statement
 $successCount = 0;
@@ -76,10 +76,10 @@ foreach ($statements as $index => $statement) {
     
     if ($conn->query($statement) === TRUE) {
         $successCount++;
-        echo "<div class='success'>✅ Statement " . ($index + 1) . " executed successfully</div>";
+        echo "<div class='success'>[SUCCESS] Statement " . ($index + 1) . " executed successfully</div>";
     } else {
         $errorCount++;
-        echo "<div class='error'>❌ Statement " . ($index + 1) . " failed: " . $conn->error . "</div>";
+        echo "<div class='error'>[ERROR] Statement " . ($index + 1) . " failed: " . $conn->error . "</div>";
         echo "<pre>" . htmlspecialchars(substr($statement, 0, 200)) . "...</pre>";
     }
 }
@@ -87,13 +87,13 @@ foreach ($statements as $index => $statement) {
 echo "</div>";
 
 // Summary
-echo "<div class='step'><h2>📋 Installation Summary</h2>";
-echo "<p>✅ Successful statements: <strong>$successCount</strong></p>";
-echo "<p>❌ Failed statements: <strong>$errorCount</strong></p>";
+echo "<div class='step'><h2>[INFO] Installation Summary</h2>";
+echo "<p>[SUCCESS] Successful statements: <strong>$successCount</strong></p>";
+echo "<p>[ERROR] Failed statements: <strong>$errorCount</strong></p>";
 
 if ($errorCount === 0) {
     echo "<div class='success'>
-        <h3>🎉 Installation Completed Successfully!</h3>
+        <h3>[SUCCESS] Installation Completed Successfully!</h3>
         <p>All tables have been created. The following tables are now available:</p>
         <ul>";
     
@@ -102,7 +102,7 @@ if ($errorCount === 0) {
     }
     
     echo "</ul>
-        <h3>✅ Next Steps:</h3>
+        <h3>[SUCCESS] Next Steps:</h3>
         <ol>
             <li>Delete this file (install_qr_tables.php) for security</li>
             <li>Go to <a href='index.html'>Homepage</a></li>
@@ -113,7 +113,7 @@ if ($errorCount === 0) {
     </div>";
 } else {
     echo "<div class='error'>
-        <h3>⚠️ Installation Completed with Errors</h3>
+        <h3>[WARNING] Installation Completed with Errors</h3>
         <p>Some statements failed. Please check the errors above.</p>
         <p>You may need to:</p>
         <ul>
@@ -127,12 +127,12 @@ if ($errorCount === 0) {
 echo "</div>";
 
 // Verify tables were created
-echo "<div class='step'><h2>🔍 Verifying Tables...</h2>";
+echo "<div class='step'><h2>[DEBUG] Verifying Tables...</h2>";
 $result = $conn->query("SHOW TABLES LIKE 'patient_%'");
 if ($result) {
     echo "<p>Found " . $result->num_rows . " patient-related tables:</p><ul>";
     while ($row = $result->fetch_array()) {
-        echo "<li>✅ " . $row[0] . "</li>";
+        echo "<li>[SUCCESS] " . $row[0] . "</li>";
     }
     echo "</ul>";
 }

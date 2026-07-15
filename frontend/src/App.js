@@ -78,7 +78,7 @@ function App() {
               path="/unauthorized"
               element={
                 <div style={{ padding: '50px', textAlign: 'center' }}>
-                  <h1>🚫 Unauthorized</h1>
+                  <h1><i className="ri-prohibit-line" style={{ marginRight: '8px', color: '#ef4444' }}></i>Unauthorized</h1>
                   <p>You don't have permission to access this page.</p>
                 </div>
               }

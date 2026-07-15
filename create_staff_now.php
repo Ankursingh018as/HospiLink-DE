@@ -9,17 +9,17 @@ echo "<h2>Creating Staff Account...</h2>";
 // First, update the role enum
 $alterQuery = "ALTER TABLE users MODIFY COLUMN role ENUM('patient', 'doctor', 'admin', 'staff', 'nurse') NOT NULL DEFAULT 'patient'";
 if ($conn->query($alterQuery)) {
-    echo "✓ Role enum updated<br>";
+    echo "SUCCESS Role enum updated<br>";
 } else {
-    echo "⚠ Role enum: " . $conn->error . "<br>";
+    echo "[WARNING] Role enum: " . $conn->error . "<br>";
 }
 
 // Add staff_id column if not exists
 $addColumnQuery = "ALTER TABLE users ADD COLUMN IF NOT EXISTS staff_id VARCHAR(50)";
 if ($conn->query($addColumnQuery)) {
-    echo "✓ staff_id column checked<br>";
+    echo "SUCCESS staff_id column checked<br>";
 } else {
-    echo "⚠ Column: " . $conn->error . "<br>";
+    echo "[WARNING] Column: " . $conn->error . "<br>";
 }
 
 // Create beds table if not exists
@@ -34,9 +34,9 @@ $bedsTable = "CREATE TABLE IF NOT EXISTS beds (
     UNIQUE KEY unique_bed (ward_name, bed_number)
 )";
 if ($conn->query($bedsTable)) {
-    echo "✓ beds table ready<br>";
+    echo "SUCCESS beds table ready<br>";
 } else {
-    echo "⚠ Beds table: " . $conn->error . "<br>";
+    echo "[WARNING] Beds table: " . $conn->error . "<br>";
 }
 
 // Create admitted_patients table if not exists
@@ -62,9 +62,9 @@ $admittedTable = "CREATE TABLE IF NOT EXISTS admitted_patients (
     FOREIGN KEY (assigned_staff_id) REFERENCES users(user_id) ON DELETE SET NULL
 )";
 if ($conn->query($admittedTable)) {
-    echo "✓ admitted_patients table ready<br>";
+    echo "SUCCESS admitted_patients table ready<br>";
 } else {
-    echo "⚠ Admitted patients table: " . $conn->error . "<br>";
+    echo "[WARNING] Admitted patients table: " . $conn->error . "<br>";
 }
 
 // Insert sample beds if table is empty
@@ -77,13 +77,13 @@ if ($checkBeds && $checkBeds->fetch_assoc()['count'] == 0) {
     ('ICU', 'ICU-02', 'ICU', 'available'),
     ('Private Ward', 'P-201', 'Private', 'available')";
     if ($conn->query($sampleBeds)) {
-        echo "✓ Sample beds added<br>";
+        echo "SUCCESS Sample beds added<br>";
     }
 }
 
 // Delete existing test accounts
 $conn->query("DELETE FROM users WHERE email IN ('staff@hospital.com', 'teststaff@hospilink.com')");
-echo "✓ Cleaned old test accounts<br>";
+echo "SUCCESS Cleaned old test accounts<br>";
 
 // Create new staff account
 $firstName = 'Hospital';
@@ -103,7 +103,7 @@ $stmt = $conn->prepare($insertQuery);
 $stmt->bind_param("sssssssss", $firstName, $lastName, $email, $password, $role, $phone, $department, $staff_id, $status);
 
 if ($stmt->execute()) {
-    echo "<h3 style='color: green;'>✓ Staff Account Created Successfully!</h3>";
+    echo "<h3 style='color: green;'>SUCCESS Staff Account Created Successfully!</h3>";
     
     // Verify the account
     $verifyQuery = "SELECT user_id, first_name, last_name, email, role, department, staff_id, status FROM users WHERE email = '$email'";
@@ -132,11 +132,11 @@ if ($stmt->execute()) {
         header("refresh:2;url=dashboards/staff_dashboard.php");
     }
 } else {
-    echo "<h3 style='color: red;'>✗ Error: " . $stmt->error . "</h3>";
+    echo "<h3 style='color: red;'>ERROR Error: " . $stmt->error . "</h3>";
 }
 
 $stmt->close();
 $conn->close();
 
-echo "<br><br><p style='color: red;'><strong>⚠ IMPORTANT: Delete this file after creating the account for security!</strong></p>";
+echo "<br><br><p style='color: red;'><strong>[WARNING] IMPORTANT: Delete this file after creating the account for security!</strong></p>";
 ?>

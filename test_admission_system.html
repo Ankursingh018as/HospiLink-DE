@@ -150,12 +150,12 @@
 </head>
 <body>
     <div class="container">
-        <h1>🏥 Patient Admission System</h1>
+        <h1>[HOSPITAL] Patient Admission System</h1>
         <p class="subtitle">Test & Verification Dashboard</p>
 
         <!-- System Status -->
         <div class="test-section">
-            <h2>📊 System Status</h2>
+            <h2>[STATS] System Status</h2>
             <div id="systemStatus">
                 <div class="test-item">
                     <span class="test-label">Database Connection</span>
@@ -178,7 +178,7 @@
 
         <!-- Performance Metrics -->
         <div class="test-section">
-            <h2>⚡ Performance Metrics</h2>
+            <h2>[FAST] Performance Metrics</h2>
             <div style="text-align: center;">
                 <div class="metric">
                     <div class="metric-value" id="availableBeds">-</div>
@@ -211,7 +211,7 @@
 
         <!-- Quick Actions -->
         <div class="test-section">
-            <h2>🚀 Quick Actions</h2>
+            <h2>[LAUNCH] Quick Actions</h2>
             <div class="button-group">
                 <button onclick="window.location.href='admit.html'">Go to Admission Form</button>
                 <button onclick="window.location.href='php/get_admission_options.php'">View API Response</button>
@@ -221,7 +221,7 @@
 
         <!-- Optimization Summary -->
         <div class="info-box">
-            <h3 style="margin-bottom: 10px;">✨ Optimizations Applied:</h3>
+            <h3 style="margin-bottom: 10px;">[FEATURE] Optimizations Applied:</h3>
             <ul style="margin-left: 20px; line-height: 1.8;">
                 <li><strong>Client-Side Validation:</strong> Phone, email, date validation before submission</li>
                 <li><strong>Transaction Support:</strong> Database rollback on errors</li>
@@ -248,7 +248,7 @@
             const entry = document.createElement('div');
             entry.className = 'log-entry';
             const timestamp = new Date().toLocaleTimeString();
-            const icon = type === 'success' ? '✓' : type === 'error' ? '✗' : '→';
+            const icon = type === 'success' ? 'SUCCESS' : type === 'error' ? 'ERROR' : '→';
             entry.innerHTML = `[${timestamp}] ${icon} ${message}`;
             entry.style.color = type === 'success' ? '#00ff00' : type === 'error' ? '#ff4444' : '#00ff00';
             logArea.appendChild(entry);
@@ -257,7 +257,7 @@
 
         function setStatus(elementId, passed) {
             const element = document.getElementById(elementId);
-            element.textContent = passed ? '✓ PASS' : '✗ FAIL';
+            element.textContent = passed ? 'SUCCESS PASS' : 'ERROR FAIL';
             element.className = 'test-status ' + (passed ? 'status-pass' : 'status-fail');
         }
 
@@ -284,7 +284,7 @@
             try {
                 const response = await fetch('test_env_config.php');
                 const text = await response.text();
-                if (text.includes('✅')) {
+                if (text.includes('[SUCCESS]')) {
                     testResults.env = true;
                     setStatus('envStatus', true);
                     log('Environment configuration valid', 'success');
@@ -381,7 +381,7 @@
             
             log('═'.repeat(50));
             const allPassed = Object.values(testResults).every(v => v);
-            log('Test suite completed: ' + (allPassed ? 'ALL PASSED ✓' : 'SOME FAILED ✗'), 
+            log('Test suite completed: ' + (allPassed ? 'ALL PASSED SUCCESS' : 'SOME FAILED ERROR'), 
                 allPassed ? 'success' : 'error');
         }
 

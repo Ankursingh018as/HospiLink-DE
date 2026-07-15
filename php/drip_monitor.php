@@ -64,7 +64,7 @@ class DripMonitor {
                     $emailBody = <<<HTML
 <div style="font-family:Arial,sans-serif;padding:10px 0;">
   <p style="color:#2d3748;font-size:16px;line-height:1.6;">
-    🚨 <strong>Attention Required:</strong> The IV drip for patient <strong>$patientName</strong> in <strong>$ward</strong> is nearly empty!
+    [ALERT] <strong>Attention Required:</strong> The IV drip for patient <strong>$patientName</strong> in <strong>$ward</strong> is nearly empty!
   </p>
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#fff5f5;border-left:4px solid #e53e3e;border-radius:8px;padding:20px;margin:20px 0;">
     <tr><td style="padding:6px 0;border-bottom:1px solid #fed7d7;">
@@ -88,14 +88,14 @@ class DripMonitor {
 </div>
 HTML;
 
-                    $html = HospiNotify::baseTemplate('linear-gradient(135deg,#ff0844 0%,#ffb199 100%)', '🚨', 'IV Drip Alert', $emailBody);
-                    $subject = "🚨 Alert: IV Drip nearly empty ($remMl ml left) for $patientName — HospiLink";
+                    $html = HospiNotify::baseTemplate('linear-gradient(135deg,#ff0844 0%,#ffb199 100%)', '[ALERT]', 'IV Drip Alert', $emailBody);
+                    $subject = "[ALERT] Alert: IV Drip nearly empty ($remMl ml left) for $patientName — HospiLink";
 
                     // 1. Log notification in database for the bell icon
                     HospiNotify::logNotification(
                         $conn, 
                         'drip_low', 
-                        "🚨 Drip Alert: $fluidType nearly empty", 
+                        "[ALERT] Drip Alert: $fluidType nearly empty", 
                         "IV Drip ID: $iv_id | Patient: $patientName | Remaining: $remMl ml", 
                         'staff', 
                         $drip['admission_id']

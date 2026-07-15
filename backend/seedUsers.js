@@ -4,9 +4,9 @@ require('dotenv').config();
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('✅ Connected to MongoDB'))
+  .then(() => console.log('[SUCCESS] Connected to MongoDB'))
   .catch(err => {
-    console.error('❌ MongoDB connection error:', err);
+    console.error('[ERROR] MongoDB connection error:', err);
     process.exit(1);
   });
 
@@ -85,14 +85,14 @@ async function seedUsers() {
     
     // Clear existing users (optional - comment out if you want to keep existing users)
     // await User.deleteMany({});
-    // console.log('🗑️  Cleared existing users');
+    // console.log('[CLEARED]  Cleared existing users');
 
     for (const userData of testUsers) {
       // Check if user already exists
       const existing = await User.findOne({ email: userData.email });
       
       if (existing) {
-        console.log(`⚠️  User ${userData.email} already exists, skipping...`);
+        console.log(`[WARNING]  User ${userData.email} already exists, skipping...`);
         continue;
       }
 
@@ -102,11 +102,11 @@ async function seedUsers() {
 
       // Create user
       const user = await User.create(userData);
-      console.log(`✅ Created user: ${user.email} (${user.role})`);
+      console.log(`[SUCCESS] Created user: ${user.email} (${user.role})`);
     }
 
-    console.log('\n✨ Seeding completed successfully!');
-    console.log('\n📝 Test Credentials:');
+    console.log('\n[FEATURE] Seeding completed successfully!');
+    console.log('\n[INFO] Test Credentials:');
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     console.log('Patient:  patient@test.com / password123');
     console.log('Doctor:   doctor@test.com  / password123');
@@ -116,7 +116,7 @@ async function seedUsers() {
 
     process.exit(0);
   } catch (error) {
-    console.error('❌ Seeding error:', error);
+    console.error('[ERROR] Seeding error:', error);
     process.exit(1);
   }
 }

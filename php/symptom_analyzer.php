@@ -96,14 +96,14 @@ class SymptomAnalyzer {
         
         switch ($priorityLevel) {
             case 'high':
-                return "⚠️ HIGH PRIORITY: Your symptoms ($keywordString) indicate a medical emergency. You will be prioritized for immediate attention. Please seek emergency care if symptoms worsen.";
-                return "⚡ HIGH PRIORITY: Your symptoms ($keywordString) require urgent medical attention. You will be seen by a doctor as soon as possible.";
+                return "[WARNING] HIGH PRIORITY: Your symptoms ($keywordString) indicate a medical emergency. You will be prioritized for immediate attention. Please seek emergency care if symptoms worsen.";
+                return "[FAST] HIGH PRIORITY: Your symptoms ($keywordString) require urgent medical attention. You will be seen by a doctor as soon as possible.";
             
             case 'medium':
-                return "📋 MEDIUM PRIORITY: Your symptoms ($keywordString) will be evaluated by a doctor. Expected wait time may vary based on emergency cases.";
+                return "[INFO] MEDIUM PRIORITY: Your symptoms ($keywordString) will be evaluated by a doctor. Expected wait time may vary based on emergency cases.";
             
             case 'low':
-                return "✓ LOW PRIORITY: Your request ($keywordString) is noted. You will be scheduled based on availability. This is suitable for routine care and follow-ups.";
+                return "SUCCESS LOW PRIORITY: Your request ($keywordString) is noted. You will be scheduled based on availability. This is suitable for routine care and follow-ups.";
             
             default:
                 return "Your symptoms have been recorded and will be reviewed by medical staff.";

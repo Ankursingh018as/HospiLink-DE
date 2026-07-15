@@ -27,14 +27,14 @@ foreach ($statements as $statement) {
     
     try {
         if ($conn->query($statement)) {
-            echo "✓ Success\n\n";
+            echo "SUCCESS Success\n\n";
             $success++;
         } else {
-            echo "✗ Error: " . $conn->error . "\n\n";
+            echo "ERROR Error: " . $conn->error . "\n\n";
             $errors++;
         }
     } catch (Exception $e) {
-        echo "✗ Exception: " . $e->getMessage() . "\n\n";
+        echo "ERROR Exception: " . $e->getMessage() . "\n\n";
         $errors++;
     }
 }

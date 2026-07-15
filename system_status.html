@@ -4,6 +4,7 @@
     <title>HospiLink System Status</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -172,51 +173,51 @@
 </head>
 <body>
     <div class="container">
-        <h1>🏥 HospiLink System Status</h1>
+        <h1><i class="ri-hospital-line"></i> HospiLink System Status</h1>
         
         <div class="info-box success-box">
-            <strong>✅ All Systems Operational</strong>
+            <strong><i class="ri-checkbox-circle-fill"></i> All Systems Operational</strong>
             <p style="margin-top: 8px;">HospiLink is running with real-time updates enabled for beds, staff dashboard, and QR system.</p>
         </div>
 
-        <h2>📊 System Components</h2>
+        <h2><i class="ri-bar-chart-2-line"></i> System Components</h2>
         <div class="status-grid">
             <div class="status-card success">
-                <div class="status-icon">✅</div>
+                <div class="status-icon"><i class="ri-checkbox-circle-fill" style="color: #28a745;"></i></div>
                 <div class="status-title">Beds System</div>
                 <div class="status-desc">Real-time updates enabled<br><small>(10-second refresh interval)</small></div>
             </div>
             
             <div class="status-card success">
-                <div class="status-icon">✅</div>
+                <div class="status-icon"><i class="ri-checkbox-circle-fill" style="color: #28a745;"></i></div>
                 <div class="status-title">Staff Dashboard</div>
                 <div class="status-desc">Auto-refresh enabled<br><small>(30-second interval)</small></div>
             </div>
             
             <div class="status-card success">
-                <div class="status-icon">✅</div>
+                <div class="status-icon"><i class="ri-checkbox-circle-fill" style="color: #28a745;"></i></div>
                 <div class="status-title">OTP System</div>
                 <div class="status-desc">Staff role support added<br><small>(All roles supported)</small></div>
             </div>
             
             <div class="status-card success">
-                <div class="status-icon">✅</div>
+                <div class="status-icon"><i class="ri-checkbox-circle-fill" style="color: #28a745;"></i></div>
                 <div class="status-title">QR System</div>
                 <div class="status-desc">Helper functions loaded<br><small>(patient_admissions table)</small></div>
             </div>
         </div>
 
-        <h2>🔗 Quick Links</h2>
+        <h2><i class="ri-link"></i> Quick Links</h2>
         <div class="action-grid">
-            <a href="sign_new.html" class="btn">👤 Login/Register</a>
-            <a href="dashboards/staff_dashboard.php" class="btn">👨‍⚕️ Staff Dashboard</a>
-            <a href="beds.html" class="btn">🛏️ Beds Management</a>
-            <a href="qr-print.php" class="btn">📱 Generate QR Code</a>
-            <a href="scan.php" class="btn">📷 Scan QR Code</a>
-            <a href="test_all_systems.php" class="btn btn-secondary">🔧 System Diagnostic</a>
+            <a href="sign_new.html" class="btn"><i class="ri-user-line"></i> Login/Register</a>
+            <a href="dashboards/staff_dashboard.php" class="btn"><i class="ri-nurse-line"></i> Staff Dashboard</a>
+            <a href="beds.html" class="btn"><i class="ri-hotel-bed-line"></i> Beds Management</a>
+            <a href="qr-print.php" class="btn"><i class="ri-qr-code-line"></i> Generate QR Code</a>
+            <a href="scan.php" class="btn"><i class="ri-camera-lens-line"></i> Scan QR Code</a>
+            <a href="test_all_systems.php" class="btn btn-secondary"><i class="ri-tools-line"></i> System Diagnostic</a>
         </div>
 
-        <h2>🔐 Test Credentials</h2>
+        <h2><i class="ri-lock-password-line"></i> Test Credentials</h2>
         <table>
             <thead>
                 <tr>
@@ -228,19 +229,19 @@
             </thead>
             <tbody>
                 <tr>
-                    <td><strong>👨‍⚕️ Nurse</strong></td>
+                    <td><strong><i class="ri-nurse-line"></i> Nurse</strong></td>
                     <td><code>nurse.sharma@hospilink.com</code></td>
                     <td><code>nurse123</code></td>
                     <td>General Ward</td>
                 </tr>
                 <tr>
-                    <td><strong>👩‍⚕️ Nurse</strong></td>
+                    <td><strong><i class="ri-nurse-fill"></i> Nurse</strong></td>
                     <td><code>nurse.patel@hospilink.com</code></td>
                     <td><code>nurse123</code></td>
                     <td>ICU</td>
                 </tr>
                 <tr>
-                    <td><strong>👔 Admin</strong></td>
+                    <td><strong><i class="ri-admin-line"></i> Admin</strong></td>
                     <td><code>admin@hospilink.com</code></td>
                     <td><code>admin123</code></td>
                     <td>Administration</td>
@@ -249,13 +250,13 @@
         </table>
 
         <div class="info-box warning-box">
-            <strong>⚠️ Important: Login Role Selection</strong>
+            <strong><i class="ri-alert-line" style="color: #ffc107;"></i> Important: Login Role Selection</strong>
             <p style="margin-top: 8px;">When logging in with nurse accounts, select <strong>"Hospital Staff"</strong> from the role dropdown (not "nurse"). The system automatically maps staff/nurse roles.</p>
         </div>
 
-        <h2>🎯 Features Overview</h2>
+        <h2><i class="ri-target-line"></i> Features Overview</h2>
         
-        <h3 style="color: #333; margin: 20px 0 10px 0;">✨ Real-Time Features</h3>
+        <h3 style="color: #333; margin: 20px 0 10px 0;"><i class="ri-sparkling-line"></i> Real-Time Features</h3>
         <table>
             <thead>
                 <tr>
@@ -288,7 +289,7 @@
             </tbody>
         </table>
 
-        <h3 style="color: #333; margin: 20px 0 10px 0;">📱 QR System</h3>
+        <h3 style="color: #333; margin: 20px 0 10px 0;"><i class="ri-qr-code-line"></i> QR System</h3>
         <div class="info-box">
             <p><strong>How it works:</strong></p>
             <ol style="margin: 10px 0 0 20px; line-height: 1.8;">
@@ -300,45 +301,45 @@
             </ol>
         </div>
 
-        <h3 style="color: #333; margin: 20px 0 10px 0;">🛏️ Beds Management</h3>
+        <h3 style="color: #333; margin: 20px 0 10px 0;"><i class="ri-hotel-bed-line"></i> Beds Management</h3>
         <div class="info-box">
             <p><strong>Dynamic Features:</strong></p>
-            <ul style="margin: 10px 0 0 20px; line-height: 1.8;">
+            <ol style="margin: 10px 0 0 20px; line-height: 1.8;">
                 <li>Auto-refresh every 10 seconds - see real-time availability</li>
                 <li>Visual ward-wise grouping (ICU, General Ward, Emergency, etc.)</li>
                 <li>Color-coded bed status (Available, Occupied, Under Maintenance)</li>
                 <li>One-click bed assignment/release</li>
-            </ul>
+            </ol>
         </div>
 
-        <h2>🚀 What's New</h2>
+        <h2><i class="ri-rocket-line"></i> What's New</h2>
         <div class="status-grid">
             <div class="status-card" style="border-color: #17a2b8; background: #d1ecf1;">
-                <div class="status-icon" style="color: #17a2b8;">🔄</div>
+                <div class="status-icon" style="color: #17a2b8;"><i class="ri-refresh-line"></i></div>
                 <div class="status-title" style="color: #17a2b8;">Real-Time Updates</div>
                 <div class="status-desc">Beds page now refreshes automatically every 10 seconds</div>
             </div>
             
             <div class="status-card" style="border-color: #17a2b8; background: #d1ecf1;">
-                <div class="status-icon" style="color: #17a2b8;">👨‍⚕️</div>
+                <div class="status-icon" style="color: #17a2b8;"><i class="ri-nurse-line"></i></div>
                 <div class="status-title" style="color: #17a2b8;">Staff Dashboard Enhanced</div>
                 <div class="status-desc">30-second auto-refresh for patient lists and bed status</div>
             </div>
             
             <div class="status-card" style="border-color: #17a2b8; background: #d1ecf1;">
-                <div class="status-icon" style="color: #17a2b8;">📱</div>
+                <div class="status-icon" style="color: #17a2b8;"><i class="ri-smartphone-line"></i></div>
                 <div class="status-title" style="color: #17a2b8;">OTP for Staff</div>
                 <div class="status-desc">Hospital staff can now register with OTP verification</div>
             </div>
             
             <div class="status-card" style="border-color: #17a2b8; background: #d1ecf1;">
-                <div class="status-icon" style="color: #17a2b8;">✅</div>
+                <div class="status-icon" style="color: #17a2b8;"><i class="ri-checkbox-circle-fill"></i></div>
                 <div class="status-title" style="color: #17a2b8;">QR System Fixed</div>
                 <div class="status-desc">Helper functions loaded, using patient_admissions table</div>
             </div>
         </div>
 
-        <h2>💡 Testing Guide</h2>
+        <h2><i class="ri-lightbulb-line"></i> Testing Guide</h2>
         <div class="info-box">
             <h4 style="margin-bottom: 10px;">1. Test Staff Login</h4>
             <ol style="margin: 5px 0 15px 20px; line-height: 1.8;">
@@ -379,13 +380,13 @@
         </div>
 
         <div class="info-box success-box" style="text-align: center; margin-top: 30px;">
-            <h3 style="color: #28a745; margin-bottom: 10px;">🎉 System Ready!</h3>
+            <h3 style="color: #28a745; margin-bottom: 10px;"><i class="ri-party-line"></i> System Ready!</h3>
             <p>All features are now dynamic with real-time updates. Start testing the staff dashboard, beds management, and QR system!</p>
         </div>
     </div>
 
     <button class="refresh-btn" onclick="location.reload()" title="Refresh Status">
-        🔄
+        <i class="ri-refresh-line"></i>
     </button>
 </body>
 </html>

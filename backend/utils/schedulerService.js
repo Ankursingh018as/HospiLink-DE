@@ -12,14 +12,14 @@ const initScheduler = () => {
   if (schedulerInitialized) return;
   schedulerInitialized = true;
 
-  console.log('⏰ HospiLink Notification Scheduler starting...');
+  console.log('[TIMER] HospiLink Notification Scheduler starting...');
 
   // ─────────────────────────────────────────────────────────────
   //  JOB 1: IV DRIP REMINDERS (every 15 minutes)
   //  Notify nurses when a drip will end within 30 minutes
   // ─────────────────────────────────────────────────────────────
   cron.schedule('*/15 * * * *', async () => {
-    console.log('🔄 [Scheduler] Checking IV drips...');
+    console.log('[PROCESS] [Scheduler] Checking IV drips...');
     try {
       const now = new Date();
       const thirtyMinutesLater = new Date(now.getTime() + 30 * 60 * 1000);
@@ -48,10 +48,10 @@ const initScheduler = () => {
       }
 
       if (expiringDrips.length > 0) {
-        console.log(`✅ [Scheduler] Processed ${expiringDrips.length} expiring drip(s)`);
+        console.log(`[SUCCESS] [Scheduler] Processed ${expiringDrips.length} expiring drip(s)`);
       }
     } catch (error) {
-      console.error('❌ [Scheduler] IV drip check error:', error.message);
+      console.error('[ERROR] [Scheduler] IV drip check error:', error.message);
     }
   });
 
@@ -60,7 +60,7 @@ const initScheduler = () => {
   //  Notify patients about their upcoming medicine doses
   // ─────────────────────────────────────────────────────────────
   cron.schedule('*/30 * * * *', async () => {
-    console.log('🔄 [Scheduler] Checking medicine schedules...');
+    console.log('[PROCESS] [Scheduler] Checking medicine schedules...');
     try {
       const now = new Date();
       const hourLater = new Date(now.getTime() + 60 * 60 * 1000);
@@ -90,10 +90,10 @@ const initScheduler = () => {
       }
 
       if (activeMedicines.length > 0) {
-        console.log(`✅ [Scheduler] Processed ${activeMedicines.length} medicine record(s)`);
+        console.log(`[SUCCESS] [Scheduler] Processed ${activeMedicines.length} medicine record(s)`);
       }
     } catch (error) {
-      console.error('❌ [Scheduler] Medicine check error:', error.message);
+      console.error('[ERROR] [Scheduler] Medicine check error:', error.message);
     }
   });
 
@@ -102,7 +102,7 @@ const initScheduler = () => {
   //  Notify doctors about patients without recent vitals check
   // ─────────────────────────────────────────────────────────────
   cron.schedule('0 */6 * * *', async () => {
-    console.log('🔄 [Scheduler] Checking routine vitals status...');
+    console.log('[PROCESS] [Scheduler] Checking routine vitals status...');
     try {
       const sixHoursAgo = new Date(Date.now() - 6 * 60 * 60 * 1000);
 
@@ -142,10 +142,10 @@ const initScheduler = () => {
       }
 
       if (admissions.length > 0) {
-        console.log(`✅ [Scheduler] Routine check: notified doctors for ${admissions.length} admission(s)`);
+        console.log(`[SUCCESS] [Scheduler] Routine check: notified doctors for ${admissions.length} admission(s)`);
       }
     } catch (error) {
-      console.error('❌ [Scheduler] Routine check error:', error.message);
+      console.error('[ERROR] [Scheduler] Routine check error:', error.message);
     }
   });
 
@@ -154,7 +154,7 @@ const initScheduler = () => {
   //  Notify doctor + patient when appointment was completed 7 days ago
   // ─────────────────────────────────────────────────────────────
   cron.schedule('30 3 * * *', async () => { // 9:00 AM IST = 3:30 AM UTC
-    console.log('🔄 [Scheduler] Checking follow-up reminders...');
+    console.log('[PROCESS] [Scheduler] Checking follow-up reminders...');
     try {
       const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
       const eightDaysAgo = new Date(Date.now() - 8 * 24 * 60 * 60 * 1000);
@@ -170,10 +170,10 @@ const initScheduler = () => {
       }
 
       if (completedAppointments.length > 0) {
-        console.log(`✅ [Scheduler] Follow-up: processed ${completedAppointments.length} appointment(s)`);
+        console.log(`[SUCCESS] [Scheduler] Follow-up: processed ${completedAppointments.length} appointment(s)`);
       }
     } catch (error) {
-      console.error('❌ [Scheduler] Follow-up check error:', error.message);
+      console.error('[ERROR] [Scheduler] Follow-up check error:', error.message);
     }
   });
 
@@ -182,7 +182,7 @@ const initScheduler = () => {
   //  Notify patients about tomorrow's appointments
   // ─────────────────────────────────────────────────────────────
   cron.schedule('30 12 * * *', async () => { // 6:00 PM IST = 12:30 PM UTC
-    console.log('🔄 [Scheduler] Checking tomorrow\'s appointments...');
+    console.log('[PROCESS] [Scheduler] Checking tomorrow\'s appointments...');
     try {
       const tomorrowStart = new Date();
       tomorrowStart.setDate(tomorrowStart.getDate() + 1);
@@ -203,10 +203,10 @@ const initScheduler = () => {
       }
 
       if (tomorrowAppointments.length > 0) {
-        console.log(`✅ [Scheduler] Appointment reminders sent for ${tomorrowAppointments.length} appointment(s)`);
+        console.log(`[SUCCESS] [Scheduler] Appointment reminders sent for ${tomorrowAppointments.length} appointment(s)`);
       }
     } catch (error) {
-      console.error('❌ [Scheduler] Appointment reminder error:', error.message);
+      console.error('[ERROR] [Scheduler] Appointment reminder error:', error.message);
     }
   });
 
@@ -214,7 +214,7 @@ const initScheduler = () => {
   //  JOB 6: ADMIN DAILY DIGEST (daily at 8 AM IST)
   // ─────────────────────────────────────────────────────────────
   cron.schedule('30 2 * * *', async () => { // 8:00 AM IST = 2:30 AM UTC
-    console.log('🔄 [Scheduler] Sending admin daily digest...');
+    console.log('[PROCESS] [Scheduler] Sending admin daily digest...');
     try {
       const admins = await User.find({ role: 'admin', status: 'active' })
         .select('firstName lastName email');
@@ -259,13 +259,13 @@ const initScheduler = () => {
         await notificationService.sendAdminDailyDigest(admin, stats);
       }
 
-      console.log(`✅ [Scheduler] Daily digest sent to ${admins.length} admin(s)`);
+      console.log(`[SUCCESS] [Scheduler] Daily digest sent to ${admins.length} admin(s)`);
     } catch (error) {
-      console.error('❌ [Scheduler] Admin digest error:', error.message);
+      console.error('[ERROR] [Scheduler] Admin digest error:', error.message);
     }
   });
 
-  console.log('✅ HospiLink Notification Scheduler initialized — 6 jobs running');
+  console.log('[SUCCESS] HospiLink Notification Scheduler initialized — 6 jobs running');
 };
 
 // ─────────────────────────────────────────────────────────────────

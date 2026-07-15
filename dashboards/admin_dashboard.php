@@ -57,6 +57,7 @@ $activityLogs = $conn->query($activityQuery);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - HospiLink</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="../css/doctor-dashboard-enhanced.css">
     <link rel="icon" href="../images/hosp_favicon.png" type="image/png">
@@ -907,7 +908,7 @@ $activityLogs = $conn->query($activityQuery);
         <div class="modal-box large">
             <div class="modal-header">
                 <h3>Appointment Profile & AI Diagnostic Insights</h3>
-                <button class="modal-close-btn" onclick="closeModal('aptDetailsModal')">✕</button>
+                <button class="modal-close-btn" onclick="closeModal('aptDetailsModal')"><i class="ri-close-line"></i></button>
             </div>
             <div id="aptDetailsContent">
                 <!-- Populated dynamically -->
@@ -920,7 +921,7 @@ $activityLogs = $conn->query($activityQuery);
         <div class="modal-box">
             <div class="modal-header">
                 <h3>Assign Doctor to Appointment</h3>
-                <button class="modal-close-btn" onclick="closeModal('assignDoctorModal')">✕</button>
+                <button class="modal-close-btn" onclick="closeModal('assignDoctorModal')"><i class="ri-close-line"></i></button>
             </div>
             <input type="hidden" id="assign_apt_id">
             <div class="form-group" style="margin-bottom: 20px;">
@@ -942,7 +943,7 @@ $activityLogs = $conn->query($activityQuery);
         <div class="modal-box">
             <div class="modal-header">
                 <h3 id="userModalTitle">Add New System User</h3>
-                <button class="modal-close-btn" onclick="closeModal('userModal')">✕</button>
+                <button class="modal-close-btn" onclick="closeModal('userModal')"><i class="ri-close-line"></i></button>
             </div>
             <form id="userModalForm">
                 <input type="hidden" id="modal_user_id" name="user_id">
@@ -1036,7 +1037,7 @@ $activityLogs = $conn->query($activityQuery);
         <div class="modal-box">
             <div class="modal-header">
                 <h3 id="keywordModalTitle">Add Symptom Priority Keyword</h3>
-                <button class="modal-close-btn" onclick="closeModal('keywordModal')">✕</button>
+                <button class="modal-close-btn" onclick="closeModal('keywordModal')"><i class="ri-close-line"></i></button>
             </div>
             <form id="keywordForm">
                 <input type="hidden" id="key_id" name="keyword_id">
@@ -1070,7 +1071,7 @@ $activityLogs = $conn->query($activityQuery);
         <div class="modal-box">
             <div class="modal-header">
                 <h3>AI Triaging Insights</h3>
-                <button onclick="closeAIModal()" class="modal-close-btn">✕</button>
+                <button onclick="closeAIModal()" class="modal-close-btn"><i class="ri-close-line"></i></button>
             </div>
             <div id="aiModalContent">Loading insights...</div>
         </div>

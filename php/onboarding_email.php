@@ -50,306 +50,503 @@ class OnboardingEmailService {
      * Patient Welcome Email Template
      */
     private static function createPatientWelcomeEmail($firstName) {
+        $dashUrl = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/sign_new.html';
         return '
         <!DOCTYPE html>
         <html>
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>
+                body {
+                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                    background-color: #f8fafc;
+                    color: #334155;
+                    margin: 0;
+                    padding: 0;
+                }
+                .wrapper {
+                    max-width: 580px;
+                    margin: 40px auto;
+                    background-color: #ffffff;
+                    border: 1px solid #e2e8f0;
+                    border-radius: 12px;
+                    overflow: hidden;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+                }
+                .header {
+                    padding: 32px 40px 20px 40px;
+                    border-bottom: 1px solid #f1f5f9;
+                }
+                .header-logo {
+                    font-size: 18px;
+                    font-weight: 700;
+                    color: #0d9488;
+                    letter-spacing: -0.5px;
+                }
+                .header-title {
+                    font-size: 20px;
+                    font-weight: 600;
+                    color: #0f172a;
+                    margin-top: 12px;
+                    margin-bottom: 0;
+                }
+                .body {
+                    padding: 32px 40px;
+                }
+                .body h2 {
+                    font-size: 18px;
+                    font-weight: 600;
+                    color: #0f172a;
+                    margin-top: 0;
+                    margin-bottom: 12px;
+                }
+                .body p {
+                    font-size: 15px;
+                    line-height: 1.6;
+                    color: #475569;
+                    margin-top: 0;
+                    margin-bottom: 16px;
+                }
+                .info-card {
+                    background-color: #f8fafc;
+                    border: 1px solid #e2e8f0;
+                    border-radius: 8px;
+                    padding: 20px;
+                    margin: 24px 0;
+                }
+                .info-card h3 {
+                    color: #0f172a;
+                    margin: 0 0 12px 0;
+                    font-size: 16px;
+                }
+                .info-card ul {
+                    margin: 0;
+                    padding-left: 20px;
+                    color: #475569;
+                    line-height: 1.7;
+                }
+                .btn {
+                    display: inline-block;
+                    background-color: #0d9488;
+                    color: #ffffff !important;
+                    text-decoration: none;
+                    padding: 12px 30px;
+                    border-radius: 6px;
+                    font-size: 15px;
+                    font-weight: bold;
+                    margin: 20px 0;
+                }
+                .pro-tip {
+                    background-color: #fffbef;
+                    border-left: 4px solid #f59e0b;
+                    padding: 12px;
+                    margin: 24px 0;
+                    border-radius: 4px;
+                    font-size: 14px;
+                    color: #b45309;
+                }
+                .footer {
+                    background-color: #f8fafc;
+                    padding: 24px 40px;
+                    border-top: 1px solid #e2e8f0;
+                    text-align: center;
+                }
+                .footer p {
+                    font-size: 12px;
+                    color: #64748b;
+                    line-height: 1.5;
+                    margin: 0;
+                }
+            </style>
         </head>
-        <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4;">
-            <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4; padding: 40px 0;">
-                <tr>
-                    <td align="center">
-                        <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                            <!-- Header -->
-                            <tr>
-                                <td style="background: linear-gradient(135deg, #0e545f 0%, #00adb5 100%); padding: 40px; text-align: center; border-radius: 10px 10px 0 0;">
-                                    <h1 style="color: #ffffff; margin: 0; font-size: 32px;">🏥 Welcome to HospiLink!</h1>
-                                    <p style="color: #ffffff; margin: 15px 0 0 0; font-size: 18px;">Your health, our priority</p>
-                                </td>
-                            </tr>
-                            
-                            <!-- Content -->
-                            <tr>
-                                <td style="padding: 40px 30px;">
-                                    <h2 style="color: #0e545f; margin: 0 0 20px 0;">Hello ' . htmlspecialchars($firstName) . '!</h2>
-                                    <p style="color: #333; font-size: 16px; line-height: 1.8; margin: 0 0 25px 0;">
-                                        We\'re thrilled to have you join the HospiLink family! Your account has been successfully created, and you now have access to our comprehensive healthcare platform.
-                                    </p>
-                                    
-                                    <div style="background: linear-gradient(135deg, #e8f8f9 0%, #f0f9fa 100%); border-left: 4px solid #00adb5; padding: 25px; border-radius: 8px; margin: 30px 0;">
-                                        <h3 style="color: #0e545f; margin: 0 0 15px 0; font-size: 20px;">🎯 Getting Started</h3>
-                                        <ul style="margin: 0; padding-left: 20px; color: #333; line-height: 1.8;">
-                                            <li style="margin-bottom: 10px;"><strong>Book Appointments:</strong> Schedule visits with our expert doctors at your convenience</li>
-                                            <li style="margin-bottom: 10px;"><strong>AI Priority System:</strong> Your symptoms are automatically analyzed to prioritize urgent cases</li>
-                                            <li style="margin-bottom: 10px;"><strong>Medical History:</strong> Access your complete health records anytime, anywhere</li>
-                                            <li style="margin-bottom: 10px;"><strong>Reminders:</strong> Receive automated notifications for upcoming appointments</li>
-                                        </ul>
-                                    </div>
-                                    
-                                    <h3 style="color: #0e545f; margin: 30px 0 15px 0;">📋 How to Book Your First Appointment</h3>
-                                    <ol style="margin: 0; padding-left: 20px; color: #333; line-height: 1.8;">
-                                        <li style="margin-bottom: 10px;">Login to your patient dashboard</li>
-                                        <li style="margin-bottom: 10px;">Navigate to "Book Appointment"</li>
-                                        <li style="margin-bottom: 10px;">Fill in your details and describe your symptoms</li>
-                                        <li style="margin-bottom: 10px;">Our AI will prioritize your case and assign you to the right specialist</li>
-                                        <li style="margin-bottom: 10px;">You\'ll receive a confirmation email with appointment details</li>
-                                    </ol>
-                                    
-                                    <div style="text-align: center; margin: 40px 0;">
-                                        <a href="' . (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/sign_new.html" style="display: inline-block; background: linear-gradient(135deg, #0e545f 0%, #00adb5 100%); color: #ffffff; text-decoration: none; padding: 15px 40px; border-radius: 8px; font-size: 16px; font-weight: bold;">Access Your Dashboard</a>
-                                    </div>
-                                    
-                                    <div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 30px 0; border-radius: 5px;">
-                                        <p style="margin: 0; color: #856404; font-size: 14px;">
-                                            💡 <strong>Pro Tip:</strong> Describe your symptoms in detail for better AI analysis and faster appointment scheduling!
-                                        </p>
-                                    </div>
-                                </td>
-                            </tr>
-                            
-                            <!-- Support -->
-                            <tr>
-                                <td style="background-color: #f8f9fa; padding: 25px 30px; border-top: 1px solid #e9ecef;">
-                                    <h3 style="color: #0e545f; margin: 0 0 15px 0; font-size: 18px;">Need Help?</h3>
-                                    <p style="margin: 0; color: #666; font-size: 14px; line-height: 1.6;">
-                                        Our support team is here 24/7 to assist you. Contact us at <a href="mailto:' . SMTP_FROM_EMAIL . '" style="color: #00adb5; text-decoration: none;">' . SMTP_FROM_EMAIL . '</a>
-                                    </p>
-                                </td>
-                            </tr>
-                            
-                            <!-- Footer -->
-                            <tr>
-                                <td style="background-color: #0e545f; padding: 25px; text-align: center; border-radius: 0 0 10px 10px;">
-                                    <p style="color: #ffffff; margin: 0; font-size: 14px;">
-                                        © ' . date('Y') . ' HospiLink. All rights reserved.
-                                    </p>
-                                    <p style="color: #00adb5; margin: 10px 0 0 0; font-size: 13px;">
-                                        Empowering healthcare through technology
-                                    </p>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
+        <body>
+            <div class="wrapper">
+                <div class="header">
+                    <div class="header-logo">HospiLink</div>
+                    <div class="header-title">Welcome to HospiLink</div>
+                </div>
+                <div class="body">
+                    <h2>Hello ' . htmlspecialchars($firstName) . ',</h2>
+                    <p>We are thrilled to have you join the HospiLink family! Your account has been successfully created, and you now have access to our comprehensive healthcare platform.</p>
+                    
+                    <div class="info-card">
+                        <h3>Getting Started</h3>
+                        <ul>
+                            <li><strong>Book Appointments:</strong> Schedule visits with our expert doctors at your convenience.</li>
+                            <li><strong>AI Priority System:</strong> Your symptoms are automatically analyzed to prioritize urgent cases.</li>
+                            <li><strong>Medical History:</strong> Access your complete health records anytime, anywhere.</li>
+                            <li><strong>Reminders:</strong> Receive automated notifications for upcoming appointments.</li>
+                        </ul>
+                    </div>
+                    
+                    <h2>How to Book Your First Appointment</h2>
+                    <p>1. Login to your patient dashboard.<br>2. Navigate to "Book Appointment".<br>3. Fill in your details and describe your symptoms.<br>4. Our system will analyze your case details and route you to the right specialist.</p>
+                    
+                    <div style="text-align: center;">
+                        <a href="' . $dashUrl . '" class="btn">Access Your Dashboard</a>
+                    </div>
+                    
+                    <div class="pro-tip">
+                        <strong>Pro Tip:</strong> Describe your symptoms in detail for more accurate clinical analysis and faster scheduling.
+                    </div>
+                </div>
+                <div class="footer">
+                    <p>© ' . date('Y') . ' HospiLink. All rights reserved.<br>Support: ' . SMTP_FROM_EMAIL . '</p>
+                </div>
+            </div>
         </body>
-        </html>
-        ';
+        </html>';
     }
     
     /**
      * Doctor Welcome Email Template
      */
     private static function createDoctorWelcomeEmail($firstName) {
+        $dashUrl = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/sign_new.html';
         return '
         <!DOCTYPE html>
         <html>
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>
+                body {
+                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                    background-color: #f8fafc;
+                    color: #334155;
+                    margin: 0;
+                    padding: 0;
+                }
+                .wrapper {
+                    max-width: 580px;
+                    margin: 40px auto;
+                    background-color: #ffffff;
+                    border: 1px solid #e2e8f0;
+                    border-radius: 12px;
+                    overflow: hidden;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+                }
+                .header {
+                    padding: 32px 40px 20px 40px;
+                    border-bottom: 1px solid #f1f5f9;
+                }
+                .header-logo {
+                    font-size: 18px;
+                    font-weight: 700;
+                    color: #0d9488;
+                    letter-spacing: -0.5px;
+                }
+                .header-title {
+                    font-size: 20px;
+                    font-weight: 600;
+                    color: #0f172a;
+                    margin-top: 12px;
+                    margin-bottom: 0;
+                }
+                .body {
+                    padding: 32px 40px;
+                }
+                .body h2 {
+                    font-size: 18px;
+                    font-weight: 600;
+                    color: #0f172a;
+                    margin-top: 0;
+                    margin-bottom: 12px;
+                }
+                .body p {
+                    font-size: 15px;
+                    line-height: 1.6;
+                    color: #475569;
+                    margin-top: 0;
+                    margin-bottom: 16px;
+                }
+                .info-card {
+                    background-color: #f8fafc;
+                    border: 1px solid #e2e8f0;
+                    border-radius: 8px;
+                    padding: 20px;
+                    margin: 24px 0;
+                }
+                .info-card h3 {
+                    color: #0f172a;
+                    margin: 0 0 12px 0;
+                    font-size: 16px;
+                }
+                .info-card ul {
+                    margin: 0;
+                    padding-left: 20px;
+                    color: #475569;
+                    line-height: 1.7;
+                }
+                .feature-block {
+                    background-color: #f8fafc;
+                    border: 1px solid #e2e8f0;
+                    padding: 16px;
+                    border-radius: 6px;
+                    margin-bottom: 12px;
+                }
+                .feature-block h4 {
+                    margin: 0 0 6px 0;
+                    color: #0f172a;
+                    font-size: 15px;
+                }
+                .feature-block p {
+                    margin: 0;
+                    font-size: 13.5px;
+                    line-height: 1.5;
+                }
+                .btn {
+                    display: inline-block;
+                    background-color: #0d9488;
+                    color: #ffffff !important;
+                    text-decoration: none;
+                    padding: 12px 30px;
+                    border-radius: 6px;
+                    font-size: 15px;
+                    font-weight: bold;
+                    margin: 20px 0;
+                }
+                .footer {
+                    background-color: #f8fafc;
+                    padding: 24px 40px;
+                    border-top: 1px solid #e2e8f0;
+                    text-align: center;
+                }
+                .footer p {
+                    font-size: 12px;
+                    color: #64748b;
+                    line-height: 1.5;
+                    margin: 0;
+                }
+            </style>
         </head>
-        <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4;">
-            <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4; padding: 40px 0;">
-                <tr>
-                    <td align="center">
-                        <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                            <!-- Header -->
-                            <tr>
-                                <td style="background: linear-gradient(135deg, #0e545f 0%, #00adb5 100%); padding: 40px; text-align: center; border-radius: 10px 10px 0 0;">
-                                    <h1 style="color: #ffffff; margin: 0; font-size: 32px;">🩺 Welcome, Dr. ' . htmlspecialchars($firstName) . '!</h1>
-                                    <p style="color: #ffffff; margin: 15px 0 0 0; font-size: 18px;">Join our team of healthcare excellence</p>
-                                </td>
-                            </tr>
-                            
-                            <!-- Content -->
-                            <tr>
-                                <td style="padding: 40px 30px;">
-                                    <h2 style="color: #0e545f; margin: 0 0 20px 0;">Welcome to HospiLink!</h2>
-                                    <p style="color: #333; font-size: 16px; line-height: 1.8; margin: 0 0 25px 0;">
-                                        Thank you for joining our medical team! Your account has been successfully created. We\'re excited to have your expertise on our platform.
-                                    </p>
-                                    
-                                    <div style="background: linear-gradient(135deg, #e8f8f9 0%, #f0f9fa 100%); border-left: 4px solid #00adb5; padding: 25px; border-radius: 8px; margin: 30px 0;">
-                                        <h3 style="color: #0e545f; margin: 0 0 15px 0; font-size: 20px;">🎯 Your Doctor Dashboard</h3>
-                                        <ul style="margin: 0; padding-left: 20px; color: #333; line-height: 1.8;">
-                                            <li style="margin-bottom: 10px;"><strong>AI-Prioritized Queue:</strong> Appointments automatically sorted by urgency</li>
-                                            <li style="margin-bottom: 10px;"><strong>Patient Records:</strong> Instant access to complete medical histories</li>
-                                            <li style="margin-bottom: 10px;"><strong>Appointment Management:</strong> View, update, and manage all your appointments</li>
-                                            <li style="margin-bottom: 10px;"><strong>Real-time Stats:</strong> Monitor your daily appointments and pending cases</li>
-                                        </ul>
-                                    </div>
-                                    
-                                    <h3 style="color: #0e545f; margin: 30px 0 15px 0;">📋 Key Features</h3>
-                                    <div style="margin: 20px 0;">
-                                        <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 15px;">
-                                            <h4 style="color: #0e545f; margin: 0 0 10px 0; font-size: 16px;">🚨 Priority-Based System</h4>
-                                            <p style="margin: 0; color: #666; font-size: 14px; line-height: 1.6;">
-                                                Our AI analyzes patient symptoms and assigns priority levels (Critical, High, Medium, Low) to help you focus on urgent cases first.
-                                            </p>
-                                        </div>
-                                        <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 15px;">
-                                            <h4 style="color: #0e545f; margin: 0 0 10px 0; font-size: 16px;">📊 Comprehensive Dashboard</h4>
-                                            <p style="margin: 0; color: #666; font-size: 14px; line-height: 1.6;">
-                                                Track your appointments, view patient details, add diagnosis notes, and manage your schedule efficiently.
-                                            </p>
-                                        </div>
-                                        <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px;">
-                                            <h4 style="color: #0e545f; margin: 0 0 10px 0; font-size: 16px;">📝 Activity Logging</h4>
-                                            <p style="margin: 0; color: #666; font-size: 14px; line-height: 1.6;">
-                                                All actions are logged for security and audit purposes, ensuring accountability and patient safety.
-                                            </p>
-                                        </div>
-                                    </div>
-                                    
-                                    <div style="text-align: center; margin: 40px 0;">
-                                        <a href="' . (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/sign_new.html" style="display: inline-block; background: linear-gradient(135deg, #0e545f 0%, #00adb5 100%); color: #ffffff; text-decoration: none; padding: 15px 40px; border-radius: 8px; font-size: 16px; font-weight: bold;">Access Your Dashboard</a>
-                                    </div>
-                                    
-                                    <div style="background-color: #d1ecf1; border-left: 4px solid #00adb5; padding: 15px; margin: 30px 0; border-radius: 5px;">
-                                        <p style="margin: 0; color: #0c5460; font-size: 14px;">
-                                            ℹ️ <strong>First Time Login:</strong> Use your registered email and password to access your doctor dashboard.
-                                        </p>
-                                    </div>
-                                </td>
-                            </tr>
-                            
-                            <!-- Support -->
-                            <tr>
-                                <td style="background-color: #f8f9fa; padding: 25px 30px; border-top: 1px solid #e9ecef;">
-                                    <h3 style="color: #0e545f; margin: 0 0 15px 0; font-size: 18px;">Need Assistance?</h3>
-                                    <p style="margin: 0; color: #666; font-size: 14px; line-height: 1.6;">
-                                        Our admin team is here to support you. For any questions or technical issues, reach out at <a href="mailto:' . SMTP_FROM_EMAIL . '" style="color: #00adb5; text-decoration: none;">' . SMTP_FROM_EMAIL . '</a>
-                                    </p>
-                                </td>
-                            </tr>
-                            
-                            <!-- Footer -->
-                            <tr>
-                                <td style="background-color: #0e545f; padding: 25px; text-align: center; border-radius: 0 0 10px 10px;">
-                                    <p style="color: #ffffff; margin: 0; font-size: 14px;">
-                                        © ' . date('Y') . ' HospiLink. All rights reserved.
-                                    </p>
-                                    <p style="color: #00adb5; margin: 10px 0 0 0; font-size: 13px;">
-                                        Advancing healthcare through innovation
-                                    </p>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
+        <body>
+            <div class="wrapper">
+                <div class="header">
+                    <div class="header-logo">HospiLink</div>
+                    <div class="header-title">Welcome to our Medical Team</div>
+                </div>
+                <div class="body">
+                    <h2>Hello Dr. ' . htmlspecialchars($firstName) . ',</h2>
+                    <p>Thank you for joining our medical team! Your account has been successfully created. We are excited to have your expertise on our platform.</p>
+                    
+                    <div class="info-card">
+                        <h3>Your Doctor Dashboard</h3>
+                        <ul>
+                            <li><strong>AI-Prioritized Queue:</strong> Appointments automatically sorted by urgency.</li>
+                            <li><strong>Patient Records:</strong> Instant access to complete medical histories.</li>
+                            <li><strong>Appointment Management:</strong> View, update, and manage all your appointments.</li>
+                            <li><strong>Real-time Stats:</strong> Monitor your daily appointments and pending cases.</li>
+                        </ul>
+                    </div>
+                    
+                    <h2>Key Platform Features</h2>
+                    <div class="feature-block">
+                        <h4>Priority-Based System</h4>
+                        <p>Our system analyzes patient symptoms and assigns priority levels to help you focus on urgent cases first.</p>
+                    </div>
+                    <div class="feature-block">
+                        <h4>Comprehensive Dashboard</h4>
+                        <p>Track your appointments, view patient details, add diagnosis notes, and manage your schedule efficiently.</p>
+                    </div>
+                    <div class="feature-block">
+                        <h4>Activity Logging</h4>
+                        <p>All clinical actions are logged for security and audit purposes, ensuring accountability and patient safety.</p>
+                    </div>
+                    
+                    <div style="text-align: center;">
+                        <a href="' . $dashUrl . '" class="btn">Access Your Dashboard</a>
+                    </div>
+                </div>
+                <div class="footer">
+                    <p>© ' . date('Y') . ' HospiLink. All rights reserved.<br>Support: ' . SMTP_FROM_EMAIL . '</p>
+                </div>
+            </div>
         </body>
-        </html>
-        ';
+        </html>';
     }
     
     /**
      * Admin Welcome Email Template
      */
     private static function createAdminWelcomeEmail($firstName) {
+        $dashUrl = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/sign_new.html';
         return '
         <!DOCTYPE html>
         <html>
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>
+                body {
+                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                    background-color: #f8fafc;
+                    color: #334155;
+                    margin: 0;
+                    padding: 0;
+                }
+                .wrapper {
+                    max-width: 580px;
+                    margin: 40px auto;
+                    background-color: #ffffff;
+                    border: 1px solid #e2e8f0;
+                    border-radius: 12px;
+                    overflow: hidden;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+                }
+                .header {
+                    padding: 32px 40px 20px 40px;
+                    border-bottom: 1px solid #f1f5f9;
+                }
+                .header-logo {
+                    font-size: 18px;
+                    font-weight: 700;
+                    color: #0d9488;
+                    letter-spacing: -0.5px;
+                }
+                .header-title {
+                    font-size: 20px;
+                    font-weight: 600;
+                    color: #0f172a;
+                    margin-top: 12px;
+                    margin-bottom: 0;
+                }
+                .body {
+                    padding: 32px 40px;
+                }
+                .body h2 {
+                    font-size: 18px;
+                    font-weight: 600;
+                    color: #0f172a;
+                    margin-top: 0;
+                    margin-bottom: 12px;
+                }
+                .body p {
+                    font-size: 15px;
+                    line-height: 1.6;
+                    color: #475569;
+                    margin-top: 0;
+                    margin-bottom: 16px;
+                }
+                .info-card {
+                    background-color: #f8fafc;
+                    border: 1px solid #e2e8f0;
+                    border-radius: 8px;
+                    padding: 20px;
+                    margin: 24px 0;
+                }
+                .info-card h3 {
+                    color: #0f172a;
+                    margin: 0 0 12px 0;
+                    font-size: 16px;
+                }
+                .info-card ul {
+                    margin: 0;
+                    padding-left: 20px;
+                    color: #475569;
+                    line-height: 1.7;
+                }
+                .feature-block {
+                    background-color: #f8fafc;
+                    border: 1px solid #e2e8f0;
+                    padding: 16px;
+                    border-radius: 6px;
+                    margin-bottom: 12px;
+                }
+                .feature-block h4 {
+                    margin: 0 0 6px 0;
+                    color: #0f172a;
+                    font-size: 15px;
+                }
+                .feature-block p {
+                    margin: 0;
+                    font-size: 13.5px;
+                    line-height: 1.5;
+                }
+                .btn {
+                    display: inline-block;
+                    background-color: #0d9488;
+                    color: #ffffff !important;
+                    text-decoration: none;
+                    padding: 12px 30px;
+                    border-radius: 6px;
+                    font-size: 15px;
+                    font-weight: bold;
+                    margin: 20px 0;
+                }
+                .security-notice {
+                    background-color: #fffbef;
+                    border-left: 4px solid #f59e0b;
+                    padding: 12px;
+                    margin: 24px 0;
+                    border-radius: 4px;
+                    font-size: 14px;
+                    color: #b45309;
+                }
+                .footer {
+                    background-color: #f8fafc;
+                    padding: 24px 40px;
+                    border-top: 1px solid #e2e8f0;
+                    text-align: center;
+                }
+                .footer p {
+                    font-size: 12px;
+                    color: #64748b;
+                    line-height: 1.5;
+                    margin: 0;
+                }
+            </style>
         </head>
-        <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4;">
-            <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4; padding: 40px 0;">
-                <tr>
-                    <td align="center">
-                        <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                            <!-- Header -->
-                            <tr>
-                                <td style="background: linear-gradient(135deg, #0e545f 0%, #00adb5 100%); padding: 40px; text-align: center; border-radius: 10px 10px 0 0;">
-                                    <h1 style="color: #ffffff; margin: 0; font-size: 32px;">🛡️ Welcome, ' . htmlspecialchars($firstName) . '!</h1>
-                                    <p style="color: #ffffff; margin: 15px 0 0 0; font-size: 18px;">Hospital Staff Administrator Access</p>
-                                </td>
-                            </tr>
-                            
-                            <!-- Content -->
-                            <tr>
-                                <td style="padding: 40px 30px;">
-                                    <h2 style="color: #0e545f; margin: 0 0 20px 0;">Welcome to HospiLink Admin!</h2>
-                                    <p style="color: #333; font-size: 16px; line-height: 1.8; margin: 0 0 25px 0;">
-                                        Your admin account has been successfully created. You now have access to comprehensive hospital management tools and oversight capabilities.
-                                    </p>
-                                    
-                                    <div style="background: linear-gradient(135deg, #e8f8f9 0%, #f0f9fa 100%); border-left: 4px solid #00adb5; padding: 25px; border-radius: 8px; margin: 30px 0;">
-                                        <h3 style="color: #0e545f; margin: 0 0 15px 0; font-size: 20px;">🎯 Admin Dashboard Features</h3>
-                                        <ul style="margin: 0; padding-left: 20px; color: #333; line-height: 1.8;">
-                                            <li style="margin-bottom: 10px;"><strong>Patient Admissions:</strong> Manage patient admission and discharge workflows</li>
-                                            <li style="margin-bottom: 10px;"><strong>Bed Management:</strong> Real-time bed availability across all wards</li>
-                                            <li style="margin-bottom: 10px;"><strong>Appointment Oversight:</strong> Monitor all hospital appointments</li>
-                                            <li style="margin-bottom: 10px;"><strong>Activity Logs:</strong> Complete audit trail of all system activities</li>
-                                            <li style="margin-bottom: 10px;"><strong>Coordination Tools:</strong> Facilitate communication between departments</li>
-                                        </ul>
-                                    </div>
-                                    
-                                    <h3 style="color: #0e545f; margin: 30px 0 15px 0;">📋 Key Responsibilities</h3>
-                                    <div style="margin: 20px 0;">
-                                        <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 15px;">
-                                            <h4 style="color: #0e545f; margin: 0 0 10px 0; font-size: 16px;">🏥 Bed & Ward Management</h4>
-                                            <p style="margin: 0; color: #666; font-size: 14px; line-height: 1.6;">
-                                                Track bed availability in real-time, assign patients to appropriate wards, and manage bed status (available, occupied, maintenance).
-                                            </p>
-                                        </div>
-                                        <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 15px;">
-                                            <h4 style="color: #0e545f; margin: 0 0 10px 0; font-size: 16px;">📊 System Monitoring</h4>
-                                            <p style="margin: 0; color: #666; font-size: 14px; line-height: 1.6;">
-                                                View comprehensive statistics, monitor appointment flow, and track system usage across all departments.
-                                            </p>
-                                        </div>
-                                        <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px;">
-                                            <h4 style="color: #0e545f; margin: 0 0 10px 0; font-size: 16px;">🔍 Activity Auditing</h4>
-                                            <p style="margin: 0; color: #666; font-size: 14px; line-height: 1.6;">
-                                                Access detailed activity logs for security compliance, including user actions, timestamps, and IP addresses.
-                                            </p>
-                                        </div>
-                                    </div>
-                                    
-                                    <div style="text-align: center; margin: 40px 0;">
-                                        <a href="' . (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/sign_new.html" style="display: inline-block; background: linear-gradient(135deg, #0e545f 0%, #00adb5 100%); color: #ffffff; text-decoration: none; padding: 15px 40px; border-radius: 8px; font-size: 16px; font-weight: bold;">Access Admin Dashboard</a>
-                                    </div>
-                                    
-                                    <div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 30px 0; border-radius: 5px;">
-                                        <p style="margin: 0; color: #856404; font-size: 14px;">
-                                            ⚠️ <strong>Security Notice:</strong> As an admin, you have elevated privileges. Please ensure you follow all security protocols and never share your credentials.
-                                        </p>
-                                    </div>
-                                </td>
-                            </tr>
-                            
-                            <!-- Support -->
-                            <tr>
-                                <td style="background-color: #f8f9fa; padding: 25px 30px; border-top: 1px solid #e9ecef;">
-                                    <h3 style="color: #0e545f; margin: 0 0 15px 0; font-size: 18px;">Technical Support</h3>
-                                    <p style="margin: 0; color: #666; font-size: 14px; line-height: 1.6;">
-                                        For technical assistance or to report issues, contact our IT team at <a href="mailto:' . SMTP_FROM_EMAIL . '" style="color: #00adb5; text-decoration: none;">' . SMTP_FROM_EMAIL . '</a>
-                                    </p>
-                                </td>
-                            </tr>
-                            
-                            <!-- Footer -->
-                            <tr>
-                                <td style="background-color: #0e545f; padding: 25px; text-align: center; border-radius: 0 0 10px 10px;">
-                                    <p style="color: #ffffff; margin: 0; font-size: 14px;">
-                                        © ' . date('Y') . ' HospiLink. All rights reserved.
-                                    </p>
-                                    <p style="color: #00adb5; margin: 10px 0 0 0; font-size: 13px;">
-                                        Streamlining healthcare operations
-                                    </p>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
+        <body>
+            <div class="wrapper">
+                <div class="header">
+                    <div class="header-logo">HospiLink</div>
+                    <div class="header-title">Administrator Portal Access</div>
+                </div>
+                <div class="body">
+                    <h2>Hello ' . htmlspecialchars($firstName) . ',</h2>
+                    <p>Your admin account has been successfully created. You now have access to comprehensive hospital management tools and oversight capabilities.</p>
+                    
+                    <div class="info-card">
+                        <h3>Admin Dashboard Features</h3>
+                        <ul>
+                            <li><strong>Patient Admissions:</strong> Manage patient admission and discharge workflows.</li>
+                            <li><strong>Bed Management:</strong> Real-time bed availability across all wards.</li>
+                            <li><strong>Appointment Oversight:</strong> Monitor all hospital appointments.</li>
+                            <li><strong>Activity Logs:</strong> Complete audit trail of all system activities.</li>
+                            <li><strong>Coordination Tools:</strong> Facilitate communication between departments.</li>
+                        </ul>
+                    </div>
+                    
+                    <h2>Key Responsibilities</h2>
+                    <div class="feature-block">
+                        <h4>Bed & Ward Management</h4>
+                        <p>Track bed availability in real-time, assign patients to appropriate wards, and manage bed status (available, occupied, maintenance).</p>
+                    </div>
+                    <div class="feature-block">
+                        <h4>System Monitoring</h4>
+                        <p>View comprehensive statistics, monitor appointment flow, and track system usage across all departments.</p>
+                    </div>
+                    <div class="feature-block">
+                        <h4>Activity Auditing</h4>
+                        <p>Access detailed activity logs for security compliance, including user actions, timestamps, and details.</p>
+                    </div>
+                    
+                    <div style="text-align: center;">
+                        <a href="' . $dashUrl . '" class="btn">Access Admin Dashboard</a>
+                    </div>
+                    
+                    <div class="security-notice">
+                        <strong>Security Notice:</strong> As an administrator, you have elevated privileges. Please ensure you follow all security protocols and never share your credentials.
+                    </div>
+                </div>
+                <div class="footer">
+                    <p>© ' . date('Y') . ' HospiLink. All rights reserved.<br>Technical Support: ' . SMTP_FROM_EMAIL . '</p>
+                </div>
+            </div>
         </body>
-        </html>
-        ';
+        </html>';
     }
 }
 ?>

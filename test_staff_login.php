@@ -38,7 +38,7 @@ if ($result->num_rows > 0) {
     echo "</ol>";
     
     echo "<hr>";
-    echo "<h3 style='color: #f44336;'>⚠️ IMPORTANT:</h3>";
+    echo "<h3 style='color: #f44336;'>[WARNING] IMPORTANT:</h3>";
     echo "<p style='font-size: 16px;'>";
     echo "Even though the database has role='nurse', you MUST select <strong>'Hospital Staff'</strong> from the dropdown.<br>";
     echo "The auth.php checks for BOTH 'staff' OR 'nurse' when you select 'Hospital Staff'.<br>";
@@ -46,7 +46,7 @@ if ($result->num_rows > 0) {
     echo "</p>";
     
     echo "<hr>";
-    echo "<h3 style='color: #4CAF50;'>✅ TEST CREDENTIALS:</h3>";
+    echo "<h3 style='color: #4CAF50;'>[SUCCESS] TEST CREDENTIALS:</h3>";
     echo "<pre style='background: #f5f5f5; padding: 15px; border-left: 4px solid #4CAF50;'>";
     echo "<strong>STAFF USER 1:</strong>\n";
     echo "Email: nurse.sharma@hospilink.com\n";

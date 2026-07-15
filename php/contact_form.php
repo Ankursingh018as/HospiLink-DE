@@ -128,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class='content'>
                 <div class='info-section'>
                     <div class='info-row'>
-                        <span class='info-label'>👤 Name:</span>
+                        <span class='info-label'>[USER] Name:</span>
                         <span class='info-value'><strong>" . htmlspecialchars($name) . "</strong></span>
                     </div>
                     <div class='info-row'>
@@ -136,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <span class='info-value'>" . htmlspecialchars($email) . "</span>
                     </div>
                     <div class='info-row'>
-                        <span class='info-label'>🏥 Speciality:</span>
+                        <span class='info-label'>[HOSPITAL] Speciality:</span>
                         <span class='info-value'>" . htmlspecialchars($speciality) . "</span>
                     </div>
                     <div class='info-row'>
@@ -144,7 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <span class='info-value'>" . htmlspecialchars($doctor) . "</span>
                     </div>
                     <div class='info-row'>
-                        <span class='info-label'>📅 Date:</span>
+                        <span class='info-label'>[DATE] Date:</span>
                         <span class='info-value'>" . date('F d, Y') . "</span>
                     </div>
                     <div class='info-row'>
@@ -154,7 +154,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 
                 <div class='message-section'>
-                    <h3>💬 Message Content:</h3>
+                    <h3>[CHAT] Message Content:</h3>
                     <div class='message-text'>" . htmlspecialchars($message) . "</div>
                 </div>
                 

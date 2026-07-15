@@ -20,19 +20,19 @@ function log(message, color = 'reset') {
 }
 
 async function testHealthCheck() {
-  log('\n🔍 Testing Health Check...', 'blue');
+  log('\n[DEBUG] Testing Health Check...', 'blue');
   try {
     const response = await axios.get(`${API_BASE}/health`);
-    log(`✅ Health Check: ${response.data.message}`, 'green');
+    log(`[SUCCESS] Health Check: ${response.data.message}`, 'green');
     return true;
   } catch (error) {
-    log(`❌ Health Check Failed: ${error.message}`, 'red');
+    log(`[ERROR] Health Check Failed: ${error.message}`, 'red');
     return false;
   }
 }
 
 async function testLogin() {
-  log('\n🔐 Testing Login...', 'blue');
+  log('\n[AUTH] Testing Login...', 'blue');
   try {
     const response = await axios.post(`${API_BASE}/auth/login`, {
       email: 'admin@hospilink.com',
@@ -41,20 +41,20 @@ async function testLogin() {
     
     if (response.data.success && response.data.token) {
       authToken = response.data.token;
-      log(`✅ Login Successful: ${response.data.user.firstName} ${response.data.user.lastName} (${response.data.user.role})`, 'green');
+      log(`[SUCCESS] Login Successful: ${response.data.user.firstName} ${response.data.user.lastName} (${response.data.user.role})`, 'green');
       return true;
     } else {
-      log('❌ Login Failed: No token received', 'red');
+      log('[ERROR] Login Failed: No token received', 'red');
       return false;
     }
   } catch (error) {
-    log(`❌ Login Failed: ${error.response?.data?.message || error.message}`, 'red');
+    log(`[ERROR] Login Failed: ${error.response?.data?.message || error.message}`, 'red');
     return false;
   }
 }
 
 async function testPatientLogin() {
-  log('\n👤 Testing Patient Login...', 'blue');
+  log('\n[USER] Testing Patient Login...', 'blue');
   try {
     const response = await axios.post(`${API_BASE}/auth/login`, {
       email: 'patient@hospilink.com',
@@ -63,18 +63,18 @@ async function testPatientLogin() {
     
     if (response.data.success && response.data.token) {
       testPatientId = response.data.user.id;
-      log(`✅ Patient Login Successful: ${response.data.user.firstName} ${response.data.user.lastName}`, 'green');
+      log(`[SUCCESS] Patient Login Successful: ${response.data.user.firstName} ${response.data.user.lastName}`, 'green');
       log(`   Patient ID: ${testPatientId}`, 'yellow');
       return true;
     }
   } catch (error) {
-    log(`❌ Patient Login Failed: ${error.response?.data?.message || error.message}`, 'red');
+    log(`[ERROR] Patient Login Failed: ${error.response?.data?.message || error.message}`, 'red');
     return false;
   }
 }
 
 async function testRegister() {
-  log('\n📝 Testing Registration...', 'blue');
+  log('\n[INFO] Testing Registration...', 'blue');
   try {
     const randomEmail = `testuser${Date.now()}@test.com`;
     const response = await axios.post(`${API_BASE}/auth/register`, {
@@ -88,41 +88,41 @@ async function testRegister() {
     });
     
     if (response.data.success) {
-      log(`✅ Registration Successful: ${randomEmail}`, 'green');
+      log(`[SUCCESS] Registration Successful: ${randomEmail}`, 'green');
       return true;
     }
   } catch (error) {
-    log(`❌ Registration Failed: ${error.response?.data?.message || error.message}`, 'red');
+    log(`[ERROR] Registration Failed: ${error.response?.data?.message || error.message}`, 'red');
     return false;
   }
 }
 
 async function testGetProfile() {
-  log('\n👤 Testing Get Profile...', 'blue');
+  log('\n[USER] Testing Get Profile...', 'blue');
   try {
     const response = await axios.get(`${API_BASE}/auth/me`, {
       headers: { Authorization: `Bearer ${authToken}` }
     });
     
     if (response.data.success) {
-      log(`✅ Profile Retrieved: ${response.data.user.firstName} ${response.data.user.lastName}`, 'green');
+      log(`[SUCCESS] Profile Retrieved: ${response.data.user.firstName} ${response.data.user.lastName}`, 'green');
       return true;
     }
   } catch (error) {
-    log(`❌ Get Profile Failed: ${error.response?.data?.message || error.message}`, 'red');
+    log(`[ERROR] Get Profile Failed: ${error.response?.data?.message || error.message}`, 'red');
     return false;
   }
 }
 
 async function testGetBeds() {
-  log('\n🛏️  Testing Get Available Beds...', 'blue');
+  log('\n[BED]  Testing Get Available Beds...', 'blue');
   try {
     const response = await axios.get(`${API_BASE}/beds?status=available`, {
       headers: { Authorization: `Bearer ${authToken}` }
     });
     
     if (response.data.success && response.data.beds) {
-      log(`✅ Retrieved ${response.data.beds.length} available beds`, 'green');
+      log(`[SUCCESS] Retrieved ${response.data.beds.length} available beds`, 'green');
       if (response.data.beds.length > 0) {
         testBedId = response.data.beds[0]._id;
         log(`   Sample Bed: ${response.data.beds[0].wardName} - ${response.data.beds[0].bedNumber}`, 'yellow');
@@ -130,7 +130,7 @@ async function testGetBeds() {
       return true;
     }
   } catch (error) {
-    log(`❌ Get Beds Failed: ${error.response?.data?.message || error.message}`, 'red');
+    log(`[ERROR] Get Beds Failed: ${error.response?.data?.message || error.message}`, 'red');
     return false;
   }
 }
@@ -143,20 +143,20 @@ async function testGetDoctors() {
     });
     
     if (response.data.success && response.data.doctors) {
-      log(`✅ Retrieved ${response.data.doctors.length} doctors`, 'green');
+      log(`[SUCCESS] Retrieved ${response.data.doctors.length} doctors`, 'green');
       if (response.data.doctors.length > 0) {
         log(`   Sample: Dr. ${response.data.doctors[0].firstName} ${response.data.doctors[0].lastName} - ${response.data.doctors[0].specialization}`, 'yellow');
       }
       return true;
     }
   } catch (error) {
-    log(`❌ Get Doctors Failed: ${error.response?.data?.message || error.message}`, 'red');
+    log(`[ERROR] Get Doctors Failed: ${error.response?.data?.message || error.message}`, 'red');
     return false;
   }
 }
 
 async function testCreateAppointment() {
-  log('\n📅 Testing Create Appointment...', 'blue');
+  log('\n[DATE] Testing Create Appointment...', 'blue');
   try {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
@@ -175,36 +175,36 @@ async function testCreateAppointment() {
     
     if (response.data.success && response.data.appointment) {
       testAppointmentId = response.data.appointment._id;
-      log(`✅ Appointment Created: ID ${testAppointmentId}`, 'green');
+      log(`[SUCCESS] Appointment Created: ID ${testAppointmentId}`, 'green');
       log(`   Priority: ${response.data.appointment.priorityLevel} (Score: ${response.data.appointment.priorityScore})`, 'yellow');
       return true;
     }
   } catch (error) {
-    log(`❌ Create Appointment Failed: ${error.response?.data?.message || error.message}`, 'red');
+    log(`[ERROR] Create Appointment Failed: ${error.response?.data?.message || error.message}`, 'red');
     return false;
   }
 }
 
 async function testGetAppointments() {
-  log('\n📋 Testing Get Appointments...', 'blue');
+  log('\n[INFO] Testing Get Appointments...', 'blue');
   try {
     const response = await axios.get(`${API_BASE}/appointments`, {
       headers: { Authorization: `Bearer ${authToken}` }
     });
     
     if (response.data.success) {
-      log(`✅ Retrieved ${response.data.appointments?.length || 0} appointments`, 'green');
+      log(`[SUCCESS] Retrieved ${response.data.appointments?.length || 0} appointments`, 'green');
       return true;
     }
   } catch (error) {
-    log(`❌ Get Appointments Failed: ${error.response?.data?.message || error.message}`, 'red');
+    log(`[ERROR] Get Appointments Failed: ${error.response?.data?.message || error.message}`, 'red');
     return false;
   }
 }
 
 async function testUpdateAppointment() {
   if (!testAppointmentId) {
-    log('⚠️  Skipping Update Appointment (no appointment ID)', 'yellow');
+    log('[WARNING]  Skipping Update Appointment (no appointment ID)', 'yellow');
     return false;
   }
   
@@ -218,41 +218,41 @@ async function testUpdateAppointment() {
     });
     
     if (response.data.success) {
-      log(`✅ Appointment Updated: Status changed to confirmed`, 'green');
+      log(`[SUCCESS] Appointment Updated: Status changed to confirmed`, 'green');
       return true;
     }
   } catch (error) {
-    log(`❌ Update Appointment Failed: ${error.response?.data?.message || error.message}`, 'red');
+    log(`[ERROR] Update Appointment Failed: ${error.response?.data?.message || error.message}`, 'red');
     return false;
   }
 }
 
 async function testGetAdmittedPatients() {
-  log('\n🏥 Testing Get Admitted Patients...', 'blue');
+  log('\n[HOSPITAL] Testing Get Admitted Patients...', 'blue');
   try {
     const response = await axios.get(`${API_BASE}/patients?status=admitted`, {
       headers: { Authorization: `Bearer ${authToken}` }
     });
     
     if (response.data.success) {
-      log(`✅ Retrieved ${response.data.patients?.length || 0} admitted patients`, 'green');
+      log(`[SUCCESS] Retrieved ${response.data.patients?.length || 0} admitted patients`, 'green');
       return true;
     }
   } catch (error) {
-    log(`❌ Get Admitted Patients Failed: ${error.response?.data?.message || error.message}`, 'red');
+    log(`[ERROR] Get Admitted Patients Failed: ${error.response?.data?.message || error.message}`, 'red');
     return false;
   }
 }
 
 async function testGetStats() {
-  log('\n📊 Testing Get Admin Stats...', 'blue');
+  log('\n[STATS] Testing Get Admin Stats...', 'blue');
   try {
     const response = await axios.get(`${API_BASE}/admin/stats`, {
       headers: { Authorization: `Bearer ${authToken}` }
     });
     
     if (response.data.success) {
-      log(`✅ Stats Retrieved Successfully`, 'green');
+      log(`[SUCCESS] Stats Retrieved Successfully`, 'green');
       const stats = response.data.stats;
       if (stats) {
         log(`   Total Users: ${stats.totalUsers || 0}`, 'yellow');
@@ -262,7 +262,7 @@ async function testGetStats() {
       return true;
     }
   } catch (error) {
-    log(`❌ Get Stats Failed: ${error.response?.data?.message || error.message}`, 'red');
+    log(`[ERROR] Get Stats Failed: ${error.response?.data?.message || error.message}`, 'red');
     return false;
   }
 }
@@ -275,11 +275,11 @@ async function testActivityLogs() {
     });
     
     if (response.data.success) {
-      log(`✅ Retrieved ${response.data.logs?.length || 0} activity logs`, 'green');
+      log(`[SUCCESS] Retrieved ${response.data.logs?.length || 0} activity logs`, 'green');
       return true;
     }
   } catch (error) {
-    log(`❌ Get Activity Logs Failed: ${error.response?.data?.message || error.message}`, 'red');
+    log(`[ERROR] Get Activity Logs Failed: ${error.response?.data?.message || error.message}`, 'red');
     return false;
   }
 }
@@ -328,14 +328,14 @@ async function runAllTests() {
   log('║                     TEST SUMMARY                         ║', 'blue');
   log('╚══════════════════════════════════════════════════════════╝', 'blue');
   log(`\nTotal Tests: ${results.total}`, 'blue');
-  log(`✅ Passed: ${results.passed}`, 'green');
-  log(`❌ Failed: ${results.failed}`, results.failed > 0 ? 'red' : 'green');
+  log(`[SUCCESS] Passed: ${results.passed}`, 'green');
+  log(`[ERROR] Failed: ${results.failed}`, results.failed > 0 ? 'red' : 'green');
   log(`Success Rate: ${((results.passed / results.total) * 100).toFixed(1)}%\n`, results.failed > 0 ? 'yellow' : 'green');
   
   if (results.failed === 0) {
-    log('🎉 All tests passed! MERN backend is working correctly!', 'green');
+    log('[SUCCESS] All tests passed! MERN backend is working correctly!', 'green');
   } else {
-    log('⚠️  Some tests failed. Check the errors above for details.', 'yellow');
+    log('[WARNING]  Some tests failed. Check the errors above for details.', 'yellow');
   }
 }
 

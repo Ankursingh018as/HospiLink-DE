@@ -14,9 +14,9 @@ const ActivityLog = require('./models/ActivityLog');
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URI);
-    console.log('✅ MongoDB Connected');
+    console.log('[SUCCESS] MongoDB Connected');
   } catch (error) {
-    console.error('❌ MongoDB Connection Error:', error.message);
+    console.error('[ERROR] MongoDB Connection Error:', error.message);
     process.exit(1);
   }
 };
@@ -127,7 +127,7 @@ const seedUsers = async () => {
 
   await User.deleteMany({});
   const createdUsers = await User.insertMany(users);
-  console.log(`✅ Created ${createdUsers.length} users`);
+  console.log(`[SUCCESS] Created ${createdUsers.length} users`);
   return createdUsers;
 };
 
@@ -204,7 +204,7 @@ const seedSymptomKeywords = async () => {
 
   await SymptomKeyword.deleteMany({});
   const createdSymptoms = await SymptomKeyword.insertMany(symptoms);
-  console.log(`✅ Created ${createdSymptoms.length} symptom keywords`);
+  console.log(`[SUCCESS] Created ${createdSymptoms.length} symptom keywords`);
 };
 
 // Seed Beds (matching MySQL data)
@@ -232,7 +232,7 @@ const seedBeds = async () => {
 
   await Bed.deleteMany({});
   const createdBeds = await Bed.insertMany(beds);
-  console.log(`✅ Created ${createdBeds.length} beds`);
+  console.log(`[SUCCESS] Created ${createdBeds.length} beds`);
   return createdBeds;
 };
 
@@ -305,7 +305,7 @@ const seedAdmittedPatients = async (beds) => {
 
   await AdmittedPatient.deleteMany({});
   const createdPatients = await AdmittedPatient.insertMany(patients);
-  console.log(`✅ Created ${createdPatients.length} admitted patients`);
+  console.log(`[SUCCESS] Created ${createdPatients.length} admitted patients`);
   
   // Update bed status
   for (const patient of createdPatients) {
@@ -316,7 +316,7 @@ const seedAdmittedPatients = async (beds) => {
       });
     }
   }
-  console.log('✅ Updated bed statuses');
+  console.log('[SUCCESS] Updated bed statuses');
 };
 
 // Main seed function
@@ -331,8 +331,8 @@ const seedDatabase = async () => {
     const beds = await seedBeds();
     await seedAdmittedPatients(beds);
     
-    console.log('\n✅ Database seeding completed successfully!\n');
-    console.log('📝 Login Credentials:');
+    console.log('\n[SUCCESS] Database seeding completed successfully!\n');
+    console.log('[INFO] Login Credentials:');
     console.log('   Admin: admin@hospilink.com / password123');
     console.log('   Doctor: dr.patel@hospilink.com / password123');
     console.log('   Patient: patient@hospilink.com / password123');
@@ -341,7 +341,7 @@ const seedDatabase = async () => {
     
     process.exit(0);
   } catch (error) {
-    console.error('❌ Seeding error:', error);
+    console.error('[ERROR] Seeding error:', error);
     process.exit(1);
   }
 };

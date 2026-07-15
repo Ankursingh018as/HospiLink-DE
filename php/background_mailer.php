@@ -109,7 +109,7 @@ try {
 
     $cmd('QUIT');
     fclose($conn);
-    error_log("[Background Mailer] ✅ Successfully sent email batch to: " . implode(', ', $emails));
+    error_log("[Background Mailer] [SUCCESS] Successfully sent email batch to: " . implode(', ', $emails));
 
 } catch (Exception $e) {
     error_log('[Background Mailer] Exception: ' . $e->getMessage());

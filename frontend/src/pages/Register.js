@@ -67,7 +67,7 @@ const Register = () => {
       <div className="signin-form-wrapper register-form">
         <div className="signin-header">
           <div className="logo">
-            <span className="logo-icon">🏥</span>
+            <span className="logo-icon"><i className="ri-hospital-line"></i></span>
             <span className="logo-text">HospiLink</span>
           </div>
           <h2>Create Account</h2>
@@ -77,14 +77,14 @@ const Register = () => {
         <form onSubmit={handleSubmit} className="signin-form">
           {error && (
             <div className="error-message">
-              <span>⚠️</span> {error}
+              <i className="ri-alert-line" style={{ marginRight: '6px' }}></i> {error}
             </div>
           )}
 
           <div className="form-row">
             <div className="form-group">
               <label htmlFor="firstName">
-                <span className="icon">👤</span>
+                <span className="icon"><i className="ri-user-line"></i></span>
                 First Name
               </label>
               <input
@@ -100,7 +100,7 @@ const Register = () => {
 
             <div className="form-group">
               <label htmlFor="lastName">
-                <span className="icon">👤</span>
+                <span className="icon"><i className="ri-user-line"></i></span>
                 Last Name
               </label>
               <input
@@ -117,7 +117,7 @@ const Register = () => {
 
           <div className="form-group">
             <label htmlFor="email">
-              <span className="icon">📧</span>
+              <span className="icon"><i className="ri-mail-line"></i></span>
               Email Address
             </label>
             <input
@@ -133,7 +133,7 @@ const Register = () => {
 
           <div className="form-group">
             <label htmlFor="phone">
-              <span className="icon">📱</span>
+              <span className="icon"><i className="ri-phone-line"></i></span>
               Phone Number
             </label>
             <input
@@ -150,7 +150,7 @@ const Register = () => {
           <div className="form-row">
             <div className="form-group">
               <label htmlFor="dateOfBirth">
-                <span className="icon">📅</span>
+                <span className="icon"><i className="ri-calendar-line"></i></span>
                 Date of Birth
               </label>
               <input
@@ -164,7 +164,7 @@ const Register = () => {
 
             <div className="form-group">
               <label htmlFor="gender">
-                <span className="icon">⚧</span>
+                <span className="icon"><i className="ri-genderless-line"></i></span>
                 Gender
               </label>
               <select
@@ -183,7 +183,7 @@ const Register = () => {
 
           <div className="form-group">
             <label htmlFor="password">
-              <span className="icon">🔒</span>
+              <span className="icon"><i className="ri-lock-line"></i></span>
               Password
             </label>
             <input
@@ -200,7 +200,7 @@ const Register = () => {
 
           <div className="form-group">
             <label htmlFor="confirmPassword">
-              <span className="icon">🔒</span>
+              <span className="icon"><i className="ri-lock-line"></i></span>
               Confirm Password
             </label>
             <input
@@ -235,15 +235,15 @@ const Register = () => {
           <p>Experience the future of healthcare management</p>
           <div className="features">
             <div className="feature-item">
-              <span className="feature-icon">✅</span>
+              <span className="feature-icon"><i className="ri-checkbox-circle-line"></i></span>
               <span>Quick Registration</span>
             </div>
             <div className="feature-item">
-              <span className="feature-icon">🔐</span>
+              <span className="feature-icon"><i className="ri-shield-keyhole-line"></i></span>
               <span>Secure Platform</span>
             </div>
             <div className="feature-item">
-              <span className="feature-icon">🏥</span>
+              <span className="feature-icon"><i className="ri-hospital-line"></i></span>
               <span>24/7 Access</span>
             </div>
           </div>

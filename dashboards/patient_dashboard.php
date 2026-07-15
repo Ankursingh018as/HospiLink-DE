@@ -41,6 +41,7 @@ $history = $histStmt->get_result();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patient Dashboard - HospiLink</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="../css/doctor-dashboard-enhanced.css">
     <link rel="icon" href="../images/hosp_favicon.png" type="image/png">
@@ -780,15 +781,15 @@ $history = $histStmt->get_result();
                 const result = await response.json();
                 
                 if (result.success) {
-                    alert('✅ Appointment rescheduled successfully!');
+                    alert('Appointment rescheduled successfully!');
                     closeRescheduleModal();
                     location.reload();
                 } else {
-                    alert('❌ Error: ' + (result.message || 'Failed to reschedule appointment'));
+                    alert('Error: ' + (result.message || 'Failed to reschedule appointment'));
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('❌ An error occurred. Please try again.');
+                alert('An error occurred. Please try again.');
             }
         });
         
@@ -814,15 +815,15 @@ $history = $histStmt->get_result();
                 const result = await response.json();
                 
                 if (result.success) {
-                    alert('✅ Appointment cancelled successfully!');
+                    alert('Appointment cancelled successfully!');
                     closeCancelModal();
                     location.reload();
                 } else {
-                    alert('❌ Error: ' + (result.message || 'Failed to cancel appointment'));
+                    alert('Error: ' + (result.message || 'Failed to cancel appointment'));
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('❌ An error occurred. Please try again.');
+                alert('An error occurred. Please try again.');
             }
         });
         

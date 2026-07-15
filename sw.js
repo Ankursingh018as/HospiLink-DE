@@ -37,14 +37,14 @@ self.addEventListener('push', (event) => {
 
   // Add type-specific styling
   const typeIcons = {
-    drip_reminder:       '💉',
-    medicine_reminder:   '💊',
-    routine_check:       '🩺',
-    followup_doctor:     '📅',
-    followup_patient:    '📆',
-    appointment_reminder:'📆',
-    daily_digest:        '🏥',
-    system:              '🔔'
+    drip_reminder:       '[DRIP]',
+    medicine_reminder:   '[MEDICINE]',
+    routine_check:       '[CHECK]',
+    followup_doctor:     '[DATE]',
+    followup_patient:    '[DATE]',
+    appointment_reminder:'[DATE]',
+    daily_digest:        '[HOSPITAL]',
+    system:              '[NOTIFICATION]'
   };
 
   const type = data.data?.type || 'system';

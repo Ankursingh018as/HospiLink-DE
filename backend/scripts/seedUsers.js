@@ -11,11 +11,11 @@ const seedUsers = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true
     });
-    console.log('✅ MongoDB Connected');
+    console.log('[SUCCESS] MongoDB Connected');
 
     // Clear existing users
     await User.deleteMany({});
-    console.log('🗑️  Cleared existing users');
+    console.log('[CLEARED]  Cleared existing users');
 
     // Create test users matching PHP system
     const users = [
@@ -83,11 +83,11 @@ const seedUsers = async () => {
     // Insert users
     for (const userData of users) {
       const user = await User.create(userData);
-      console.log(`✅ Created ${user.role}: ${user.email}`);
+      console.log(`[SUCCESS] Created ${user.role}: ${user.email}`);
     }
 
-    console.log('\n🎉 All test users created successfully!\n');
-    console.log('📝 Login Credentials:');
+    console.log('\n[SUCCESS] All test users created successfully!\n');
+    console.log('[INFO] Login Credentials:');
     console.log('-------------------');
     users.forEach(u => {
       console.log(`${u.role.toUpperCase()}: ${u.email} / password123`);
@@ -95,7 +95,7 @@ const seedUsers = async () => {
 
     process.exit(0);
   } catch (error) {
-    console.error('❌ Error seeding users:', error);
+    console.error('[ERROR] Error seeding users:', error);
     process.exit(1);
   }
 };

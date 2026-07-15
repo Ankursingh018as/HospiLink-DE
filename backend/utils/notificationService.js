@@ -72,7 +72,7 @@ const sendDripReminder = async (ivRecord, nurse) => {
     const patient = patientAdmission?.patient;
 
     const priority = minutesRemaining <= 10 ? 'urgent' : minutesRemaining <= 20 ? 'high' : 'medium';
-    const title = `💉 IV Drip Alert — ${minutesRemaining} min remaining`;
+    const title = `[DRIP] IV Drip Alert — ${minutesRemaining} min remaining`;
     const message = `Patient ${patient?.firstName || ''} ${patient?.lastName || ''}'s ${ivRecord.fluidType} drip (${ivRecord.volumeMl}mL) ends in ${minutesRemaining} minutes. Please check immediately.`;
 
     const notification = await createNotification({
@@ -83,7 +83,7 @@ const sendDripReminder = async (ivRecord, nurse) => {
       message,
       priority,
       relatedEntity: { model: 'PatientIV', id: ivRecord._id },
-      iconType: '💉',
+      iconType: '[DRIP]',
       actionUrl: `/dashboards/staff_dashboard.php`,
       deduplicationKey: `drip-${ivRecord._id}-${nurse._id}-${Math.floor(Date.now() / (30 * 60 * 1000))}`
     });
@@ -114,7 +114,7 @@ const sendDripReminder = async (ivRecord, nurse) => {
       }
     );
 
-    console.log(`✅ Drip reminder sent to nurse ${nurse.email}`);
+    console.log(`[SUCCESS] Drip reminder sent to nurse ${nurse.email}`);
   } catch (error) {
     console.error('Send drip reminder error:', error);
   }
@@ -125,7 +125,7 @@ const sendDripReminder = async (ivRecord, nurse) => {
 // ─────────────────────────────────────────────────────────────────
 const sendMedicineReminder = async (medicineRecord, patient) => {
   try {
-    const title = `💊 Medicine Reminder: ${medicineRecord.medicineName}`;
+    const title = `[MEDICINE] Medicine Reminder: ${medicineRecord.medicineName}`;
     const message = `Time to take ${medicineRecord.medicineName} (${medicineRecord.dosage}) — ${medicineRecord.frequency}`;
 
     const notification = await createNotification({
@@ -136,7 +136,7 @@ const sendMedicineReminder = async (medicineRecord, patient) => {
       message,
       priority: 'high',
       relatedEntity: { model: 'PatientMedicine', id: medicineRecord._id },
-      iconType: '💊',
+      iconType: '[MEDICINE]',
       actionUrl: '/dashboards/patient_dashboard.php',
       deduplicationKey: `med-${medicineRecord._id}-${Math.floor(Date.now() / (60 * 60 * 1000))}`
     });
@@ -165,7 +165,7 @@ const sendMedicineReminder = async (medicineRecord, patient) => {
       }
     );
 
-    console.log(`✅ Medicine reminder sent to patient ${patient.email}`);
+    console.log(`[SUCCESS] Medicine reminder sent to patient ${patient.email}`);
   } catch (error) {
     console.error('Send medicine reminder error:', error);
   }
@@ -178,7 +178,7 @@ const sendRoutineCheckReminder = async (doctor, patients) => {
   try {
     if (!patients.length) return;
 
-    const title = `🩺 Routine Check Required — ${patients.length} patient(s)`;
+    const title = `[CHECK] Routine Check Required — ${patients.length} patient(s)`;
     const message = `${patients.length} patient(s) under your care have not had vitals checked in over 6 hours. Please review at your earliest.`;
 
     const notification = await createNotification({
@@ -188,7 +188,7 @@ const sendRoutineCheckReminder = async (doctor, patients) => {
       title,
       message,
       priority: 'high',
-      iconType: '🩺',
+      iconType: '[CHECK]',
       actionUrl: '/dashboards/doctor_dashboard.php',
       deduplicationKey: `routine-${doctor._id}-${new Date().toISOString().slice(0, 13)}` // once per hour
     });
@@ -214,7 +214,7 @@ const sendRoutineCheckReminder = async (doctor, patients) => {
       }
     );
 
-    console.log(`✅ Routine check reminder sent to Dr. ${doctor.email}`);
+    console.log(`[SUCCESS] Routine check reminder sent to Dr. ${doctor.email}`);
   } catch (error) {
     console.error('Send routine check error:', error);
   }
@@ -231,7 +231,7 @@ const sendFollowUpReminder = async (appointment) => {
 
     // Notify doctor
     if (doctor) {
-      const title = `📅 Follow-up: ${patient?.firstName} ${patient?.lastName}`;
+      const title = `[DATE] Follow-up: ${patient?.firstName} ${patient?.lastName}`;
       const message = `It's been ${daysSinceVisit} days since ${patient?.firstName}'s appointment. Consider scheduling a follow-up.`;
 
       const notification = await createNotification({
@@ -242,7 +242,7 @@ const sendFollowUpReminder = async (appointment) => {
         message,
         priority: 'medium',
         relatedEntity: { model: 'Appointment', id: appointment._id },
-        iconType: '📅',
+        iconType: '[DATE]',
         actionUrl: '/dashboards/doctor_dashboard.php',
         deduplicationKey: `followup-doc-${appointment._id}-${new Date().toISOString().slice(0, 10)}`
       });
@@ -274,7 +274,7 @@ const sendFollowUpReminder = async (appointment) => {
 
     // Notify patient
     if (patient) {
-      const title = `📆 Time for your follow-up with Dr. ${doctor?.firstName}`;
+      const title = `[DATE] Time for your follow-up with Dr. ${doctor?.firstName}`;
       const message = `It's been ${daysSinceVisit} days since your last visit. Please schedule a follow-up appointment.`;
 
       const notification = await createNotification({
@@ -285,7 +285,7 @@ const sendFollowUpReminder = async (appointment) => {
         message,
         priority: 'medium',
         relatedEntity: { model: 'Appointment', id: appointment._id },
-        iconType: '📆',
+        iconType: '[DATE]',
         actionUrl: '/dashboards/patient_dashboard.php',
         deduplicationKey: `followup-pat-${appointment._id}-${new Date().toISOString().slice(0, 10)}`
       });
@@ -312,7 +312,7 @@ const sendFollowUpReminder = async (appointment) => {
       }
     }
 
-    console.log(`✅ Follow-up reminders sent for appointment ${appointment._id}`);
+    console.log(`[SUCCESS] Follow-up reminders sent for appointment ${appointment._id}`);
   } catch (error) {
     console.error('Send follow-up reminder error:', error);
   }
@@ -327,7 +327,7 @@ const sendAppointmentReminder = async (appointment) => {
     const doctor = appointment.doctor;
     const slot = appointment.slot;
 
-    const title = `📆 Appointment Tomorrow: Dr. ${doctor?.firstName} ${doctor?.lastName}`;
+    const title = `[DATE] Appointment Tomorrow: Dr. ${doctor?.firstName} ${doctor?.lastName}`;
     const message = `Reminder: Your appointment is tomorrow. Please arrive 15 minutes early with your patient ID.`;
 
     const notification = await createNotification({
@@ -338,7 +338,7 @@ const sendAppointmentReminder = async (appointment) => {
       message,
       priority: 'medium',
       relatedEntity: { model: 'Appointment', id: appointment._id },
-      iconType: '📆',
+      iconType: '[DATE]',
       actionUrl: '/dashboards/patient_dashboard.php',
       deduplicationKey: `apt-reminder-${appointment._id}-${new Date().toISOString().slice(0, 10)}`
     });
@@ -365,7 +365,7 @@ const sendAppointmentReminder = async (appointment) => {
       }
     );
 
-    console.log(`✅ Appointment reminder sent to ${patient.email}`);
+    console.log(`[SUCCESS] Appointment reminder sent to ${patient.email}`);
   } catch (error) {
     console.error('Send appointment reminder error:', error);
   }
@@ -376,7 +376,7 @@ const sendAppointmentReminder = async (appointment) => {
 // ─────────────────────────────────────────────────────────────────
 const sendAdminDailyDigest = async (admin, stats) => {
   try {
-    const title = `🏥 Daily Digest — ${new Date().toLocaleDateString('en-IN')}`;
+    const title = `[HOSPITAL] Daily Digest — ${new Date().toLocaleDateString('en-IN')}`;
     const message = `System summary: ${stats.activeAdmissions} admissions, ${stats.todayAppointments} appointments today, ${stats.availableBeds} beds available.`;
 
     const notification = await createNotification({
@@ -386,7 +386,7 @@ const sendAdminDailyDigest = async (admin, stats) => {
       title,
       message,
       priority: 'low',
-      iconType: '🏥',
+      iconType: '[HOSPITAL]',
       deduplicationKey: `digest-${admin._id}-${new Date().toISOString().slice(0, 10)}`
     });
 
@@ -402,7 +402,7 @@ const sendAdminDailyDigest = async (admin, stats) => {
       null // No push for daily digest
     );
 
-    console.log(`✅ Daily digest sent to admin ${admin.email}`);
+    console.log(`[SUCCESS] Daily digest sent to admin ${admin.email}`);
   } catch (error) {
     console.error('Send admin digest error:', error);
   }

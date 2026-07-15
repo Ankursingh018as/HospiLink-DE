@@ -248,7 +248,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🤖 AI Medical Prioritizer</h1>
+            <h1>[AI] AI Medical Prioritizer</h1>
             <p>Powered by Google Gemini AI - Intelligent Symptom Analysis</p>
         </div>
         
@@ -279,7 +279,7 @@
                 </div>
                 
                 <button type="submit" class="btn-analyze" id="analyzeBtn">
-                    <span id="btnText">🔍 Analyze with AI</span>
+                    <span id="btnText">[DEBUG] Analyze with AI</span>
                 </button>
             </form>
             
@@ -326,7 +326,7 @@
                 // Hide loading
                 document.getElementById('loading').classList.remove('active');
                 document.getElementById('analyzeBtn').disabled = false;
-                document.getElementById('btnText').textContent = '🔍 Analyze with AI';
+                document.getElementById('btnText').textContent = '[DEBUG] Analyze with AI';
                 
                 // Display results
                 displayResults(data);
@@ -336,7 +336,7 @@
                 alert('Error analyzing symptoms. Please try again.');
                 document.getElementById('loading').classList.remove('active');
                 document.getElementById('analyzeBtn').disabled = false;
-                document.getElementById('btnText').textContent = '🔍 Analyze with AI';
+                document.getElementById('btnText').textContent = '[DEBUG] Analyze with AI';
             }
         });
         
@@ -344,7 +344,7 @@
             const resultsDiv = document.getElementById('results');
             
             const analysisType = data.ai_analyzed ? 
-                '<span class="badge badge-ai">✓ AI Analyzed</span>' : 
+                '<span class="badge badge-ai">SUCCESS AI Analyzed</span>' : 
                 '<span class="badge badge-fallback">Keyword Match</span>';
             
             let html = `
@@ -356,12 +356,12 @@
                 </div>
                 
                 <div class="detail-section">
-                    <h3>⏱️ Time Sensitivity</h3>
+                    <h3>[TIMER] Time Sensitivity</h3>
                     <p><strong>${data.time_sensitivity.toUpperCase()}</strong></p>
                 </div>
                 
                 <div class="detail-section">
-                    <h3>🩺 Suspected Conditions</h3>
+                    <h3>[CHECK] Suspected Conditions</h3>
                     <ul>
                         ${data.suspected_conditions.map(c => `<li>${c}</li>`).join('')}
                     </ul>
@@ -373,14 +373,14 @@
                 </div>
                 
                 <div class="detail-section">
-                    <h3>⚠️ Warning Signs to Monitor</h3>
+                    <h3>[WARNING] Warning Signs to Monitor</h3>
                     <ul>
                         ${data.warning_signs.map(w => `<li>${w}</li>`).join('')}
                     </ul>
                 </div>
                 
                 <div class="detail-section">
-                    <h3>📋 Next Steps</h3>
+                    <h3>[INFO] Next Steps</h3>
                     <ul>
                         ${data.next_steps.map(s => `<li>${s}</li>`).join('')}
                     </ul>
@@ -390,7 +390,7 @@
             if (data.assessment_summary) {
                 html += `
                     <div class="detail-section">
-                        <h3>📝 Assessment Summary</h3>
+                        <h3>[INFO] Assessment Summary</h3>
                         <pre style="white-space: pre-wrap; font-family: inherit;">${data.assessment_summary}</pre>
                     </div>
                 `;

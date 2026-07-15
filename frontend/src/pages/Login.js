@@ -65,7 +65,7 @@ const Login = () => {
       <div className="signin-form-wrapper">
         <div className="signin-header">
           <div className="logo">
-            <span className="logo-icon">🏥</span>
+            <span className="logo-icon"><i className="ri-hospital-line"></i></span>
             <span className="logo-text">HospiLink</span>
           </div>
           <h2>Welcome Back</h2>
@@ -75,13 +75,13 @@ const Login = () => {
         <form onSubmit={handleSubmit} className="signin-form">
           {error && (
             <div className="error-message">
-              <span>⚠️</span> {error}
+              <i className="ri-alert-line" style={{ marginRight: '6px' }}></i> {error}
             </div>
           )}
 
           <div className="form-group">
             <label htmlFor="email">
-              <span className="icon">📧</span>
+              <span className="icon"><i className="ri-mail-line"></i></span>
               Email Address
             </label>
             <input
@@ -97,7 +97,7 @@ const Login = () => {
 
           <div className="form-group">
             <label htmlFor="password">
-              <span className="icon">🔒</span>
+              <span className="icon"><i className="ri-lock-line"></i></span>
               Password
             </label>
             <input
@@ -147,7 +147,7 @@ const Login = () => {
                 setFormData({ email: 'patient@test.com', password: 'password123' });
               }}
             >
-              <span>👤</span> Patient Demo
+              <span><i className="ri-user-line" style={{ marginRight: '6px' }}></i></span> Patient Demo
             </button>
             <button 
               type="button" 
@@ -156,7 +156,7 @@ const Login = () => {
                 setFormData({ email: 'doctor@test.com', password: 'password123' });
               }}
             >
-              <span>👨‍⚕️</span> Doctor Demo
+              <span><i className="ri-stethoscope-line" style={{ marginRight: '6px' }}></i></span> Doctor Demo
             </button>
             <button 
               type="button" 
@@ -165,7 +165,7 @@ const Login = () => {
                 setFormData({ email: 'admin@test.com', password: 'password123' });
               }}
             >
-              <span>⚙️</span> Admin Demo
+              <span><i className="ri-settings-4-line" style={{ marginRight: '6px' }}></i></span> Admin Demo
             </button>
           </div>
         </div>
@@ -177,15 +177,15 @@ const Login = () => {
           <p>AI-powered hospital management for better patient care</p>
           <div className="features">
             <div className="feature-item">
-              <span className="feature-icon">🤖</span>
+              <span className="feature-icon"><i className="ri-robot-line"></i></span>
               <span>AI Prioritization</span>
             </div>
             <div className="feature-item">
-              <span className="feature-icon">📱</span>
+              <span className="feature-icon"><i className="ri-qr-code-line"></i></span>
               <span>QR Tracking</span>
             </div>
             <div className="feature-item">
-              <span className="feature-icon">💬</span>
+              <span className="feature-icon"><i className="ri-chat-3-line"></i></span>
               <span>Smart Chatbot</span>
             </div>
           </div>

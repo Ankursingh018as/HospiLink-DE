@@ -30,18 +30,18 @@ const idMapping = {
 
 async function migrateData() {
   try {
-    console.log('🚀 Starting MySQL to MongoDB migration...\n');
+    console.log('[LAUNCH] Starting MySQL to MongoDB migration...\n');
 
     // Connect to MongoDB
     await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/hospilink');
-    console.log('✅ Connected to MongoDB\n');
+    console.log('[SUCCESS] Connected to MongoDB\n');
 
     // Connect to MySQL
     const mysqlConnection = await mysql.createConnection(mysqlConfig);
-    console.log('✅ Connected to MySQL\n');
+    console.log('[SUCCESS] Connected to MySQL\n');
 
     // Clear existing MongoDB data (optional - comment out if you want to keep existing data)
-    console.log('🗑️  Clearing existing MongoDB data...');
+    console.log('[CLEARED]  Clearing existing MongoDB data...');
     await User.deleteMany({});
     await Appointment.deleteMany({});
     await PatientAdmission.deleteMany({});
@@ -51,10 +51,10 @@ async function migrateData() {
     await ChatbotLog.deleteMany({});
     await QRScan.deleteMany({});
     await ActivityLog.deleteMany({});
-    console.log('✅ Cleared existing data\n');
+    console.log('[SUCCESS] Cleared existing data\n');
 
     // Migrate Users
-    console.log('👥 Migrating users...');
+    console.log('[USERS] Migrating users...');
     const [users] = await mysqlConnection.query('SELECT * FROM users');
     for (const user of users) {
       const newUser = await User.create({
@@ -76,10 +76,10 @@ async function migrateData() {
       });
       idMapping.users[user.user_id] = newUser._id;
     }
-    console.log(`✅ Migrated ${users.length} users\n`);
+    console.log(`[SUCCESS] Migrated ${users.length} users\n`);
 
     // Migrate Beds
-    console.log('🛏️  Migrating beds...');
+    console.log('[BED]  Migrating beds...');
     const [beds] = await mysqlConnection.query('SELECT * FROM beds');
     for (const bed of beds) {
       const newBed = await Bed.create({
@@ -92,10 +92,10 @@ async function migrateData() {
       });
       idMapping.beds[bed.bed_id] = newBed._id;
     }
-    console.log(`✅ Migrated ${beds.length} beds\n`);
+    console.log(`[SUCCESS] Migrated ${beds.length} beds\n`);
 
     // Migrate Patient Admissions
-    console.log('🏥 Migrating patient admissions...');
+    console.log('[HOSPITAL] Migrating patient admissions...');
     const [admissions] = await mysqlConnection.query('SELECT * FROM patient_admissions');
     for (const admission of admissions) {
       const newAdmission = await PatientAdmission.create({
@@ -125,10 +125,10 @@ async function migrateData() {
         });
       }
     }
-    console.log(`✅ Migrated ${admissions.length} patient admissions\n`);
+    console.log(`[SUCCESS] Migrated ${admissions.length} patient admissions\n`);
 
     // Migrate Appointments
-    console.log('📅 Migrating appointments...');
+    console.log('[DATE] Migrating appointments...');
     const [appointments] = await mysqlConnection.query('SELECT * FROM appointments');
     for (const appointment of appointments) {
       const newAppointment = await Appointment.create({
@@ -147,10 +147,10 @@ async function migrateData() {
       });
       idMapping.appointments[appointment.appointment_id] = newAppointment._id;
     }
-    console.log(`✅ Migrated ${appointments.length} appointments\n`);
+    console.log(`[SUCCESS] Migrated ${appointments.length} appointments\n`);
 
     // Migrate Medical History
-    console.log('📋 Migrating medical history...');
+    console.log('[INFO] Migrating medical history...');
     const [medicalHistory] = await mysqlConnection.query('SELECT * FROM medical_history');
     for (const record of medicalHistory) {
       await MedicalHistory.create({
@@ -167,10 +167,10 @@ async function migrateData() {
         createdAt: record.created_at
       });
     }
-    console.log(`✅ Migrated ${medicalHistory.length} medical history records\n`);
+    console.log(`[SUCCESS] Migrated ${medicalHistory.length} medical history records\n`);
 
     // Migrate Symptom Keywords
-    console.log('🔤 Migrating symptom keywords...');
+    console.log('[TEXT] Migrating symptom keywords...');
     const [keywords] = await mysqlConnection.query('SELECT * FROM symptom_keywords');
     for (const keyword of keywords) {
       await SymptomKeyword.create({
@@ -181,10 +181,10 @@ async function migrateData() {
         createdAt: keyword.created_at
       });
     }
-    console.log(`✅ Migrated ${keywords.length} symptom keywords\n`);
+    console.log(`[SUCCESS] Migrated ${keywords.length} symptom keywords\n`);
 
     // Migrate Chatbot Logs
-    console.log('💬 Migrating chatbot logs...');
+    console.log('[CHAT] Migrating chatbot logs...');
     const [chatLogs] = await mysqlConnection.query('SELECT * FROM chatbot_logs');
     for (const log of chatLogs) {
       await ChatbotLog.create({
@@ -197,10 +197,10 @@ async function migrateData() {
         createdAt: log.created_at
       });
     }
-    console.log(`✅ Migrated ${chatLogs.length} chatbot logs\n`);
+    console.log(`[SUCCESS] Migrated ${chatLogs.length} chatbot logs\n`);
 
     // Migrate Activity Logs
-    console.log('📊 Migrating activity logs...');
+    console.log('[STATS] Migrating activity logs...');
     const [activityLogs] = await mysqlConnection.query('SELECT * FROM activity_logs');
     for (const log of activityLogs) {
       await ActivityLog.create({
@@ -214,14 +214,14 @@ async function migrateData() {
         createdAt: log.created_at
       });
     }
-    console.log(`✅ Migrated ${activityLogs.length} activity logs\n`);
+    console.log(`[SUCCESS] Migrated ${activityLogs.length} activity logs\n`);
 
     // Close connections
     await mysqlConnection.end();
     await mongoose.connection.close();
 
-    console.log('🎉 Migration completed successfully!');
-    console.log('\n📊 Migration Summary:');
+    console.log('[SUCCESS] Migration completed successfully!');
+    console.log('\n[STATS] Migration Summary:');
     console.log(`   Users: ${users.length}`);
     console.log(`   Beds: ${beds.length}`);
     console.log(`   Admissions: ${admissions.length}`);
@@ -232,7 +232,7 @@ async function migrateData() {
     console.log(`   Activity Logs: ${activityLogs.length}`);
 
   } catch (error) {
-    console.error('❌ Migration error:', error);
+    console.error('[ERROR] Migration error:', error);
     process.exit(1);
   }
 }

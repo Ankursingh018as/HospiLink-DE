@@ -86,6 +86,7 @@ $allTimeStats['pending_total'] = intval($allTimeStats['pending_total'] ?? 0);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Doctor Dashboard - HospiLink</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="../css/doctor-dashboard-enhanced.css?v=6">
     <link rel="icon" href="../images/hosp_favicon.png" type="image/png">
@@ -821,12 +822,12 @@ $allTimeStats['pending_total'] = intval($allTimeStats['pending_total'] ?? 0);
                 animation: slideInRight 0.5s ease-out;
             `;
             
-            const priorityEmoji = data.priority_level === 'critical' ? '🚨' : '⚡';
+            const priorityIcon = data.priority_level === 'critical' ? 'ri-error-warning-fill' : 'ri-flashlight-fill';
             const priorityText = data.priority_level.toUpperCase();
             
             toast.innerHTML = `
                 <div style="display: flex; align-items: start; gap: 15px;">
-                    <div style="font-size: 2rem;">${priorityEmoji}</div>
+                    <div style="font-size: 2rem;"><i class="${priorityIcon}"></i></div>
                     <div style="flex: 1;">
                         <div style="font-weight: 700; font-size: 1.1rem; margin-bottom: 8px;">
                             ${priorityText} PRIORITY APPOINTMENT
@@ -896,7 +897,7 @@ $allTimeStats['pending_total'] = intval($allTimeStats['pending_total'] ?? 0);
         <div style="background:white; border-radius:10px; max-width:700px; width:95%; padding:20px; box-shadow:0 10px 40px rgba(0,0,0,0.3);">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                 <h3 style="margin:0;">AI Analysis</h3>
-                <button onclick="closeAIModal()" style="background:none;border:none;font-size:18px;cursor:pointer;">✕</button>
+                <button onclick="closeAIModal()" style="background:none;border:none;font-size:18px;cursor:pointer;"><i class="ri-close-line"></i></button>
             </div>
             <div id="aiModalContent">Loading...</div>
         </div>

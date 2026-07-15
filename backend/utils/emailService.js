@@ -14,67 +14,139 @@ const transporter = nodemailer.createTransport({
 // Verify SMTP connection
 transporter.verify((error, success) => {
   if (error) {
-    console.log('❌ SMTP connection error:', error.message);
+    console.log('[ERROR] SMTP connection error:', error.message);
   } else {
-    console.log('✅ SMTP Server is ready to send emails');
+    console.log('[SUCCESS] SMTP Server is ready to send emails');
   }
 });
 
 // ═══════════════════════════════════════════
-//  BASE HTML TEMPLATE
+//  BASE HTML TEMPLATE (Clean & Minimalistic)
 // ═══════════════════════════════════════════
-const baseTemplate = (headerColor, headerEmoji, headerTitle, content) => `
+const baseTemplate = (headerTitle, content) => `
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4f8; color: #2d3748; }
-    .wrapper { max-width: 620px; margin: 30px auto; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
-    .header { background: ${headerColor}; padding: 36px 40px; text-align: center; color: white; }
-    .header .emoji { font-size: 48px; display: block; margin-bottom: 12px; }
-    .header h1 { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; }
-    .header p { font-size: 14px; opacity: 0.85; margin-top: 6px; }
-    .body { padding: 36px 40px; }
-    .body h2 { font-size: 20px; color: #1a202c; margin-bottom: 8px; }
-    .body p { font-size: 15px; line-height: 1.7; color: #4a5568; margin-bottom: 16px; }
-    .info-card { background: #f7fafc; border-left: 4px solid; border-radius: 8px; padding: 20px 24px; margin: 20px 0; }
-    .info-card.urgent { border-color: #e53e3e; background: #fff5f5; }
-    .info-card.high { border-color: #dd6b20; background: #fffaf0; }
-    .info-card.medium { border-color: #3182ce; background: #ebf8ff; }
-    .info-card.low { border-color: #38a169; background: #f0fff4; }
-    .info-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; }
-    .info-row:last-child { margin-bottom: 0; }
-    .info-label { color: #718096; font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
-    .info-value { color: #2d3748; font-weight: 500; text-align: right; }
-    .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
-    .badge-urgent { background: #fed7d7; color: #c53030; }
-    .badge-high { background: #feebc8; color: #c05621; }
-    .badge-medium { background: #bee3f8; color: #2b6cb0; }
-    .badge-low { background: #c6f6d5; color: #276749; }
-    .action-btn { display: block; width: fit-content; margin: 24px auto 0; padding: 14px 32px; background: ${headerColor}; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 15px; text-align: center; }
-    .divider { height: 1px; background: #e2e8f0; margin: 24px 0; }
-    .footer { background: #f7fafc; padding: 24px 40px; text-align: center; }
-    .footer p { font-size: 12px; color: #a0aec0; line-height: 1.6; }
-    .footer .logo { font-size: 18px; font-weight: 700; color: #4a5568; margin-bottom: 8px; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: #f8fafc;
+      color: #334155;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+    .wrapper {
+      max-width: 580px;
+      margin: 40px auto;
+      background-color: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .header {
+      padding: 32px 40px 20px 40px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .header-logo {
+      font-size: 18px;
+      font-weight: 700;
+      color: #0d9488;
+      letter-spacing: -0.5px;
+    }
+    .header-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #0f172a;
+      margin-top: 12px;
+      margin-bottom: 0;
+    }
+    .body {
+      padding: 32px 40px;
+    }
+    .body h2 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #0f172a;
+      margin-top: 0;
+      margin-bottom: 12px;
+    }
+    .body p {
+      font-size: 15px;
+      line-height: 1.6;
+      color: #475569;
+      margin-top: 0;
+      margin-bottom: 16px;
+    }
+    .info-card {
+      background-color: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 24px 0;
+    }
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+    .info-row:last-child {
+      margin-bottom: 0;
+    }
+    .info-label {
+      color: #64748b;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+    }
+    .info-value {
+      color: #0f172a;
+      font-weight: 500;
+      text-align: right;
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .badge-urgent { background: #fef2f2; color: #991b1b; border: 1px solid #fee2e2; }
+    .badge-high { background: #fff7ed; color: #9a3412; border: 1px solid #ffedd5; }
+    .badge-medium { background: #eff6ff; color: #1e40af; border: 1px solid #dbeafe; }
+    .badge-low { background: #f0fdf4; color: #166534; border: 1px solid #dcfce7; }
+    .footer {
+      background-color: #f8fafc;
+      padding: 24px 40px;
+      border-top: 1px solid #e2e8f0;
+      text-align: center;
+    }
+    .footer p {
+      font-size: 12px;
+      color: #64748b;
+      line-height: 1.5;
+      margin: 0;
+    }
   </style>
 </head>
 <body>
   <div class="wrapper">
     <div class="header">
-      <span class="emoji">${headerEmoji}</span>
-      <h1>${headerTitle}</h1>
-      <p>HospiLink Hospital Management System</p>
+      <div class="header-logo">HospiLink</div>
+      <div class="header-title">${headerTitle}</div>
     </div>
     <div class="body">
       ${content}
     </div>
     <div class="footer">
-      <div class="logo">🏥 HospiLink</div>
-      <p>© 2026 HospiLink. This is an automated notification.<br>
-      Please do not reply to this email. For support: support@hospilink.com</p>
+      <p>© 2026 HospiLink. Automated notification. Please do not reply.<br>Support: support@hospilink.com</p>
     </div>
   </div>
 </body>
@@ -100,8 +172,8 @@ exports.sendAppointmentConfirmation = async (toEmail, data) => {
     await transporter.sendMail({
       from: `"HospiLink" <${process.env.SMTP_USERNAME}>`,
       to: toEmail,
-      subject: '✅ Appointment Confirmed — HospiLink',
-      html: baseTemplate('linear-gradient(135deg, #667eea 0%, #764ba2 100%)', '📅', 'Appointment Confirmed', content)
+      subject: 'Appointment Confirmed — HospiLink',
+      html: baseTemplate('Appointment Confirmed', content)
     });
     return { success: true };
   } catch (error) {
@@ -127,8 +199,8 @@ exports.sendDischargeNotification = async (toEmail, data) => {
     await transporter.sendMail({
       from: `"HospiLink" <${process.env.SMTP_USERNAME}>`,
       to: toEmail,
-      subject: '🏥 Discharge Summary — HospiLink',
-      html: baseTemplate('linear-gradient(135deg, #11998e 0%, #38ef7d 100%)', '🏥', 'Discharge Summary', content)
+      subject: 'Discharge Summary — HospiLink',
+      html: baseTemplate('Discharge Summary', content)
     });
     return { success: true };
   } catch (error) {
@@ -143,15 +215,15 @@ exports.sendOTPEmail = async (toEmail, otp, userName) => {
       <h2>Hello ${userName},</h2>
       <p>Your One-Time Password (OTP) for HospiLink verification is:</p>
       <div style="text-align:center;margin:30px 0">
-        <div style="display:inline-block;background:linear-gradient(135deg,#667eea,#764ba2);color:white;font-size:36px;font-weight:800;letter-spacing:16px;padding:20px 40px;border-radius:12px">${otp}</div>
+        <div style="display:inline-block;background:#0d9488;color:white;font-size:36px;font-weight:800;letter-spacing:16px;padding:20px 40px;border-radius:12px">${otp}</div>
       </div>
       <p style="text-align:center"><strong>This OTP is valid for 10 minutes.</strong></p>
       <p style="text-align:center;color:#e53e3e">Never share your OTP with anyone.</p>`;
     await transporter.sendMail({
       from: `"HospiLink" <${process.env.SMTP_USERNAME}>`,
       to: toEmail,
-      subject: '🔐 Your OTP — HospiLink',
-      html: baseTemplate('linear-gradient(135deg, #667eea 0%, #764ba2 100%)', '🔐', 'Verify Your Identity', content)
+      subject: 'Your OTP Verification Code — HospiLink',
+      html: baseTemplate('Verify Your Identity', content)
     });
     return { success: true };
   } catch (error) {
@@ -165,7 +237,7 @@ exports.sendOTPEmail = async (toEmail, otp, userName) => {
 // ═══════════════════════════════════════════
 
 /**
- * 💉 IV DRIP REMINDER — for Nurses/Staff
+ * IV DRIP REMINDER — for Nurses/Staff
  */
 exports.sendDripReminderEmail = async (toEmail, data) => {
   try {
@@ -186,8 +258,8 @@ exports.sendDripReminderEmail = async (toEmail, data) => {
     await transporter.sendMail({
       from: `"HospiLink Alerts" <${process.env.SMTP_USERNAME}>`,
       to: toEmail,
-      subject: `💉 IV Drip Alert: ${patientName} — ${minutesRemaining} min remaining`,
-      html: baseTemplate('linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', '💉', 'IV Drip Reminder', content)
+      subject: `IV Drip Alert: ${patientName} — ${minutesRemaining} min remaining`,
+      html: baseTemplate('IV Drip Reminder', content)
     });
     return { success: true };
   } catch (error) {
@@ -197,7 +269,7 @@ exports.sendDripReminderEmail = async (toEmail, data) => {
 };
 
 /**
- * 💊 MEDICINE REMINDER — for Patients
+ * MEDICINE REMINDER — for Patients
  */
 exports.sendMedicineReminderEmail = async (toEmail, data) => {
   try {
@@ -217,8 +289,8 @@ exports.sendMedicineReminderEmail = async (toEmail, data) => {
     await transporter.sendMail({
       from: `"HospiLink" <${process.env.SMTP_USERNAME}>`,
       to: toEmail,
-      subject: `💊 Medicine Reminder: ${medicineName} — HospiLink`,
-      html: baseTemplate('linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)', '💊', 'Medicine Reminder', content)
+      subject: `Medicine Reminder: ${medicineName} — HospiLink`,
+      html: baseTemplate('Medicine Reminder', content)
     });
     return { success: true };
   } catch (error) {
@@ -228,7 +300,7 @@ exports.sendMedicineReminderEmail = async (toEmail, data) => {
 };
 
 /**
- * 🩺 ROUTINE CHECK REMINDER — for Doctors
+ * ROUTINE CHECK REMINDER — for Doctors
  */
 exports.sendRoutineCheckEmail = async (toEmail, data) => {
   try {
@@ -248,8 +320,8 @@ exports.sendRoutineCheckEmail = async (toEmail, data) => {
     await transporter.sendMail({
       from: `"HospiLink Clinical" <${process.env.SMTP_USERNAME}>`,
       to: toEmail,
-      subject: `🩺 Routine Check Required — ${patients.length} patient(s) need attention`,
-      html: baseTemplate('linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)', '🩺', 'Routine Check Reminder', content)
+      subject: `Routine Check Required — ${patients.length} patient(s) need attention`,
+      html: baseTemplate('Routine Check Reminder', content)
     });
     return { success: true };
   } catch (error) {
@@ -259,7 +331,7 @@ exports.sendRoutineCheckEmail = async (toEmail, data) => {
 };
 
 /**
- * 📅 FOLLOW-UP REMINDER — for Doctors
+ * FOLLOW-UP REMINDER — for Doctors
  */
 exports.sendFollowUpDoctorEmail = async (toEmail, data) => {
   try {
@@ -278,8 +350,8 @@ exports.sendFollowUpDoctorEmail = async (toEmail, data) => {
     await transporter.sendMail({
       from: `"HospiLink" <${process.env.SMTP_USERNAME}>`,
       to: toEmail,
-      subject: `📅 Follow-up Reminder: ${patientName} — ${daysSinceVisit} days since last visit`,
-      html: baseTemplate('linear-gradient(135deg, #667eea 0%, #764ba2 100%)', '📅', 'Patient Follow-up Reminder', content)
+      subject: `Follow-up Reminder: ${patientName} — ${daysSinceVisit} days since last visit`,
+      html: baseTemplate('Patient Follow-up Reminder', content)
     });
     return { success: true };
   } catch (error) {
@@ -289,7 +361,7 @@ exports.sendFollowUpDoctorEmail = async (toEmail, data) => {
 };
 
 /**
- * 📆 FOLLOW-UP REMINDER — for Patients
+ * FOLLOW-UP REMINDER — for Patients
  */
 exports.sendFollowUpPatientEmail = async (toEmail, data) => {
   try {
@@ -306,8 +378,8 @@ exports.sendFollowUpPatientEmail = async (toEmail, data) => {
     await transporter.sendMail({
       from: `"HospiLink" <${process.env.SMTP_USERNAME}>`,
       to: toEmail,
-      subject: `📆 Follow-up Appointment Reminder — HospiLink`,
-      html: baseTemplate('linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)', '📆', 'Time for Your Follow-up!', content)
+      subject: `Follow-up Appointment Reminder — HospiLink`,
+      html: baseTemplate('Time for Your Follow-up!', content)
     });
     return { success: true };
   } catch (error) {
@@ -317,7 +389,7 @@ exports.sendFollowUpPatientEmail = async (toEmail, data) => {
 };
 
 /**
- * 📆 APPOINTMENT REMINDER — for Patients (day before)
+ * APPOINTMENT REMINDER — for Patients (day before)
  */
 exports.sendAppointmentReminderEmail = async (toEmail, data) => {
   try {
@@ -331,7 +403,7 @@ exports.sendAppointmentReminderEmail = async (toEmail, data) => {
         ${department ? `<div class="info-row"><span class="info-label">Department</span><span class="info-value">${department}</span></div>` : ''}
       </div>
       <p><strong>Please remember to:</strong></p>
-      <ul style="padding-left:20px;margin:12px 0;color:#4a5568;line-height:2">
+      <ul style="padding-left:20px;margin:12px 0;color:#475569;line-height:2">
         <li>Arrive 15 minutes early for registration</li>
         <li>Bring your HospiLink patient ID / QR code</li>
         <li>Carry any previous medical reports</li>
@@ -340,8 +412,8 @@ exports.sendAppointmentReminderEmail = async (toEmail, data) => {
     await transporter.sendMail({
       from: `"HospiLink" <${process.env.SMTP_USERNAME}>`,
       to: toEmail,
-      subject: `📆 Appointment Tomorrow: Dr. ${doctorName} — HospiLink`,
-      html: baseTemplate('linear-gradient(135deg, #f6d365 0%, #fda085 100%)', '📆', 'Appointment Reminder', content)
+      subject: `Appointment Tomorrow: Dr. ${doctorName} — HospiLink`,
+      html: baseTemplate('Appointment Reminder', content)
     });
     return { success: true };
   } catch (error) {
@@ -351,7 +423,7 @@ exports.sendAppointmentReminderEmail = async (toEmail, data) => {
 };
 
 /**
- * 🏥 DAILY ADMIN DIGEST
+ * H4. DAILY ADMIN DIGEST
  */
 exports.sendAdminDailyDigestEmail = async (toEmail, data) => {
   try {
@@ -372,8 +444,8 @@ exports.sendAdminDailyDigestEmail = async (toEmail, data) => {
     await transporter.sendMail({
       from: `"HospiLink System" <${process.env.SMTP_USERNAME}>`,
       to: toEmail,
-      subject: `🏥 Daily Digest — HospiLink ${new Date().toLocaleDateString('en-IN')}`,
-      html: baseTemplate('linear-gradient(135deg, #2d3748 0%, #4a5568 100%)', '🏥', 'Daily System Digest', content)
+      subject: `Daily Digest — HospiLink ${new Date().toLocaleDateString('en-IN')}`,
+      html: baseTemplate('Daily System Digest', content)
     });
     return { success: true };
   } catch (error) {

@@ -14,10 +14,10 @@ const colors = {
 };
 
 const log = {
-  success: (msg) => console.log(`${colors.green}✓${colors.reset} ${msg}`),
-  error: (msg) => console.log(`${colors.red}✗${colors.reset} ${msg}`),
+  success: (msg) => console.log(`${colors.green}SUCCESS${colors.reset} ${msg}`),
+  error: (msg) => console.log(`${colors.red}ERROR${colors.reset} ${msg}`),
   info: (msg) => console.log(`${colors.blue}ℹ${colors.reset} ${msg}`),
-  warn: (msg) => console.log(`${colors.yellow}⚠${colors.reset} ${msg}`)
+  warn: (msg) => console.log(`${colors.yellow}[WARNING]${colors.reset} ${msg}`)
 };
 
 async function testHealthCheck() {
@@ -260,7 +260,7 @@ async function runTests() {
 
   // Results Summary
   console.log('='.repeat(60));
-  console.log('📊 Test Results Summary');
+  console.log('[STATS] Test Results Summary');
   console.log('='.repeat(60));
   console.log(`${colors.green}Passed: ${passed}${colors.reset}`);
   console.log(`${colors.red}Failed: ${failed}${colors.reset}`);
@@ -268,7 +268,7 @@ async function runTests() {
   console.log('='.repeat(60) + '\n');
 
   if (failed === 0) {
-    log.success('All tests passed! ✨');
+    log.success('All tests passed! [FEATURE]');
   } else {
     log.warn(`${failed} test(s) failed. Please check the errors above.`);
   }

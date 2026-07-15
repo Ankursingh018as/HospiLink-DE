@@ -94,8 +94,8 @@ const notificationSchema = new mongoose.Schema({
   },
   iconType: {
     type: String,
-    enum: ['💉', '💊', '🩺', '📅', '👤', '📆', '🏥', '🔔'],
-    default: '🔔'
+    enum: ['[DRIP]', '[MEDICINE]', '[CHECK]', '[DATE]', '[USER]', '[DATE]', '[HOSPITAL]', '[NOTIFICATION]'],
+    default: '[NOTIFICATION]'
   }
 }, {
   timestamps: true

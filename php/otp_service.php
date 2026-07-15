@@ -346,7 +346,7 @@ class OTPService {
         $otpDigits = str_split($otp);
         $otpBoxes = '';
         foreach ($otpDigits as $digit) {
-            $otpBoxes .= '<span style="display: inline-block; background: #f8f9fa; border: 2px solid #00adb5; border-radius: 8px; padding: 12px 16px; margin: 0 3px; font-size: 28px; font-weight: bold; color: #0e545f; min-width: 40px; text-align: center;">' . $digit . '</span>';
+            $otpBoxes .= '<span style="display: inline-block; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 16px; margin: 0 4px; font-size: 28px; font-weight: bold; color: #0d9488; min-width: 40px; text-align: center;">' . $digit . '</span>';
         }
         
         return '
@@ -355,73 +355,125 @@ class OTPService {
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>
+                body {
+                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                    background-color: #f8fafc;
+                    color: #334155;
+                    margin: 0;
+                    padding: 0;
+                }
+                .wrapper {
+                    max-width: 580px;
+                    margin: 40px auto;
+                    background-color: #ffffff;
+                    border: 1px solid #e2e8f0;
+                    border-radius: 12px;
+                    overflow: hidden;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+                }
+                .header {
+                    padding: 32px 40px 20px 40px;
+                    border-bottom: 1px solid #f1f5f9;
+                }
+                .header-logo {
+                    font-size: 18px;
+                    font-weight: 700;
+                    color: #0d9488;
+                    letter-spacing: -0.5px;
+                }
+                .header-title {
+                    font-size: 20px;
+                    font-weight: 600;
+                    color: #0f172a;
+                    margin-top: 12px;
+                    margin-bottom: 0;
+                }
+                .body {
+                    padding: 32px 40px;
+                }
+                .body h2 {
+                    font-size: 18px;
+                    font-weight: 600;
+                    color: #0f172a;
+                    margin-top: 0;
+                    margin-bottom: 12px;
+                }
+                .body p {
+                    font-size: 15px;
+                    line-height: 1.6;
+                    color: #475569;
+                    margin-top: 0;
+                    margin-bottom: 16px;
+                }
+                .expiry-notice {
+                    background-color: #fffbef;
+                    border-left: 4px solid #f59e0b;
+                    padding: 12px;
+                    margin: 24px 0;
+                    border-radius: 4px;
+                    font-size: 14px;
+                    color: #b45309;
+                }
+                .security-notice {
+                    background-color: #f8fafc;
+                    border: 1px solid #e2e8f0;
+                    padding: 16px;
+                    border-radius: 8px;
+                    margin-top: 24px;
+                }
+                .security-notice p {
+                    margin: 0;
+                    font-size: 13px;
+                    color: #64748b;
+                    line-height: 1.5;
+                }
+                .footer {
+                    background-color: #f8fafc;
+                    padding: 24px 40px;
+                    border-top: 1px solid #e2e8f0;
+                    text-align: center;
+                }
+                .footer p {
+                    font-size: 12px;
+                    color: #64748b;
+                    line-height: 1.5;
+                    margin: 0;
+                }
+            </style>
         </head>
-        <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4;">
-            <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4; padding: 40px 0;">
-                <tr>
-                    <td align="center">
-                        <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                            <!-- Header -->
-                            <tr>
-                                <td style="background: linear-gradient(135deg, #0e545f 0%, #00adb5 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
-                                    <h1 style="color: #ffffff; margin: 0; font-size: 28px;">🏥 HospiLink</h1>
-                                    <p style="color: #ffffff; margin: 10px 0 0 0; font-size: 16px;">Email Verification</p>
-                                </td>
-                            </tr>
-                            
-                            <!-- Content -->
-                            <tr>
-                                <td style="padding: 40px 30px;">
-                                    <h2 style="color: #0e545f; margin: 0 0 20px 0;">Hello ' . htmlspecialchars($firstName) . '!</h2>
-                                    <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 0 0 30px 0;">
-                                        Thank you for registering with HospiLink. To complete your registration, please verify your email address using the OTP below:
-                                    </p>
-                                    
-                                    <div style="text-align: center; margin: 40px 0;">
-                                        <div style="display: inline-block; white-space: nowrap;">
-                                            ' . $otpBoxes . '
-                                        </div>
-                                    </div>
-                                    
-                                    <div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 30px 0; border-radius: 5px;">
-                                        <p style="margin: 0; color: #856404; font-size: 14px;">
-                                            <strong>⏱️ This OTP is valid for ' . $this->otpExpiry . ' minutes.</strong>
-                                        </p>
-                                    </div>
-                                    
-                                    <p style="color: #666; font-size: 14px; line-height: 1.6; margin: 20px 0 0 0;">
-                                        If you didn\'t request this verification, please ignore this email or contact our support team.
-                                    </p>
-                                </td>
-                            </tr>
-                            
-                            <!-- Security Notice -->
-                            <tr>
-                                <td style="background-color: #f8f9fa; padding: 20px 30px; border-top: 1px solid #e9ecef;">
-                                    <p style="margin: 0; color: #666; font-size: 13px; line-height: 1.5;">
-                                        🔒 <strong>Security Tip:</strong> Never share your OTP with anyone. HospiLink staff will never ask for your OTP.
-                                    </p>
-                                </td>
-                            </tr>
-                            
-                            <!-- Footer -->
-                            <tr>
-                                <td style="background-color: #0e545f; padding: 20px; text-align: center; border-radius: 0 0 10px 10px;">
-                                    <p style="color: #ffffff; margin: 0; font-size: 14px;">
-                                        © ' . date('Y') . ' HospiLink. All rights reserved.
-                                    </p>
-                                    <p style="color: #00adb5; margin: 10px 0 0 0; font-size: 12px;">
-                                        Your trusted healthcare partner
-                                    </p>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
+        <body>
+            <div class="wrapper">
+                <div class="header">
+                    <div class="header-logo">HospiLink</div>
+                    <div class="header-title">Email Verification</div>
+                </div>
+                <div class="body">
+                    <h2>Hello ' . htmlspecialchars($firstName) . ',</h2>
+                    <p>Thank you for registering with HospiLink. To complete your registration, please verify your email address using the OTP below:</p>
+                    
+                    <div style="text-align: center; margin: 32px 0;">
+                        <div style="display: inline-block; white-space: nowrap;">
+                            ' . $otpBoxes . '
+                        </div>
+                    </div>
+                    
+                    <div class="expiry-notice">
+                        <strong>This OTP is valid for ' . $this->otpExpiry . ' minutes.</strong>
+                    </div>
+                    
+                    <p>If you did not request this verification, please ignore this email or contact our support team.</p>
+                    
+                    <div class="security-notice">
+                        <p><strong>Security Tip:</strong> Never share your OTP with anyone. HospiLink staff will never ask for your verification code.</p>
+                    </div>
+                </div>
+                <div class="footer">
+                    <p>© ' . date('Y') . ' HospiLink. All rights reserved.<br>Support: ' . SMTP_FROM_EMAIL . '</p>
+                </div>
+            </div>
         </body>
-        </html>
-        ';
+        </html>';
     }
 }
 ?>

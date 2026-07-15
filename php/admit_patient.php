@@ -208,7 +208,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </head>
         <body>
             <div class='success-msg'>
-                <h2>✓ Patient Admitted Successfully!</h2>
+                <h2>SUCCESS Patient Admitted Successfully!</h2>
                 <div class='info'><strong>Patient Name:</strong> $patient_name</div>
                 <div class='info'><strong>Admission ID:</strong> $admission_id</div>
                 <div class='info'><strong>Admission Date:</strong> " . date('d M Y', strtotime($admit_date)) . "</div>
@@ -264,7 +264,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </head>
         <body>
             <div class='error-msg'>
-                <h2>✗ Admission Failed</h2>
+                <h2>ERROR Admission Failed</h2>
                 <p style='color:#666;margin:20px 0;'>" . htmlspecialchars($e->getMessage()) . "</p>
                 <a href='../admit.html' class='btn'>Try Again</a>
             </div>

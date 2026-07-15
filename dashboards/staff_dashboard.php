@@ -79,6 +79,7 @@ $patientsResult = $conn->query($patientsQuery);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Staff Dashboard - HospiLink</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="../css/doctor-dashboard-enhanced.css">
     <link rel="icon" href="../images/hosp_favicon.png" type="image/png">
@@ -1193,19 +1194,19 @@ $patientsResult = $conn->query($patientsQuery);
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('✅ Bed assigned successfully!');
+                    alert('Bed assigned successfully!');
                     closeModal('assignBedModal');
                     // Refresh the page to show updated data
                     location.reload();
                 } else {
-                    alert('❌ Error: ' + data.message);
+                    alert('Error: ' + data.message);
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'Assign Bed';
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('❌ An error occurred while assigning the bed.');
+                alert('An error occurred while assigning the bed.');
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Assign Bed';
             });

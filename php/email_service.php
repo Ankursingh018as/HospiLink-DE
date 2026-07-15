@@ -84,10 +84,10 @@ class EmailService {
         
         // Priority messages
         $priorityMessages = [
-            'CRITICAL' => '🚨 URGENT: Please proceed to the emergency department immediately or call emergency services if symptoms worsen!',
-            'HIGH' => '⚡ Your appointment has been marked as high priority. A doctor will contact you soon.',
-            'MEDIUM' => '📋 Your appointment has been scheduled. Please arrive 10 minutes early.',
-            'LOW' => '✓ Your appointment has been confirmed. See you on the scheduled date.'
+            'CRITICAL' => '[ALERT] URGENT: Please proceed to the emergency department immediately or call emergency services if symptoms worsen!',
+            'HIGH' => '[FAST] Your appointment has been marked as high priority. A doctor will contact you soon.',
+            'MEDIUM' => '[INFO] Your appointment has been scheduled. Please arrive 10 minutes early.',
+            'LOW' => 'SUCCESS Your appointment has been confirmed. See you on the scheduled date.'
         ];
         $priorityMessage = $priorityMessages[$priority] ?? 'Your appointment has been scheduled.';
         
@@ -117,7 +117,7 @@ class EmailService {
                     <tr>
                         <td style="padding: 30px; text-align: center;">
                             <div style="display: inline-block; background-color: #28a745; color: white; padding: 10px 30px; border-radius: 50px; font-size: 16px; font-weight: bold;">
-                                ✓ APPOINTMENT CONFIRMED
+                                SUCCESS APPOINTMENT CONFIRMED
                             </div>
                         </td>
                     </tr>
@@ -143,19 +143,19 @@ class EmailService {
                             <table width="100%" cellpadding="10" style="margin: 20px 0; border: 2px solid #e0e0e0; border-radius: 8px;">
                                 <tr style="background-color: #f8f9fa;">
                                     <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;">
-                                        <strong style="color: #0e545f;">📋 Appointment ID:</strong><br>
+                                        <strong style="color: #0e545f;">[INFO] Appointment ID:</strong><br>
                                         <span style="color: #333; font-size: 18px;">#{$appointment_id}</span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;">
-                                        <strong style="color: #0e545f;">📅 Date:</strong><br>
+                                        <strong style="color: #0e545f;">[DATE] Date:</strong><br>
                                         <span style="color: #333;">{$date}</span>
                                     </td>
                                 </tr>
                                 <tr style="background-color: #f8f9fa;">
                                     <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;">
-                                        <strong style="color: #0e545f;">🕐 Time:</strong><br>
+                                        <strong style="color: #0e545f;">[TIME] Time:</strong><br>
                                         <span style="color: #333;">{$time}</span>
                                     </td>
                                 </tr>

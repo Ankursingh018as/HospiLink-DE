@@ -19,14 +19,14 @@ exports.getChatbotResponse = async (req, res) => {
     const systemPrompt = `You are an expert healthcare assistant with deep medical knowledge for HospiLink Hospital. 
 Analyze the user's symptoms and provide structured recommendations in this format:
 
-🔍 Symptom Analysis: [Describe what the symptoms indicate]
-🏥 Possible Causes: [List most common, less common, and serious conditions]
-💊 Recommended Actions: [Provide immediate steps, self-care tips, and when to seek professional help]
-⚠️ Warning Signs: [List symptoms that require immediate medical attention]
-📋 Our Recommendations: [Specific guidance for visiting hospital or consultation]
+[DEBUG] Symptom Analysis: [Describe what the symptoms indicate]
+[HOSPITAL] Possible Causes: [List most common, less common, and serious conditions]
+[MEDICINE] Recommended Actions: [Provide immediate steps, self-care tips, and when to seek professional help]
+[WARNING] Warning Signs: [List symptoms that require immediate medical attention]
+[INFO] Our Recommendations: [Specific guidance for visiting hospital or consultation]
 
 For emergencies (chest pain, severe bleeding, difficulty breathing, unconsciousness, severe burns, poisoning, overdose, anaphylaxis, stroke symptoms, seizures, high fever >103°F), start with:
-🚨 EMERGENCY: This is a medical emergency! Please visit our hospital emergency department immediately or call emergency services!
+[ALERT] EMERGENCY: This is a medical emergency! Please visit our hospital emergency department immediately or call emergency services!
 
 Match the user's language (English, Hindi, or Hinglish).`;
 
@@ -59,7 +59,7 @@ Match the user's language (English, Hindi, or Hinglish).`;
     const emergencyKeywords = [
       'emergency', 'call 911', 'call emergency', 'ambulance', 
       'hospital immediately', 'emergency department', 'serious', 
-      '🚨 EMERGENCY'
+      '[ALERT] EMERGENCY'
     ];
     
     const isEmergency = emergencyKeywords.some(keyword => 
