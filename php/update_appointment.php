@@ -13,6 +13,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['appointment_id'])) {
         $appointment_id = intval($_POST['appointment_id']);
         
+        // Update assigned doctor
+        if (isset($_POST['doctor_id'])) {
+            $doctor_id = intval($_POST['doctor_id']);
+            $db_doctor_id = $doctor_id > 0 ? $doctor_id : null;
+            
+            // Check current status - if pending and assigning a doctor, confirm the appointment
+            $currentStatusQuery = "SELECT status FROM appointments WHERE appointment_id = ?";
+            $csStmt = $conn->prepare($currentStatusQuery);
+            $csStmt->bind_param("i", $appointment_id);
+            $csStmt->execute();
+            $currentStatusRes = $csStmt->get_result()->fetch_assoc();
+            $csStmt->close();
+            
+            $newStatus = $currentStatusRes['status'] ?? 'pending';
+            if ($newStatus === 'pending' && $db_doctor_id !== null) {
+                $newStatus = 'confirmed';
+            }
+            
+            $updateQuery = "UPDATE appointments SET doctor_id = ?, status = ? WHERE appointment_id = ?";
+            $stmt = $conn->prepare($updateQuery);
+            $stmt->bind_param("isi", $db_doctor_id, $newStatus, $appointment_id);
+            
+            if ($stmt->execute()) {
+                $response['success'] = true;
+                $response['message'] = 'Doctor assigned successfully';
+                
+                // Log activity
+                if (isset($_SESSION['user_id'])) {
+                    $user_id = $_SESSION['user_id'];
+                    $logQuery = "INSERT INTO activity_logs (user_id, action, details) VALUES (?, ?, ?)";
+                    $logStmt = $conn->prepare($logQuery);
+                    $action = "Assigned Doctor to Appointment";
+                    $details = "Assigned Doctor ID #$doctor_id to Appointment #$appointment_id. Status updated to $newStatus.";
+                    $logStmt->bind_param("iss", $user_id, $action, $details);
+                    $logStmt->execute();
+                    $logStmt->close();
+                }
+            } else {
+                $response['message'] = 'Failed to assign doctor: ' . $conn->error;
+            }
+            $stmt->close();
+        }
+        
         // Update status
         if (isset($_POST['status'])) {
             $status = mysqli_real_escape_string($conn, $_POST['status']);
