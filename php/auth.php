@@ -22,7 +22,19 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 // Function to log activity
 function logActivity($conn, $user_id, $action, $details = null) {
-    $ip_address = $_SERVER['REMOTE_ADDR'];
+    $ip_address = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+    
+    // Prevent foreign key check failure if the user_id is stale/deleted
+    if ($user_id !== null) {
+        $check = $conn->prepare("SELECT user_id FROM users WHERE user_id = ?");
+        $check->bind_param("i", $user_id);
+        $check->execute();
+        if ($check->get_result()->num_rows === 0) {
+            $user_id = null;
+        }
+        $check->close();
+    }
+    
     $stmt = $conn->prepare("INSERT INTO activity_logs (user_id, action, details, ip_address) VALUES (?, ?, ?, ?)");
     $stmt->bind_param("isss", $user_id, $action, $details, $ip_address);
     $stmt->execute();

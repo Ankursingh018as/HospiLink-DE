@@ -184,12 +184,20 @@ class PatientQRHelper {
         return null;
     }
     
-    /**
-     * Log QR code scan
-     */
     public static function logScan($conn, $admission_id, $user_id, $action = 'view') {
         $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
         $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? 'unknown';
+        
+        // Prevent foreign key check failure if the session user_id is stale
+        if ($user_id !== null) {
+            $check = $conn->prepare("SELECT user_id FROM users WHERE user_id = ?");
+            $check->bind_param("i", $user_id);
+            $check->execute();
+            if ($check->get_result()->num_rows === 0) {
+                $user_id = null;
+            }
+            $check->close();
+        }
         
         $stmt = $conn->prepare("
             INSERT INTO qr_scan_logs (admission_id, scanned_by, scanned_at, ip_address, user_agent, action_taken)
